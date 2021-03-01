@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="ISO-8859-1">
+<title>NewsSite</title>
+<link href="../static/css/boostrap.css" rel="stylesheet"
+	th:href="@{/css/bootstrap.css}" />
+<link rel="icon" href="../../favicon.ico" />
+
+</head>
+<body>
+
+	<h1 class="p-3 mb-2 bg-primary text-white">API DashBoard</h1>
+	<div class="container">
+
+		<div class="row" th:each="article : ${NewsData}">
+			<div class="col">
+
+				<div class="jumbotron p-2 m-2">
+					<a th:href="${article.url}"><h2 class="title" th:text="${article.title}"></h2></a>
+					<div>
+						<ul>
+							<li th:text="${article.author}"></li>
+
+							<li th:text="${article.source}"></li>
+
+							<li th:text="${article.category}"></li>
+
+							<li th:text="${article.language}"></li>
+
+							<li th:text="${article.publishedAt}"></li>
+							
+							<li th:text="${article.countryOrigin}"></li>
+							
+						</ul>
+					</div>
+					
+					<img th:src="${article.imageUrl}" width="300" height="300">
+
+					<p th:text="${article.description}"></p>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

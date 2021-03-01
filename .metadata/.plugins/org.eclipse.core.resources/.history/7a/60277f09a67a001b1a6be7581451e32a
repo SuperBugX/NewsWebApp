@@ -1,0 +1,12 @@
+package com.newssite.demo.configurations;
+
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+public class WebConfiguration {
+	
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
+    }
+
+}
