@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newssite.demo.Exceptions.MediaStackJSONException;
-import com.newssite.demo.Exceptions.MediaStackResponseErrorException;
+import com.newssite.demo.exceptions.MediaStackJSONException;
+import com.newssite.demo.exceptions.MediaStackResponseErrorException;
 
 import lombok.Builder;
 import lombok.Data;
