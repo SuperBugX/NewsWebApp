@@ -1,4 +1,4 @@
-package com.newssite.demo.Exceptions;
+package com.newssite.demo.exceptions;
 
 public class MediaStackResponseErrorException extends MediaStackException {
 	
