@@ -6,9 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,23 +23,22 @@ import com.newssite.demo.resources.Article;
 import com.newssite.demo.resources.ErrorTemplate;
 
 @RestController
-@CrossOrigin(origins="http://localhost:8080")
 @RequestMapping("/NewsFetcherService")
 public class NewsFetcherController {
 
 	@Autowired
 	MediaStackBuilder mediaStackBuilder;
-	
+
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
-	
+
 	@RequestMapping("/Demonstration2")
 	public String demoJson() {
 		// Demonstration Code
 
 		ErrorTemplate errorTemplate;
 
-		String[] categories = {"general", "sports", "business", "entertainment", "health", "science", "technology"};
+		String[] categories = { "general", "sports", "business", "entertainment", "health", "science", "technology" };
 		String[] countries = { "gb" };
 		String[] languages = { "en", "fr" };
 		String[] keyWords = null;
@@ -49,17 +47,17 @@ public class NewsFetcherController {
 		MediaStack api = mediaStackBuilder.languages(languages).categories(categories).build();
 
 		try {
-			
-			//Perform API request
+
+			// Perform API request
 			String apiJsonResponse = api.requestLiveArticles();
-			
+
 			ObjectMapper jsonMapper = new ObjectMapper();
 			JsonNode responseNode;
 			JsonNode dataNode;
-			JsonNode articleNode;		
+			JsonNode articleNode;
 			Article tempArticle;
-			
-			//Linked Lists that are meant to contain articles of their category
+
+			// Linked Lists that are meant to contain articles of their category
 			List<Article> generalArticles = new LinkedList<Article>();
 			List<Article> businessArticles = new LinkedList<Article>();
 			List<Article> entertainmentArticles = new LinkedList<Article>();
@@ -67,30 +65,26 @@ public class NewsFetcherController {
 			List<Article> scienceArticles = new LinkedList<Article>();
 			List<Article> sportsArticles = new LinkedList<Article>();
 			List<Article> technologyArticles = new LinkedList<Article>();
-			
+
 			responseNode = jsonMapper.readTree(apiJsonResponse);
 			dataNode = responseNode.get("data");
-			
-			//Place the articles in the correct data-structures
-			for(int i = 0; i < dataNode.size(); i++) { 
-				
+
+			// Place the articles in the correct data-structures
+			for (int i = 0; i < dataNode.size(); i++) {
+
 				articleNode = dataNode.get(i);
 				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText())
-						.title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText())
-						.description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText())
-						.imageUrl(articleNode.get("image").asText())
+						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
+						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
+						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
 						.language(articleNode.get("language").asText())
 						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText())
-						.build();
-				
+						.publishedAt(articleNode.get("published_at").asText()).build();
+
 				generalArticles.add(tempArticle);
-				
+
 			}
-			
+
 			return jsonMapper.writeValueAsString(generalArticles);
 		} catch (MediaStackResponseErrorException e) {
 			// TODO Auto-generated catch block
@@ -115,7 +109,7 @@ public class NewsFetcherController {
 
 		ErrorTemplate errorTemplate;
 
-		String[] categories = {"general", "sports", "business", "entertainment", "health", "science", "technology"};
+		String[] categories = { "general", "sports", "business", "entertainment", "health", "science", "technology" };
 		String[] countries = { "gb" };
 		String[] languages = { "en", "fr" };
 		String[] keyWords = null;
@@ -124,17 +118,17 @@ public class NewsFetcherController {
 		MediaStack api = mediaStackBuilder.languages(languages).categories(categories).build();
 
 		try {
-			
-			//Perform API request
+
+			// Perform API request
 			String apiJsonResponse = api.requestLiveArticles();
-			
+
 			ObjectMapper jsonMapper = new ObjectMapper();
 			JsonNode responseNode;
 			JsonNode dataNode;
-			JsonNode articleNode;		
+			JsonNode articleNode;
 			Article tempArticle;
-			
-			//Linked Lists that are meant to contain articles of their category
+
+			// Linked Lists that are meant to contain articles of their category
 			List<Article> generalArticles = new LinkedList<Article>();
 			List<Article> businessArticles = new LinkedList<Article>();
 			List<Article> entertainmentArticles = new LinkedList<Article>();
@@ -142,102 +136,97 @@ public class NewsFetcherController {
 			List<Article> scienceArticles = new LinkedList<Article>();
 			List<Article> sportsArticles = new LinkedList<Article>();
 			List<Article> technologyArticles = new LinkedList<Article>();
-			
+
 			responseNode = jsonMapper.readTree(apiJsonResponse);
 			dataNode = responseNode.get("data");
-			
-			//Place the articles in the correct data-structures
-			for(int i = 0; i < dataNode.size(); i++) { 
-				
+
+			// Place the articles in the correct data-structures
+			for (int i = 0; i < dataNode.size(); i++) {
+
 				articleNode = dataNode.get(i);
 				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText())
-						.title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText())
-						.description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText())
-						.imageUrl(articleNode.get("image").asText())
+						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
+						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
+						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
 						.language(articleNode.get("language").asText())
 						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText())
-						.build();
-				
-				switch(tempArticle.getCategory()) {
-				
+						.publishedAt(articleNode.get("published_at").asText()).build();
+
+				switch (tempArticle.getCategory()) {
+
 				case "general":
 					generalArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "business":
 					businessArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "entertainment":
 					entertainmentArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "health":
 					healthArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "science":
 					scienceArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "sports":
 					sportsArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "technology":
 					technologyArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				default:
 					break;
-				}	
+				}
 			}
-			
+
 			/*
-			//Publish the articles of each data structure to the correct kafka topic
-			
-			if(!generalArticles.isEmpty()) {
-				kafkaTemplate.send(Topic.GENERAL, generalArticles. );
-				
-			}
-			
-			if(!businessArticles.isEmpty()) {
-				
-			}
-			
-			if(!entertainmentArticles.isEmpty()) {
-				
-			}
-			
-			if(!healthArticles.isEmpty()) {
-				
-			}
-			
-			if(!scienceArticles.isEmpty()) {
-				
-			}
-			
-			if(!sportsArticles.isEmpty()) {
-				
-			}
-			
-			if(!technologyArticles.isEmpty()) {
-				
-			}
-			*/
-			
-			
+			 * //Publish the articles of each data structure to the correct kafka topic
+			 * 
+			 * if(!generalArticles.isEmpty()) { kafkaTemplate.send(Topic.GENERAL,
+			 * generalArticles. );
+			 * 
+			 * }
+			 * 
+			 * if(!businessArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!entertainmentArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!healthArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!scienceArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!sportsArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!technologyArticles.isEmpty()) {
+			 * 
+			 * }
+			 */
+
 		} catch (MediaStackResponseErrorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -254,12 +243,12 @@ public class NewsFetcherController {
 		}
 	}
 
-	@RequestMapping("/RetrieveNews/Categories/{categories}/Countries/{countries}/Languages/{languages}/Keywords/{keywords}/PaginationLimit/{limit}/PaginationOffset/{offset}/Sources/{sources}/SortBy/{sort}")
-	public String retrieveNews(@PathVariable("categories") String[] categories,
-			@PathVariable("countries") String[] countries, @PathVariable("languages") String[] languages,
-			@PathVariable("keywords") String[] keywords, @PathVariable("limit") int limit,
-			@PathVariable("offset") int offset, @PathVariable("sources") String[] sources,
-			@PathVariable("sort") String sort) {
+	@RequestMapping("/RetrieveNews")
+	public String retrieveNews(@RequestParam("categories") String[] categories,
+			@RequestParam("countries") String[] countries, @RequestParam("languages") String[] languages,
+			@RequestParam("keywords") String[] keywords, @RequestParam("limit") int limit,
+			@RequestParam("offset") int offset, @RequestParam("sources") String[] sources,
+			@RequestParam("sort") String sort) {
 
 		ErrorTemplate errorTemplate;
 
@@ -284,29 +273,29 @@ public class NewsFetcherController {
 
 	}
 
-	@RequestMapping("/PublishNews/Categories/{categories}/Countries/{countries}/Languages/{languages}/Keywords/{keywords}/PaginationLimit/{limit}/PaginationOffset/{offset}/Sources/{sources}/SortBy/{sort}")
-	public void publishNews(@PathVariable("categories") String[] categories,
-			@PathVariable("countries") String[] countries, @PathVariable("languages") String[] languages,
-			@PathVariable("keywords") String[] keywords, @PathVariable("limit") int limit,
-			@PathVariable("offset") int offset, @PathVariable("sources") String[] sources,
-			@PathVariable("sort") String sort) {
+	@RequestMapping("/PublishNews")
+	public void publishNews(@RequestParam("categories") String[] categories,
+			@RequestParam("countries") String[] countries, @RequestParam("languages") String[] languages,
+			@RequestParam("keywords") String[] keywords, @RequestParam("limit") int limit,
+			@RequestParam("offset") int offset, @RequestParam("sources") String[] sources,
+			@RequestParam("sort") String sort) {
 
 		// Build the API request parameters
 		MediaStack api = mediaStackBuilder.countries(countries).categories(categories).languages(languages)
 				.sources(sources).keyWords(keywords).paginationLimit(limit).paginationOffset(offset).sortBy(sort)
 				.build();
 		try {
-			
-			//Perform API request
+
+			// Perform API request
 			String apiJsonResponse = api.requestLiveArticles();
-			
+
 			ObjectMapper jsonMapper = new ObjectMapper();
 			JsonNode responseNode;
 			JsonNode dataNode;
-			JsonNode articleNode;		
+			JsonNode articleNode;
 			Article tempArticle;
-			
-			//Linked Lists that are meant to contain articles of their category
+
+			// Linked Lists that are meant to contain articles of their category
 			List<Article> generalArticles = new LinkedList<Article>();
 			List<Article> businessArticles = new LinkedList<Article>();
 			List<Article> entertainmentArticles = new LinkedList<Article>();
@@ -314,102 +303,97 @@ public class NewsFetcherController {
 			List<Article> scienceArticles = new LinkedList<Article>();
 			List<Article> sportsArticles = new LinkedList<Article>();
 			List<Article> technologyArticles = new LinkedList<Article>();
-			
+
 			responseNode = jsonMapper.readTree(apiJsonResponse);
 			dataNode = responseNode.get("data");
-			
-			//Place the articles in the correct data-structures
-			for(int i = 0; i < dataNode.size(); i++) { 
-				
+
+			// Place the articles in the correct data-structures
+			for (int i = 0; i < dataNode.size(); i++) {
+
 				articleNode = dataNode.get(i);
 				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText())
-						.title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText())
-						.description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText())
-						.imageUrl(articleNode.get("image").asText())
+						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
+						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
+						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
 						.language(articleNode.get("language").asText())
 						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText())
-						.build();
-				
-				switch(tempArticle.getCategory()) {
-				
+						.publishedAt(articleNode.get("published_at").asText()).build();
+
+				switch (tempArticle.getCategory()) {
+
 				case "general":
 					generalArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "business":
 					businessArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "entertainment":
 					entertainmentArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "health":
 					healthArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "science":
 					scienceArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "sports":
 					sportsArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				case "technology":
 					technologyArticles.add(tempArticle);
 					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
-					
+
 				default:
 					break;
-				}	
+				}
 			}
-			
+
 			/*
-			//Publish the articles of each data structure to the correct kafka topic
-			
-			if(!generalArticles.isEmpty()) {
-				kafkaTemplate.send(Topic.GENERAL, generalArticles. );
-				
-			}
-			
-			if(!businessArticles.isEmpty()) {
-				
-			}
-			
-			if(!entertainmentArticles.isEmpty()) {
-				
-			}
-			
-			if(!healthArticles.isEmpty()) {
-				
-			}
-			
-			if(!scienceArticles.isEmpty()) {
-				
-			}
-			
-			if(!sportsArticles.isEmpty()) {
-				
-			}
-			
-			if(!technologyArticles.isEmpty()) {
-				
-			}
-			*/
-			
-			
+			 * //Publish the articles of each data structure to the correct kafka topic
+			 * 
+			 * if(!generalArticles.isEmpty()) { kafkaTemplate.send(Topic.GENERAL,
+			 * generalArticles. );
+			 * 
+			 * }
+			 * 
+			 * if(!businessArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!entertainmentArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!healthArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!scienceArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!sportsArticles.isEmpty()) {
+			 * 
+			 * }
+			 * 
+			 * if(!technologyArticles.isEmpty()) {
+			 * 
+			 * }
+			 */
+
 		} catch (MediaStackResponseErrorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

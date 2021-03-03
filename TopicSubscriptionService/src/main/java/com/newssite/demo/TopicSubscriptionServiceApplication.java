@@ -11,5 +11,4 @@ public class TopicSubscriptionServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TopicSubscriptionServiceApplication.class, args);
 	}
-
 }
