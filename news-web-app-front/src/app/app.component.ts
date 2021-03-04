@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'news-web-app-front';
-  topics=[
+  topics = [
     "Sports",
     "General"
   ];

@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopicFilterOptionsComponent } from './components/topic-filter-options/topic-filter-options.component';
 import { TopicSubscriptionButtonComponent } from './components/topic-subscription-button/topic-subscription-button.component';
 import { ArticleService } from './services/article.service';
+import { WebsocketService } from './services/websocket.service';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,7 @@ import { ArticleService } from './services/article.service';
     AppRoutingModule,
     NgbModule
   ],
-  providers: [ArticleService],
+  providers: [ArticleService, WebsocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
