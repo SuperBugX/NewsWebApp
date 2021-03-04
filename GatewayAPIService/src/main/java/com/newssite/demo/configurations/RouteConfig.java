@@ -11,8 +11,8 @@ public class RouteConfig {
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 		return builder.routes().route(r -> r.path("/NewsFetcherService/**").uri("lb://News-Fetcher-Service"))
-				.route(r -> r.path("/TopicSubscriptionService/**").uri("lb://Topic-Subscription-Service"))
 				.route(r -> r.path("/TopicSubscriptionService").uri("lb://Topic-Subscription-Service"))
+				.route(r -> r.path("/TopicSubscriptionService/**").uri("lb://Topic-Subscription-Service"))
 				.build();
 	}
 }
