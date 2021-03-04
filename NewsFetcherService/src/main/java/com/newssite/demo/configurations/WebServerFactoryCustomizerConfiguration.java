@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.SocketUtils;
 
 @Configuration
-public class WebServerFacotryCustomizerConfiguration implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+public class WebServerFactoryCustomizerConfiguration implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
     @Value("${port.number.min}")
     private Integer minPort;

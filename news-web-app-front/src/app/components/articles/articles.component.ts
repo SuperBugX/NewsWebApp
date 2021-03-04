@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Article } from '../../models/Article';
+import { ArticleService } from 'src/app/services/article.service';
 
 @Component({
   selector: 'app-articles',
@@ -10,49 +11,9 @@ export class ArticlesComponent implements OnInit {
 
   articles: Article[];
 
-  constructor() { }
+  constructor(private articleService: ArticleService) { }
 
   ngOnInit(): void {
-    this.articles = [
-      {
-        author: "James",
-        title: "Royal Family in Ruins",
-        description: "Marriage issues",
-        url: "Broken/URL",
-        source: "BBC",
-        imageUrl: "Image/URL",
-        category: "Drama",
-        language: "English",
-        countryOrigin: "United Kingdom",
-        publishedAt: "20/20/20"
-      },
-
-      {
-        author: "James",
-        title: "Royal Family in Ruins2",
-        description: "Marriage issues",
-        url: "Broken/URL",
-        source: "BBC",
-        imageUrl: "Image/URL",
-        category: "Drama",
-        language: "English",
-        countryOrigin: "United Kingdom",
-        publishedAt: "20/20/20"
-      },
-
-      {
-        author: "James",
-        title: "Royal Family in Ruins3",
-        description: "Marriage issues",
-        url: "Broken/URL",
-        source: "BBC",
-        imageUrl: "Image/URL",
-        category: "Drama",
-        language: "English",
-        countryOrigin: "United Kingdom",
-        publishedAt: "20/20/20"
-      }
-    ];
+    this.articleService.articles.subscribe(x => this.articles = x);
   }
-
 }
