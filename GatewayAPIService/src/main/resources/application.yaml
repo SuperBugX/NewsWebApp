@@ -1,12 +1,9 @@
 spring:
   cloud:
     gateway:
-      globalcors:
+     globalcors:
         corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedHeaders:
-              - content-type
-            allowedMethods:
-            - GET
-            - POST
+         '[/**]':
+          allowedMethods:
+          - GET
+          - POST
