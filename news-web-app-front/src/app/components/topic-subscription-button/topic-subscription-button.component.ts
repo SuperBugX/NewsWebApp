@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ArticleService } from 'src/app/services/article.service';
-import axios from 'axios';
-import { WebsocketService } from 'src/app/services/websocket.service';
+import { MessageService } from 'src/app/services/message.service';
 
 
 
@@ -14,22 +13,15 @@ export class TopicSubscriptionButtonComponent implements OnInit {
 
   @Input() topicName: string;
 
-  constructor(private articleService: ArticleService, private websocketService: WebsocketService) { }
+  constructor(private articleService: ArticleService, private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
 
-  getNews() {
-    /*
-    axios
-      .get(`http://localhost:8060/NewsFetcherService/Demonstration2`)
-      .then((response) => {
-        // JSON responses are automatically parsed.
-        console.log(response);
-        this.articleService.setArticles(response.data);
-      });
-    */
-    this.websocketService.connect("ws://localhost:8060/subscription-service/subscribe/websocket");
 
+
+  getNews() {
+    
+    this.messageService._connect();
   }
 }
