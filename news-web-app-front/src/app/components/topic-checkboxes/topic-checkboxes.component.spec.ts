@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TopicFilterOptionsComponent } from './topic-filter-options.component';
+import { TopicCheckboxesComponent } from './topic-checkboxes.component';
 
-describe('TopicFilterOptionsComponent', () => {
-  let component: TopicFilterOptionsComponent;
-  let fixture: ComponentFixture<TopicFilterOptionsComponent>;
+describe('TopicCheckboxesComponent', () => {
+  let component: TopicCheckboxesComponent;
+  let fixture: ComponentFixture<TopicCheckboxesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TopicFilterOptionsComponent ]
+      declarations: [ TopicCheckboxesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TopicFilterOptionsComponent);
+    fixture = TestBed.createComponent(TopicCheckboxesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

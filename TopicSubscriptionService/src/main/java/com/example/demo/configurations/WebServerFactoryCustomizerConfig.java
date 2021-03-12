@@ -1,4 +1,4 @@
-package com.newssite.demo.configurations;
+package com.example.demo.configurations;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.SocketUtils;
 
 @Configuration
-public class WebServerFactoryCustomizerConfiguration implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+public class WebServerFactoryCustomizerConfig implements WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
 
     @Value("${port.number.min}")
     private Integer minPort;

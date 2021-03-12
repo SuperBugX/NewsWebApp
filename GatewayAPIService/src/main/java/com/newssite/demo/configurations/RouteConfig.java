@@ -10,7 +10,7 @@ public class RouteConfig {
 
 	@Bean
 	public RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
-		return builder.routes().route(r -> r.path("/NewsFetcherService/**").uri("lb://News-Fetcher-Service"))
-				.route(r -> r.path("/TopicSubscriptionService/**").filters(f -> f.stripPrefix(1)).uri("lb://Topic-Subscription-Service")).build();
+		return builder.routes().route(r -> r.path("/NewsFetcherService/**").uri("lb://News-Fetcher-Service/"))
+				.route(r -> r.path("/TopicSubscriptionService/**").filters(f->f.stripPrefix(1)).uri("lb:ws://Topic-Subscription-Service")).build();
 	}
 }
