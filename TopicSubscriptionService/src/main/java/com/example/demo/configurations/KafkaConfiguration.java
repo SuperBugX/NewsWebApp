@@ -20,6 +20,7 @@ public class KafkaConfiguration {
 	        configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 	        configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 	        configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+	        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_1");
 	        
 	        return new DefaultKafkaConsumerFactory<>(configProps);
 	    }
@@ -31,5 +32,4 @@ public class KafkaConfiguration {
 	        
 	        return factory;
 	    }
-
 }

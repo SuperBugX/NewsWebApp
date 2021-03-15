@@ -18,7 +18,7 @@ import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.G
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_ROUTE_ATTR;
 
-@Configuration
+//@Configuration <- Uncomment to see logs produced for each successful request 
 public class LoggingFilter implements GlobalFilter {
 	Log log = LogFactory.getLog(getClass());
 
