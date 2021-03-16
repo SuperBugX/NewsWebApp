@@ -12,10 +12,12 @@ export class ArticlesService {
   topicSubscriptionServiceURL: string;
   websocket: WebSocket;
   stompClient: Stomp.Client;
+  test: any;
 
   constructor() {
     this.topicSubscriptionServiceURL =
       'ws://localhost:8060/TopicSubscriptionService/gs-guide-websocket/websocket';
+
 
     let tempArticles = [
       {
@@ -74,11 +76,11 @@ export class ArticlesService {
     this.stompClient = Stomp.over(this.websocket);
 
     this.stompClient.connect({}, (frame) => {
-      this.stompClient.subscribe('/errors', (message) => {
+    this.test = this.stompClient.subscribe('/errors', (message) => {
         console.log('Error: ' + message);
       });
 
-      this.stompClient.subscribe('/topic/greetings', (message) => {
+      this.test = this.stompClient.subscribe('/topic/general', (message) => {
         console.log('/topic/greetings: ' + message);
       });
     },
@@ -87,9 +89,13 @@ export class ArticlesService {
     });
   }
 
+  unsub(){
+    this.test.unsubscribe();
+  }
+
   sendMessage(message){
     if(this.stompClient){
-      this.stompClient.send("/app/test", {}, message);
+      this.stompClient.send("/app/general", {}, message);
     }
     else{
       alert("No connection");

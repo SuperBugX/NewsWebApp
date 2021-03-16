@@ -63,4 +63,11 @@ public class WebSocketController {
 		System.out.println("I got something TECHNO");
 
 	}
+	
+	@KafkaListener(topics="${topics.enabled}", id="first", autoStartup="false")
+	@MessageMapping("/generic")
+	@SendTo("/topic/generic")
+	public void genericLivesNews() {
+		
+	}
 }
