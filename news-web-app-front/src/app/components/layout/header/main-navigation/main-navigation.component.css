@@ -1,10 +1,30 @@
-.heading{
-	margin-top:0;
-	width: 100%;
-	background-color: blue;
-	padding-left: 5%;
-	padding-bottom: 2%;
-	color: white;
-	padding-top: 20px;
-	margin-bottom: 20px;
+.heading {
+  color: white;
+  font-family: "Cinzel";
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 25px;
+}
+
+.heading h1 {
+  border-bottom: 3px solid black;
+  display: inline;
+  text-shadow: 3px 3px 3px black;
+}
+
+header {
+  margin-left: auto;
+  margin-right: auto;
+  position: sticky;
+  top: 0;
+  margin: auto;
+  z-index: 1;
+  width: 75%;
+}
+
+.navbar {
+  border-top: 1px solid black;
+}
+
+.bg-header {
 }

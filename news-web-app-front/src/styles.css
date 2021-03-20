@@ -1,5 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
+@font-face {
+  font-family: Cinzel;
+  src: url(./assets/Fonts/Cinzel/Cinzel-VariableFont_wght.ttf);
+}
+
+@font-face {
+  font-family: Lora;
+  src: url(./assets/Fonts/Lora/Lora-VariableFont_wght.ttf);
+}
+
 body{
 	margin:0;
+	font-family: "Lora";
 }
