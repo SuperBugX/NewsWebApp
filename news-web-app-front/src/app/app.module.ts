@@ -7,10 +7,8 @@ import { MainNavigationComponent } from './components/layout/header/main-navigat
 import { ArticlesComponent } from './components/articles/articles.component';
 import { ArticleComponent } from './components/article/article.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TopicFilterOptionsComponent } from './components/topic-filter-options/topic-filter-options.component';
-import { TopicSubscriptionButtonComponent } from './components/topic-subscription-button/topic-subscription-button.component';
-import { ArticleService } from './services/article.service';
-import { MessageService } from './services/message.service';
+import { TopicCheckboxesComponent } from './components/topic-checkboxes/topic-checkboxes.component';
+import { ArticlesService } from './services/Articles/articles.service';
 
 @NgModule({
   declarations: [
@@ -18,15 +16,14 @@ import { MessageService } from './services/message.service';
     MainNavigationComponent,
     ArticlesComponent,
     ArticleComponent,
-    TopicFilterOptionsComponent,
-    TopicSubscriptionButtonComponent
+    TopicCheckboxesComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule
   ],
-  providers: [ArticleService, MessageService],
+  providers: [ArticlesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

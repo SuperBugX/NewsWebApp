@@ -9,11 +9,11 @@
 		<version>2.4.3</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.newssite</groupId>
+	<groupId>com.example</groupId>
 	<artifactId>TopicSubscriptionService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>TopicSubscriptionService</name>
-	<description>Microservice responsible for subscribing to kafka topics and consuming events which are then send to active clients</description>
+	<description>Microservice responsible for providing news content through websockets when consumed from kafka based on set topics from initial websocket communications</description>
 	<properties>
 		<java.version>15</java.version>
 		<spring-cloud.version>2020.0.1</spring-cloud.version>
@@ -22,22 +22,19 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
@@ -63,7 +60,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 

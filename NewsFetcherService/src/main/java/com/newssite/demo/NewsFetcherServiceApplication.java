@@ -21,5 +21,5 @@ public class NewsFetcherServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(NewsFetcherServiceApplication.class, args);
 	}
-	
+
 }
