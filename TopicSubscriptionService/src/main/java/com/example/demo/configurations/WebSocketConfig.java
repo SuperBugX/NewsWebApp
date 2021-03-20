@@ -21,11 +21,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/gs-guide-websocket").setAllowedOrigins("http://localhost:4200").withSockJS();
+		registry.addEndpoint("/topics-websocket").setAllowedOrigins("http://localhost:4200").withSockJS();
 	}
-	
+
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
-	     registration.interceptors(new TopicSubscriptionInterceptor());
+		registration.interceptors(new TopicSubscriptionInterceptor());
 	}
 }

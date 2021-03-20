@@ -7,19 +7,24 @@ import { ArticlesService } from 'src/app/services/Articles/articles.service';
   styleUrls: ['./topic-checkboxes.component.css'],
 })
 export class TopicCheckboxesComponent implements OnInit {
-  constructor(private articlesService: ArticlesService) {}
+  constructor(private articlesService: ArticlesService) { }
 
   topics: string[];
 
   ngOnInit(): void {
-    this.topics = ['Sports', 'General'];
+    this.topics = ['Sports', 'General', 'Business', 'Entertainment', 'Health', 'Science', 'Technology'];
   }
 
-  updateNewsFeed() {
-    this.articlesService.sendMessage('YESYSYS');
-  }
+  updateTopicSubscriptions() {
 
-  unsub() {
-    this.articlesService.unsub();
+    let topicsArray: string[];
+    let selectedTopicBoxesElements = document.getElementById("topicCheckBoxes").querySelector("input:checked");
+    this.articlesService.currentTopicSubscriptions.forEach((topic) => { this.articlesService.unsubscribeTopic(topic) });
+
+    for (var i = 0; selectedTopicBoxesElements[i]; ++i) {
+      this.articlesService.subscribeTopic(selectedTopicBoxesElements[i]);
+      topicsArray.push(selectedTopicBoxesElements[i]);
+    }
+    this.articlesService.requestNewsArticles(topicsArray);
   }
 }

@@ -2,6 +2,7 @@ package com.newssite.demo.controllers;
 
 import java.util.LinkedList;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,99 @@ public class NewsFetcherController {
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
+	
+	@RequestMapping("/Demonstration2")
+	public void demo(@RequestParam("categories") String[] categories) {
+		// Demonstration Code
+
+		ErrorTemplate errorTemplate;
+
+		MediaStack api = mediaStackBuilder.categories(categories).build();
+
+		try {
+
+			// Perform API request
+			String apiJsonResponse = api.getLiveArticles();
+
+			ObjectMapper jsonMapper = new ObjectMapper();
+			JsonNode responseNode;
+			JsonNode dataNode;
+			JsonNode articleNode;
+			Article tempArticle;
+
+			responseNode = jsonMapper.readTree(apiJsonResponse);
+			dataNode = responseNode.get("data");
+
+			// Place the articles in the correct data-structures
+			for (int i = 0; i < dataNode.size(); i++) {
+				
+				System.out.println("Loop Here");
+
+				articleNode = dataNode.get(i);
+				tempArticle = Article.builder().author(articleNode.get("author").asText())
+						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
+						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
+						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
+						.language(articleNode.get("language").asText())
+						.countryOrigin(articleNode.get("country").asText())
+						.publishedAt(articleNode.get("published_at").asText()).build();
+				
+				System.out.println(tempArticle.getCategory() + articleNode.get("category").asText());
+
+				switch (tempArticle.getCategory()) {
+
+				case "general":
+					System.out.println("I sent something HERE");
+					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "business":
+					System.out.println("I sent something HERE BBBBBBB");
+					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "entertainment":
+					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "health":
+					System.out.println("I sent something HERE HEALTH" );
+					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "science":
+					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "sports":
+					System.out.println("I sent something HERE");
+					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				case "technology":
+					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
+					break;
+
+				default:
+					break;
+				}
+			}
+
+		} catch (MediaStackResponseErrorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (MediaStackJSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@RequestMapping("/Demonstration")
 	public void demo() {

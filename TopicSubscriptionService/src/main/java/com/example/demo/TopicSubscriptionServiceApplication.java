@@ -20,7 +20,7 @@ public class TopicSubscriptionServiceApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/greeting-javaconfig").allowedOriginPatterns("http://localhost:8060").allowCredentials(true);
+				registry.addMapping("/**").allowedOriginPatterns("http://localhost:8060").allowCredentials(true);
 			}
 		};
 	}

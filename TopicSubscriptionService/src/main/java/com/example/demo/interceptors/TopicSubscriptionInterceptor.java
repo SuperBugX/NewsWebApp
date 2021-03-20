@@ -33,7 +33,8 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
 				if (topic != null) {
 					topic.incrementSubscriptions();
 				} else {
-					topics.put(topicID, new TopicSubscription(headerAccessor.getDestination().replaceFirst("/topic", "")));
+					topics.put(topicID,
+							new TopicSubscription(headerAccessor.getDestination().replaceFirst("/topic", "")));
 				}
 				break;
 
@@ -47,10 +48,10 @@ public class TopicSubscriptionInterceptor implements ChannelInterceptor {
 			}
 		}
 
-		 for (Map.Entry<String,TopicSubscription> entry : topics.entrySet())  
-	            System.out.println("Key = " + entry.getKey() + 
-	                             ", Value = " + entry.getValue().getSubscriptions() + " name = :" + entry.getValue().getName()); 
-	    
+		for (Map.Entry<String, TopicSubscription> entry : topics.entrySet())
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue().getSubscriptions()
+					+ " name = :" + entry.getValue().getName());
+
 		return message;
 	}
 }
