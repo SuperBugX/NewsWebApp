@@ -1,15 +1,16 @@
 .heading {
-  color: white;
   font-family: "Cinzel";
   text-align: center;
-  padding-top: 10px;
-  padding-bottom: 25px;
+  padding-top: 20px;
+  margin-bottom: 20px;
 }
 
 .heading h1 {
   border-bottom: 3px solid black;
   display: inline;
-  text-shadow: 3px 3px 3px black;
+  line-height: 1.4;
+  text-shadow: 1px 2px 10px gray;
+  font-size: 50px;
 }
 
 header {
@@ -17,14 +18,31 @@ header {
   margin-right: auto;
   position: sticky;
   top: 0;
-  margin: auto;
-  z-index: 1;
-  width: 75%;
+  z-index: 10;
+  width: 100%;
+  background-color: white;
 }
 
 .navbar {
+  font-size: 15px;
   border-top: 1px solid black;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
-.bg-header {
+.navbar-nav{
+  margin-right: 110px;
 }
+
+.nav-item {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.breadcrumb{
+  font-size: 20px;
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  margin-bottom: 0px;
+}
+

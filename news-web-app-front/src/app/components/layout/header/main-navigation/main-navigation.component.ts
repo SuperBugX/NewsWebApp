@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {formatDate} from '@angular/common';
 
 @Component({
   selector: 'app-main-navigation',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainNavigationComponent implements OnInit {
 
-  constructor() { }
+  currentDate: any;
 
-  ngOnInit(): void {
+  constructor() {
+    this.currentDate = formatDate(new Date(), 'dd/MM/yyyy', 'en');
   }
 
+  ngOnInit(): void {
+
+  }
 }
