@@ -1,5 +1,65 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
 
-body{
-	margin:0;
+@font-face {
+  font-family: Cinzel;
+  src: url(./assets/Fonts/Cinzel/Cinzel-VariableFont_wght.ttf);
+}
+
+@font-face {
+  font-family: Lora;
+  src: url(./assets/Fonts/Lora/Lora-VariableFont_wght.ttf);
+}
+
+body,
+html {
+  width: 100%;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  /* font-family: "Lora"; */
+}
+
+a {
+  color: #0000FF;
+}
+
+.btn-sports {
+  background-color: #009c05;
+  color: white;
+}
+
+.btn-health {
+  background-color: #006ba1;
+  color: white;
+}
+
+.btn-general {
+  background-color: #424242;
+  color: white;
+}
+
+.btn-business {
+  background-color: #0055de;
+  color: white;
+}
+
+.btn-technology {
+  background-color: #4300c9;
+  color: white;
+}
+
+.btn-science {
+  background-color: #00c3d1;
+  color: white;
+}
+
+.btn-entertainment {
+  background-color: #edba00;
+  color: white;
+}
+
+.btn-sports {
+  background-color: #009c05;
+  color: white;
 }

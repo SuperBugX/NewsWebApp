@@ -9,6 +9,9 @@ import { ArticleComponent } from './components/article/article.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopicCheckboxesComponent } from './components/topic-checkboxes/topic-checkboxes.component';
 import { ArticlesService } from './services/Articles/articles.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FooterComponent } from './components/layout/footer/footer/footer.component';
+import { AccountCardComponent } from './components/account-card/account-card.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +19,15 @@ import { ArticlesService } from './services/Articles/articles.service';
     MainNavigationComponent,
     ArticlesComponent,
     ArticleComponent,
-    TopicCheckboxesComponent
+    TopicCheckboxesComponent,
+    FooterComponent,
+    AccountCardComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [ArticlesService],
   bootstrap: [AppComponent]

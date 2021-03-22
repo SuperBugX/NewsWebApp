@@ -1,10 +1,46 @@
-.heading{
-	margin-top:0;
-	width: 100%;
-	background-color: blue;
-	padding-left: 5%;
-	padding-bottom: 2%;
-	color: white;
-	padding-top: 20px;
-	margin-bottom: 20px;
+.heading h1 {
+  font-family: "Cinzel";
+  border-bottom: 3px solid black;
+
+  line-height: 1.3;
+  text-shadow: 1px 2px 15px gray;
+  font-size: 35px;
+}
+
+.heading {
+  text-align: center;
+}
+
+header {
+  margin-left: auto;
+  margin-right: auto;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  background-color: white;
+}
+
+.navbar {
+  font-size: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.nav-item {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.category-wrapper button {
+  height: 30px;
+  line-height: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.breadcrumb {
+  font-size: 13px;
+  border-top: 1px solid black;
+  margin-bottom: 0;
 }
