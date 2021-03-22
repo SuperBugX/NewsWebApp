@@ -27,3 +27,8 @@ footer a:hover {
   min-width: 200px;
   max-width: 300px;
 }
+
+.list-group-item {
+  padding: 5px;
+  font-weight: 900;
+}
