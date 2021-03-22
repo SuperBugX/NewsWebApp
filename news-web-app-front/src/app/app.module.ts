@@ -11,6 +11,7 @@ import { TopicCheckboxesComponent } from './components/topic-checkboxes/topic-ch
 import { ArticlesService } from './services/Articles/articles.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './components/layout/footer/footer/footer.component';
+import { AccountCardComponent } from './components/account-card/account-card.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FooterComponent } from './components/layout/footer/footer/footer.compon
     ArticlesComponent,
     ArticleComponent,
     TopicCheckboxesComponent,
-    FooterComponent
+    FooterComponent,
+    AccountCardComponent
   ],
   imports: [
     BrowserModule,
