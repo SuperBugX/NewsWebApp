@@ -3,25 +3,44 @@
 
 @font-face {
   font-family: Cinzel;
-  src: url(./assets/Fonts/Cinzel/Cinzel-VariableFont_wght.ttf);
+  src: url(./assets/fonts/Cinzel/Cinzel-VariableFont_wght.ttf);
 }
 
 @font-face {
   font-family: Lora;
-  src: url(./assets/Fonts/Lora/Lora-VariableFont_wght.ttf);
+  src: url(./assets/fonts/Lora/Lora-VariableFont_wght.ttf);
 }
 
-body,
-html {
-  width: 100%;
-  height: auto;
-  margin: 0px;
-  padding: 0px;
-  /* font-family: "Lora"; */
+html,
+body {
+  margin: 0;
+
+}
+
+app-root {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
 }
 
 a {
   color: #0000FF;
+}
+
+p {
+  font-size: 20px;
+  color: black;
+  text-align: justify;
+}
+
+@media only screen and (max-width: 900px) {
+  p {
+    text-align: left;
+  }
 }
 
 .btn-sports {

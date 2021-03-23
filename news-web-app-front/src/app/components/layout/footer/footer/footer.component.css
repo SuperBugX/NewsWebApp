@@ -1,14 +1,14 @@
 footer {
   background-color: black;
   width: 100%;
-  clear: both;
   color: white;
   padding-top: 20px;
+  margin-top: 20px;
   font-size: 15px;
 }
 
 footer a {
-  font-size: larger;
+  color: #5c9aff;
 }
 
 .list-group a:hover {
