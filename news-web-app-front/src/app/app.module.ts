@@ -12,6 +12,9 @@ import { ArticlesService } from './services/Articles/articles.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './components/layout/footer/footer/footer.component';
 import { AccountCardComponent } from './components/account-card/account-card.component';
+import { HomapageComponent } from './components/homapage/homapage.component';
+import { DatePipe } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -21,15 +24,19 @@ import { AccountCardComponent } from './components/account-card/account-card.com
     ArticleComponent,
     TopicCheckboxesComponent,
     FooterComponent,
-    AccountCardComponent
+    AccountCardComponent,
+    HomapageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    TranslateModule.forRoot({
+      defaultLanguage: 'en'
+    })
   ],
-  providers: [ArticlesService],
+  providers: [ArticlesService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
