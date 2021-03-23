@@ -1,7 +1,8 @@
 .content{
-	background-color: #f0f0f0;
-	width: 75%;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 35px;
+  background-color: #fafafa;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 35px;
+  flex: 1;
 }

@@ -1,5 +1,5 @@
 footer {
-  background-color: black;
+  background-color: #1a1a1a;
   width: 100%;
   color: white;
   padding-top: 20px;
@@ -26,6 +26,12 @@ footer a:hover {
 .list-group {
   min-width: 200px;
   max-width: 300px;
+}
+
+.list-group-head{
+  padding: 5px;
+  background-color: black;
+  font-weight: 700;
 }
 
 .list-group-item {
