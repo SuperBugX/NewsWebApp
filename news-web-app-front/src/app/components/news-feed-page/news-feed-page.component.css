@@ -1,0 +1,12 @@
+.article-category-header {
+  width: 100%;
+  font-size: 20px;
+  padding: 5px;
+  padding-left: 20px;
+  color: white;
+}
+
+.side-image-wrapper {
+  display: flex;
+  flex: 1 1 auto;
+}

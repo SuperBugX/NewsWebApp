@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import "~bootstrap-icons/font/bootstrap-icons.css";
+@import '../src/assets/js/country-select-js-master/build/css/countrySelect.min.css';
 
 @font-face {
   font-family: Cinzel;
@@ -28,16 +29,21 @@ a {
   color: #0000FF;
 }
 
-p {
+p,
+label {
   font-size: 20px;
   color: black;
   text-align: justify;
 }
 
-.button-icon {
+.btn-icon {
   margin-left: 5px;
   position: relative;
   top: 4px;
+}
+
+.in-text-icon {
+  margin-left: 5px;
 }
 
 @media only screen and (max-width: 900px) {
@@ -52,7 +58,7 @@ p {
 }
 
 .btn-health {
-  background-color: #006ba1;
+  background-color: #d9534f;
   color: white;
 }
 
@@ -81,7 +87,140 @@ p {
   color: white;
 }
 
-.btn-sports {
+.btn-sports:hover,
+.btn-health:hover,
+.btn-general:hover,
+.btn-business:hover,
+.btn-technology:hover,
+.btn-science:hover,
+.btn-entertainment:hover {
+  background-color: black;
+  color: white;
+}
+
+.btn-outline-sports {
+  background-color: white;
+  color: #009c05;
+  border-color: #009c05;
+}
+
+.btn-outline-health {
+  background-color: white;
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
+.btn-outline-general {
+  background-color: white;
+  color: #424242;
+  border-color: #424242;
+}
+
+.btn-outline-business {
+  background-color: white;
+  color: #0055de;
+  border-color: #0055de;
+}
+
+.btn-outline-technology {
+  background-color: white;
+  color: #4300c9;
+  border-color: #4300c9;
+}
+
+.btn-outline-science {
+  background-color: white;
+  color: #00c3d1;
+  border-color: #00c3d1;
+}
+
+.btn-outline-entertainment {
+  background-color: white;
+  color: #edba00;
+  border-color: #edba00;
+}
+
+
+.btn-outline-sports:hover {
   background-color: #009c05;
   color: white;
+  border-color: #009c05;
+}
+
+.btn-outline-health:hover {
+  background-color: #d9534f;
+  color: white;
+  border-color: #d9534f;
+}
+
+.btn-outline-general:hover {
+  background-color: #424242;
+  color: white;
+  border-color: #424242;
+}
+
+.btn-outline-business:hover {
+  background-color: #0055de;
+  color: white;
+  border-color: #0055de;
+}
+
+.btn-outline-technology:hover {
+  background-color: #4300c9;
+  color: white;
+  border-color: #4300c9;
+}
+
+.btn-outline-science:hover {
+  background-color: #00c3d1;
+  color: white;
+  border-color: #00c3d1;
+}
+
+.btn-outline-entertainment:hover {
+  background-color: #edba00;
+  color: white;
+  border-color: #edba00;
+}
+
+.btn-outline-sports-filled {
+  background-color: #009c05;
+  color: white;
+  border-color: #009c05;
+}
+
+.btn-outline-health-filled {
+  background-color: #d9534f;
+  color: white;
+  border-color: #d9534f;
+}
+
+.btn-outline-general-filled {
+  background-color: #424242;
+  color: white;
+  border-color: #424242;
+}
+
+.btn-outline-business-filled {
+  background-color: #0055de;
+  color: white;
+  border-color: #0055de;
+}
+
+.btn-outline-technology-filled {
+  background-color: #4300c9;
+  color: white;
+  border-color: #4300c9;
+}
+
+.btn-outline-science-filled {
+  background-color: #00c3d1;
+  color: white;
+  border-color: #00c3d1;
+}
+
+.btn-outline-entertainment-filled {
+  background-color: #edba00;
+  color: white;
+  border-color: #edba00;
 }
