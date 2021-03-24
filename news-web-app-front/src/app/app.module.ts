@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainNavigationComponent } from './components/layout/header/main-navigation/main-navigation.component';
@@ -15,6 +14,9 @@ import { AccountCardComponent } from './components/account-card/account-card.com
 import { HomapageComponent } from './components/homapage/homapage.component';
 import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -25,13 +27,15 @@ import { TranslateModule } from '@ngx-translate/core';
     TopicCheckboxesComponent,
     FooterComponent,
     AccountCardComponent,
-    HomapageComponent
+    HomapageComponent,
+    NewsFeedPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     BrowserAnimationsModule,
+    MatGridListModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en'
     })

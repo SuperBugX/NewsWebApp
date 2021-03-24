@@ -1,0 +1,71 @@
+<div class="row mb-5 border-bottom bg-light">
+	<div class="col p-3">
+		<div>
+			<h4>Filters</h4>
+			<form>
+				<div class="d-flex flex-row flex-wrap justify-content-between">
+					<div class="form-item">
+						<div class="btn-group btn-group-toggle d-flex flex-row flex-wrap mb-3" data-toggle="buttons">
+							<label class="btn btn-outline-general mr-1" for="general-checkbox"
+								[ngClass]="{'btn-outline-general-filled': generalCheck}">
+								<input id="general-checkbox" type="checkbox" (change)="generalChecked($event)"> General
+							</label>
+							<label class="btn btn-outline-sports mr-1" for="sports-checkbox"
+								[ngClass]="{'btn-outline-sports-filled': sportsCheck}">
+								<input id="sports-checkbox" type="checkbox" (change)="sportsChecked($event)"> Sports
+							</label>
+							<label class="btn btn-outline-health mr-1" for="health-checkbox"
+								[ngClass]="{'btn-outline-health-filled': healthCheck}">
+								<input id="health-checkbox" type="checkbox" (change)="healthChecked($event)"> Health
+							</label>
+							<label class="btn btn-outline-business mr-1" for="business-checkbox"
+								[ngClass]="{'btn-outline-business-filled': businessCheck}">
+								<input id="business-checkbox" type="checkbox" (change)="businessChecked($event)">
+								Business
+							</label>
+							<label class="btn btn-outline-technology mr-1" for="technology-checkbox"
+								[ngClass]="{'btn-outline-technology-filled': technologyCheck}">
+								<input id="technology-checkbox" type="checkbox" (change)="technologyChecked($event)">
+								Technology
+							</label>
+							<label class="btn btn-outline-science mr-1" for="science-checkbox"
+								[ngClass]="{'btn-outline-science-filled': scienceCheck}">
+								<input id="science-checkbox" type="checkbox" (change)="scienceChecked($event)"> Science
+							</label>
+							<label class="btn btn-outline-entertainment mr-1" for="entertainment-checkbox"
+								[ngClass]="{'btn-outline-entertainment-filled': entertainmentCheck}">
+								<input id="entertainment-checkbox" type="checkbox"
+									(change)="entertainmentChecked($event)"> Entertainment
+							</label>
+						</div>
+					</div>
+
+					<div class="form-item mt-2">
+						<label class="mr-2" for="country_selector">Country</label>
+						<input id="country_selector" type="text">
+					</div>
+					<div class="form-item" style="display:none;">
+						<input type="text" id="country_selector_code" name="country_selector_code"
+							data-countrycodeinput="1" readonly="readonly"
+							placeholder="Selected country code will appear here" />
+					</div>
+					<button type="submit" class="btn btn-primary mb-2">Search <i
+							class="bi bi-search in-text-icon"></i></button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+
+		<mat-grid-list cols="4" rowHeight="100px">
+			<mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows"
+				[style.background]="tile.color">
+				{{tile.text}}
+			</mat-grid-tile>
+		</mat-grid-list>
+
+	</div>
+</div>
