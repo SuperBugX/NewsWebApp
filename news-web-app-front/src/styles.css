@@ -36,6 +36,14 @@ label {
   text-align: justify;
 }
 
+.text-wrap{
+  word-wrap: break-word;
+}
+
+button a{
+  color:black;
+}
+
 .btn-icon {
   margin-left: 5px;
   position: relative;
@@ -46,10 +54,24 @@ label {
   margin-left: 5px;
 }
 
+.bigger-icon{
+  font-size: 20px;
+}
+
+.bigger-text {
+  font-size: 25px;
+}
+
 @media only screen and (max-width: 900px) {
   p {
-    text-align: left;
+    text-align: left !important;
   }
+}
+
+@media (max-width: 768px) {
+    .logo h1, .logo {
+        font-size: 40px !important;
+    }
 }
 
 .btn-sports {

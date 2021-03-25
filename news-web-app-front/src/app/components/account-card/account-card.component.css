@@ -1,2 +1,10 @@
-.account-wrapper {
+.username-holder {
+  width: 220px;
+  margin: 0%;
+  word-wrap: break-word;
+}
+
+.sign-in-btn:hover>a,
+.sign-in-btn:hover {
+  color: white;
 }

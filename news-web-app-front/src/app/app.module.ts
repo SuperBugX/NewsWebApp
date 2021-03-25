@@ -4,9 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainNavigationComponent } from './components/layout/header/main-navigation/main-navigation.component';
 import { ArticlesComponent } from './components/articles/articles.component';
-import { ArticleComponent } from './components/article/article.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TopicCheckboxesComponent } from './components/topic-checkboxes/topic-checkboxes.component';
 import { ArticlesService } from './services/Articles/articles.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './components/layout/footer/footer/footer.component';
@@ -16,6 +14,14 @@ import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { SignInComponent } from './components/sign-in/sign-in.component';
+import { NewsCategoryFilterComponent } from './components/news-category-filter/news-category-filter.component';
+import { LargeArticleComponent } from './components/large-article/large-article.component';
+import { SmallArticleComponent } from './components/small-article/small-article.component';
+import { HorizontalImageArticleComponent } from './components/horizontal-image-article/horizontal-image-article.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
@@ -23,12 +29,15 @@ import {MatButtonModule} from '@angular/material/button';
     AppComponent,
     MainNavigationComponent,
     ArticlesComponent,
-    ArticleComponent,
-    TopicCheckboxesComponent,
     FooterComponent,
     AccountCardComponent,
     HomapageComponent,
     NewsFeedPageComponent,
+    SignInComponent,
+    NewsCategoryFilterComponent,
+    LargeArticleComponent,
+    SmallArticleComponent,
+    HorizontalImageArticleComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +45,10 @@ import {MatButtonModule} from '@angular/material/button';
     NgbModule,
     BrowserAnimationsModule,
     MatGridListModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatButtonModule,
+    ReactiveFormsModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en'
     })

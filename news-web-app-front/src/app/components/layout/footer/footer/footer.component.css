@@ -26,6 +26,8 @@ footer a:hover {
 .list-group {
   min-width: 200px;
   max-width: 300px;
+  margin-right: 40px;
+  margin-top: 10px;
 }
 
 .list-group-head{
