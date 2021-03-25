@@ -1,14 +1,44 @@
-<div class="account-wrapper">
+<div *ngIf="true;else loggedIn">
 	<div class="d-flex justify-content-center">
 		<div class="card border-0">
 			<div class="d-flex align-items-center">
 				<div class="mr-4 mt-2">
-					<div class="d-flex flex-column align-items-center"> <button
-							class="btn btn-outline-primary mb-2">Sign-In</button> <button
-							class="btn btn-primary">Sign-Up</button> </div>
+					<div class="d-flex flex-column align-items-center">
+						
+						<button class="btn btn-primary mb-2"><a class="text-white">Sign-Up<i class="bi bigger-icon btn-icon bi-pencil-square"></i></a></button>
+						<button class="btn btn-outline-primary mb-2 sign-in-btn"><a routerLink="sign-in">Sign-In <i class="bi bigger-icon btn-icon bi-box-arrow-in-right"></i></a></button>
+					</div>
 				</div>
-				<img src="/assets/images/Account/user.svg" class="rounded" width="100">
+				<img src="/assets/images/Account/not-logged-in-user.svg" class="rounded img" width="100">
 			</div>
 		</div>
 	</div>
 </div>
+
+<ng-template #loggedIn>
+<div>
+	<div class="d-flex justify-content-center">
+		<div class="card border-0">
+			<div class="d-flex align-items-center text-center">
+				<div class="mr-4 mt-2">
+					<h5 class="border-bottom username-holder">Username XXXX</h5>
+					<div class="d-flex flex-column align-items-center">
+						<div class="d-flex flex-row mt-2">
+							<button class="btn btn-outline-primary w-50"><a>Account Settings</a></button>
+							<button class="btn btn-primary">
+
+								<div class="d-flex flex-column">
+									<a>Log-Out</a>
+									<i class="bi bigger-icon bi-box-arrow-left"></i>
+								</div>
+
+							</button>
+						</div>
+					</div>
+				</div>
+				<img src="/assets/images/Account/logged-in-user.svg" class="rounded img mr-1" width="100">
+			</div>
+		</div>
+	</div>
+</div>
+</ng-template>

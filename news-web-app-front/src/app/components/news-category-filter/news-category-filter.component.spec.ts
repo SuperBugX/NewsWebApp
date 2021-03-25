@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArticleComponent } from './article.component';
+import { NewsCategoryFilterComponent } from './news-category-filter.component';
 
-describe('ArticleComponent', () => {
-  let component: ArticleComponent;
-  let fixture: ComponentFixture<ArticleComponent>;
+describe('NewsCategoryFilterComponent', () => {
+  let component: NewsCategoryFilterComponent;
+  let fixture: ComponentFixture<NewsCategoryFilterComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ArticleComponent ]
+      declarations: [ NewsCategoryFilterComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArticleComponent);
+    fixture = TestBed.createComponent(NewsCategoryFilterComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TopicCheckboxesComponent } from './topic-checkboxes.component';
+import { LargeArticleComponent } from './large-article.component';
 
-describe('TopicCheckboxesComponent', () => {
-  let component: TopicCheckboxesComponent;
-  let fixture: ComponentFixture<TopicCheckboxesComponent>;
+describe('LargeArticleComponent', () => {
+  let component: LargeArticleComponent;
+  let fixture: ComponentFixture<LargeArticleComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TopicCheckboxesComponent ]
+      declarations: [ LargeArticleComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TopicCheckboxesComponent);
+    fixture = TestBed.createComponent(LargeArticleComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
