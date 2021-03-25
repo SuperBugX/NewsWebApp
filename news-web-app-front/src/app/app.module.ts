@@ -23,6 +23,8 @@ import { HorizontalImageArticleComponent } from './components/horizontal-image-a
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
+import { AccountRegistrationComponent } from './components/account-registration/account-registration.component';
+import {MatStepperModule} from '@angular/material/stepper';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import {MatButtonModule} from '@angular/material/button';
     LargeArticleComponent,
     SmallArticleComponent,
     HorizontalImageArticleComponent,
+    AccountRegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,6 +51,7 @@ import {MatButtonModule} from '@angular/material/button';
     MatCheckboxModule,
     MatSelectModule,
     MatButtonModule,
+    MatStepperModule,
     ReactiveFormsModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en'
