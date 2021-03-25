@@ -1,23 +1,64 @@
-<button mat-raised-button (click)="isEditable = !isEditable">
-    {{!isEditable ? 'Enable edit mode' : 'Disable edit mode'}}
-</button>
-
 <mat-horizontal-stepper linear #stepper>
-    <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
-        <form [formGroup]="firstFormGroup">
-            <ng-template matStepLabel>Fill out your name</ng-template>
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
-            </mat-form-field>
-            <div>
-                <button mat-button matStepperNext>Next</button>
+    <mat-step [stepControl]="accountForm" [editable]="true">
+        <form [formGroup]="accountForm">
+            <ng-template matStepLabel>Account Details</ng-template>
+            <h2>Step 1: Account Details</h2>
+            <div class="row border p-3">
+                <div class="col pl-0">
+
+                    <mat-label>Username</mat-label>
+                    <input class="form-control bigger-text" matInput formControlName="username"
+                        placeholder="Enter your username" required>
+
+                    <mat-label>Email</mat-label>
+                    <input class="form-control bigger-text" matInput formControlName="email"
+                        placeholder="Enter your email" required>
+
+                    <mat-label>Password</mat-label>
+                    <input class="form-control bigger-text" matInput formControlName="password"
+                        placeholder="Enter your password" required>
+
+                    <mat-label>Confirm Password</mat-label>
+                    <input class="form-control bigger-text" matInput formControlName="passwordConfirm"
+                        placeholder="Enter your password again as confirmation" required>
+
+                    <div class="form-item mt-2">
+                        <label class="mr-2" for="country_selector">Country</label>
+                        <input id="country_selector" type="text">
+                    </div>
+                    <div class="form-item" style="display:none;">
+                        <input type="text" matInput formControlName="preferedCountry" id="country_selector_code"
+                            name="country_selector_code" data-countrycodeinput="1" readonly="readonly"
+                            placeholder="Selected country code will appear here" />
+                    </div>
+                </div>
+                <div class="col border-left">
+                    <h3>How do we use your information</h3>
+                    <div class="jumbotron">
+                        <p>
+
+                            All of your information collected is not provided or sold to any other external third party
+                            except for the information provided on your preferences on news categories which is used for
+                            legitimate news discovery and retrieval purposes.
+                        </p>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="d-flex flex-row-reverse">
+                        <button mat-raised-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </div>
             </div>
         </form>
     </mat-step>
-    <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
-        <form [formGroup]="secondFormGroup">
-            <ng-template matStepLabel>Fill out your address</ng-template>
+    <mat-step [stepControl]="topicForm" [editable]="true">
+        <form [formGroup]="topicForm">
+            <ng-template matStepLabel>Favourite Topics</ng-template>
+            <h2>Step 1: Favourite Topics</h2>
             <mat-form-field>
                 <mat-label>Address</mat-label>
                 <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>

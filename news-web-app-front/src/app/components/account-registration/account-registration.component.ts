@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+declare var $: any;
 
 @Component({
   selector: 'app-account-registration',
@@ -8,19 +9,44 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class AccountRegistrationComponent implements OnInit {
 
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  isEditable = false;
+  accountForm: FormGroup;
+  topicForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
 
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
+    this.accountForm = this.formBuilder.group({
+      username: ['', [
+
+      ]],
+      email: ['', [
+
+      ]],
+      password: ['', [
+
+      ]],
+      passwordConfirm: ['', [
+
+      ]],
+      preferedCountry: ['', [
+
+      ]]
     });
-    this.secondFormGroup = this.formBuilder.group({
+
+    this.topicForm = this.formBuilder.group({
       secondCtrl: ['', Validators.required]
+    });
+
+    $("#country_selector").countrySelect({
+      defaultCountry: "gb",
+      onlyCountries: [
+        'ar', 'au', 'at', 'be', 'br', 'bg', 'ca', 'cn', 'co', 'cz', 'eg', 'fr', 'de',
+        'gr', 'hk', 'hu', 'in', 'id', 'ie', 'il', 'it', 'jp', 'lv', 'lt', 'my', 'mx',
+        'ma', 'nl', 'nz', 'ng', 'no', 'ph', 'pl', 'pt', 'ro', 'sa', 'rs', 'sg', 'sk',
+        'si', 'za', 'kr', 'se', 'ch', 'tw', 'th', 'tr', 'ae', 'ua', 'gb', 'us', 've'
+      ],
+      responsiveDropdown: true,
     });
   }
 }

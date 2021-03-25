@@ -5,3 +5,8 @@
 .mat-form-field {
   margin-top: 16px;
 }
+
+mat-label{
+  font-size: 25px;
+  color: black;
+}
