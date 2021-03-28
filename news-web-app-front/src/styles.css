@@ -8,11 +8,6 @@
   src: url(./assets/fonts/Cinzel/Cinzel-VariableFont_wght.ttf);
 }
 
-@font-face {
-  font-family: Lora;
-  src: url(./assets/fonts/Lora/Lora-VariableFont_wght.ttf);
-}
-
 html,
 body {
   margin: 0;
@@ -42,20 +37,6 @@ label {
 
 button a{
   color:black;
-}
-
-.btn-icon {
-  margin-left: 5px;
-  position: relative;
-  top: 4px;
-}
-
-.in-text-icon {
-  margin-left: 5px;
-}
-
-.bigger-icon{
-  font-size: 20px;
 }
 
 .bigger-text {

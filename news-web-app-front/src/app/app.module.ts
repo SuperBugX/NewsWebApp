@@ -28,6 +28,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
+import { MyAccountComponent } from './components/my-account/my-account.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +46,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     SmallArticleComponent,
     HorizontalImageArticleComponent,
     AccountRegistrationComponent,
+    NotFoundPageComponent,
+    MyAccountComponent,
   ],
   imports: [
     BrowserModule,

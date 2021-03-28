@@ -6,11 +6,12 @@
   font-size: 35px;
 }
 
-.heading a{
+.heading a {
   text-decoration: none;
 }
 
 .heading {
+  margin-top: 8px;
   text-align: center;
 }
 
@@ -41,10 +42,4 @@ header {
   height: 30px;
   line-height: 5px;
   margin: 5px;
-}
-
-.breadcrumb {
-  font-size: 13px;
-  border-top: 1px solid black;
-  margin-bottom: 0;
 }

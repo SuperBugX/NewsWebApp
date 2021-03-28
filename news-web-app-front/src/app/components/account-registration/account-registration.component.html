@@ -1,11 +1,11 @@
-<mat-horizontal-stepper class="stepper-wrapper" linear #stepper>
+<mat-vertical-stepper class="stepper-wrapper" linear #stepper>
     <mat-step [stepControl]="accountForm" [editable]="true">
         <form [formGroup]="accountForm">
             <!-- First Step for Account Details Acquisition -->
             <ng-template matStepLabel>Account Details</ng-template>
             <h2>Step 1: Account Details</h2>
-            <div class="row border p-3">
-                <div class="col pl-0">
+            <div class="row p-1">
+                <div class="col">
 
                     <!-- Inputs -->
                     <div class="form-group">
@@ -106,8 +106,10 @@
                     <h4>How do we use your information</h4>
                     <div class="jumbotron">
                         <p>
-                            All of your information collected is not provided or sold to any other external third party
-                            except for the information provided on your preferences on news categories which is used for
+                            All of your information collected is not provided or sold to any other external third
+                            party
+                            except for the information provided on your preferences on news categories which is used
+                            for
                             legitimate news discovery and retrieval purposes.
                         </p>
                     </div>
@@ -116,7 +118,7 @@
             <div class="row mt-3">
                 <div class="col">
                     <div class="d-flex flex-row-reverse">
-                        <button mat-raised-button color="primary" matStepperNext>Next</button>
+                        <button mat-raised-button color="primary" class="next-btn" matStepperNext>Next</button>
                     </div>
                 </div>
             </div>
@@ -128,14 +130,16 @@
             <!-- Second Step for News Topic Preferences Choosing -->
             <ng-template matStepLabel>Favourite Topics</ng-template>
             <h2>Step 2: Favourite Topics</h2>
-            <div class="row border p-3">
-                <div class="col-md-4 pl-0">
+            <div class="row">
+                <div class="col-md-4">
                     <!-- User Message -->
-                    <h4>Why Should you Choose</h4>
                     <div class="jumbotron">
+                        <h4>Why Should you Choose</h4>
                         <p>
-                            When choosing one or more of these available news topics you can help us better understand
-                            your preferences and decide easier what content to display too you each time you visit this
+                            When choosing one or more of these available news topics you can help us better
+                            understand
+                            your preferences and decide easier what content to display too you each time you visit
+                            this
                             site.
                         </p>
                         <p>
@@ -151,7 +155,7 @@
 
                                 <div>
                                     <!-- News Topic Options -->
-                                    <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start"
+                                    <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start align-items-center"
                                         data-toggle="buttons">
                                         <label class="btn btn-outline-general topic-item shadow" for="general-checkbox"
                                             [ngClass]="{'btn-outline-general-filled': generalCheck}">
@@ -175,7 +179,7 @@
                                 </div>
 
                                 <div>
-                                    <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start"
+                                    <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start align-items-center"
                                         data-toggle="buttons">
                                         <label class="btn btn-outline-business topic-item shadow"
                                             for="business-checkbox"
@@ -200,7 +204,7 @@
                                     </div>
                                 </div>
 
-                                <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start"
+                                <div class="btn-group btn-group-toggle d-flex flex-wrap justify-content-start align-items-center"
                                     data-toggle="buttons">
                                     <label class="btn btn-outline-entertainment topic-item shadow"
                                         for="entertainment-checkbox"
@@ -219,7 +223,7 @@
             <div class="row mt-3">
                 <div class="col">
                     <div class="d-flex flex-row-reverse">
-                        <button mat-raised-button color="primary" matStepperNext>Next</button>
+                        <button mat-raised-button color="primary" class="next-btn" matStepperNext>Next</button>
                     </div>
                 </div>
             </div>
@@ -238,4 +242,4 @@
             </div>
         </div>
     </mat-step>
-</mat-horizontal-stepper>
+</mat-vertical-stepper>
