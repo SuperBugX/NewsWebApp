@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-declare var $, JQuery: any;
 
 @Component({
   selector: 'app-homapage',
@@ -12,10 +11,5 @@ export class HomapageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    $("#country_selector").countrySelect({
-      defaultCountry: "gb",
-      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
-      responsiveDropdown: true
-    });
   }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+// JQuery Var (Needed for JQuery)
 declare var $: any;
 
 @Component({
@@ -8,6 +9,7 @@ declare var $: any;
 })
 export class NewsCategoryFilterComponent implements OnInit {
 
+  // Variables
   generalCheck: boolean;
   sportsCheck: boolean;
   healthCheck: boolean;
@@ -20,6 +22,7 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // JQuery Code Needed for Country Selector in HTML
     $("#country_selector").countrySelect({
       defaultCountry: "gb",
       onlyCountries: [
@@ -32,6 +35,9 @@ export class NewsCategoryFilterComponent implements OnInit {
     });
   }
 
+  // Methods
+  
+  // Button Toggle Methods used for CSS Class Applying in HTML
   generalChecked(event) {
     this.generalCheck = event.target.checked;
   }
@@ -72,5 +78,4 @@ export class NewsCategoryFilterComponent implements OnInit {
   //   }
   //   this.articlesService.requestNewsArticles(topicsArray);
   // }
-  
 }

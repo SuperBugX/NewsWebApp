@@ -9,20 +9,23 @@ import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms'
 })
 export class SignInComponent implements OnInit {
 
+  // Variables
   loginForm: FormGroup;
 
   constructor(private router: Router, private formBuilder: FormBuilder) {
     if (false) {
+      // Code used for redirecting
       router.navigate(['/']);
     }
   }
 
   ngOnInit(): void {
 
+    // Angular Reactive Login Form
     this.loginForm = this.formBuilder.group({
       username: ['', [
         Validators.required,
-        Validators.pattern('^[\/a-zA-Z0-9/d]+$'),
+        Validators.pattern('^[A-Za-z0-9]+$'),
         Validators.minLength(5),
         Validators.maxLength(25),
 
@@ -40,6 +43,7 @@ export class SignInComponent implements OnInit {
     })
   }
 
+  // Getters And Setters for Login Form
   get username() {
     return this.loginForm.get('username');
   }

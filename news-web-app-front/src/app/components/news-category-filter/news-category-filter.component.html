@@ -1,7 +1,8 @@
-<div class="p-3 border">
+<div class="p-3 border filter-wrapper shadow-sm">
     <h4>Filters</h4>
     <form>
         <div class="d-flex flex-row flex-wrap justify-content-between">
+            <!-- News Topics Filter Options (Toggled) -->
             <div class="form-item">
                 <div class="btn-group btn-group-toggle d-flex flex-row flex-wrap mb-3" data-toggle="buttons">
                     <label class="btn btn-outline-general mr-1" for="general-checkbox"
@@ -38,6 +39,7 @@
                 </div>
             </div>
 
+            <!-- Country Selector Code -->
             <div class="form-item mt-2">
                 <label class="mr-2" for="country_selector">Country</label>
                 <input id="country_selector" type="text">
@@ -46,6 +48,7 @@
                 <input type="text" id="country_selector_code" name="country_selector_code" data-countrycodeinput="1"
                     readonly="readonly" placeholder="Selected country code will appear here" />
             </div>
+            <!-- Filter Button -->
             <button type="submit" class="btn btn-primary mb-2">Search <i class="bi bi-search in-text-icon"></i></button>
         </div>
     </form>

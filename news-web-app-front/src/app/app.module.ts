@@ -27,6 +27,7 @@ import { AccountRegistrationComponent } from './components/account-registration/
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en'
     })
