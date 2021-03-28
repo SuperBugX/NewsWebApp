@@ -11,7 +11,7 @@
                             <label for="usernameInput">Username</label>
                             <input matInput type="text" class="form-control textual-input" formControlName="username"
                                 id="usernameInput" placeholder="Enter Username">
-                            <mat-error *ngIf="username.invalid && username.touched">
+                            <mat-error *ngIf="username.dirty && username.touched">
                                 Invalid Username
                             </mat-error>
                         </div>
@@ -22,7 +22,7 @@
                             <input matInput type="password" class="form-control textual-input" id="passwordInput"
                                 placeholder="Enter Password" formControlName="password">
                         </div>
-                        <mat-error *ngIf="password.invalid && password.touched">
+                        <mat-error *ngIf="password.dirty && password.touched">
                             Invalid Password
                         </mat-error>
                     </div>

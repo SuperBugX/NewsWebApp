@@ -1,0 +1,36 @@
+<div class="account-wrapper">
+    <div class="row">
+        <div class="col">
+            <h3>My Account</h3>
+            <div class="d-flex flex-column">
+
+                <label>Username</label>
+                <input type="text" disabled>
+                <label>Email</label>
+                <input type="text" disabled>
+
+                <div class="form-item mt-2">
+                    <label class="mr-2" for="country_selector">Country</label>
+                    <input id="country_selector" type="text">
+                </div>
+                <div class="form-item" style="display:none;">
+                    <input type="text" id="country_selector_code" name="country_selector_code" data-countrycodeinput="1"
+                        readonly="readonly" placeholder="Selected country code will appear here" />
+                </div>
+
+                <button mat-raised-button color="accent">Change Password</button>
+                <button mat-raised-button color="accent">My Topics</button>
+                <button mat-raised-button color="warn">Delete Account</button>
+                <button mat-raised-button color="primary">Update Account</button>
+            </div>
+        </div>
+        <div class="col border-left">
+            <h3>Blacklisted Sources</h3>
+            <div class="blacklist-wrapper jumbotron">
+                <textarea readonly rows="4" cols="50">
+                    Placeholder Text
+                </textarea>
+            </div>
+        </div>
+    </div>
+</div>

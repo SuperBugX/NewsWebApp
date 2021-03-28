@@ -1,6 +1,6 @@
 <header>
   <div class="container-fluid">
-    <div class="row align-items-center border-bottom test">
+    <div class="row border-bottom">
       <div class="col-xl-2 heading">
         <!-- Web App Logo -->
         <div class="heading">
@@ -27,16 +27,20 @@
                   <!-- Links -->
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" routerLink="homepage">Home</a>
+                      <a class="nav-link"
+                        [ngClass]="{'active' : this.currentUrl == '/' || this.currentUrl=='/homapage'}"
+                        aria-current="page" routerLink="homepage">Home</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" routerLink="news-feed-page">Browse News</a>
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl == '/news-feed-page'}"
+                        routerLink="news-feed-page">Browse News</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">My News</a>
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl == '/news-feed-page'}">My News</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#">Search Articles</a>
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl == '/search-articles'}">Search
+                        Articles</a>
                     </li>
                   </ul>
                 </div>
@@ -60,34 +64,21 @@
 
                   <!-- Quick News Links -->
                   <div class="d-flex flex-wrap category-wrapper">
-                    <a><button type="button" class="btn btn-general">General</button></a>
-                    <a><button type="button" class="btn btn-sports">Sports</button></a>
-                    <a><button type="button" class="btn btn-health">Health</button></a>
-                    <a><button type="button" class="btn btn-business">Business</button></a>
-                    <a><button type="button" class="btn btn-technology">Technology</button></a>
-                    <a><button type="button" class="btn btn-science">Science</button></a>
-                    <a><button type="button" class="btn btn-entertainment">Entertainment</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-general">General</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-sports">Sports</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-health">Health</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-business">Business</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-technology">Technology</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-science">Science</button></a>
+                    <a routerLink="news-feed-page"><button type="button" class="btn btn-entertainment">Entertainment</button></a>
                   </div>
                 </div>
               </nav>
             </div>
           </div>
-
-          <!-- Breadcrumb Code -->
-          <div class="row">
-            <div class="col">
-              <nav aria-label="breadcrumb">
-                <ol class="breadcrumb rounded-0">
-                  <li class="breadcrumb-item"><a href="#">Home</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Library</li>
-                  <li class="ml-auto">Todays Date: {{currentDate}}</li>
-                </ol>
-              </nav>
-            </div>
-          </div>
         </div>
       </div>
-      <div class="col-xl-2 pb-3">
+      <div class="col-xl-2">
         <app-account-card></app-account-card>
       </div>
     </div>

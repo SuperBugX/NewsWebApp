@@ -8,3 +8,10 @@
 .sign-in-btn:hover {
   color: white;
 }
+
+.card-button{
+  font-size: 15px;
+  min-height: 40px;
+  max-height: 70px;
+  margin-bottom: 10px;
+}
