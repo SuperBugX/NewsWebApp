@@ -1,3 +1,5 @@
+<!-- Condition Statement for if the user is logged in, The appropriate html is provided -->
+<!-- Users Not Logged-In HTML -->
 <div *ngIf="true;else loggedIn">
 	<div class="d-flex justify-content-center">
 		<div class="card border-0">
@@ -5,8 +7,8 @@
 				<div class="mr-4 mt-2">
 					<div class="d-flex flex-column align-items-center">
 						
-						<button class="btn btn-primary mb-2"><a class="text-white">Sign-Up<i class="bi bigger-icon btn-icon bi-pencil-square"></i></a></button>
-						<button class="btn btn-outline-primary mb-2 sign-in-btn"><a routerLink="sign-in">Sign-In <i class="bi bigger-icon btn-icon bi-box-arrow-in-right"></i></a></button>
+						<a class="text-white" routerLink="account-registration"><button class="btn btn-primary mb-2">Sign-Up<i class="bi bigger-icon btn-icon bi-pencil-square"></i></button></a>
+						<a routerLink="sign-in"><button class="btn btn-outline-primary mb-2 sign-in-btn">Sign-In <i class="bi bigger-icon btn-icon bi-box-arrow-in-right"></i></button></a>
 					</div>
 				</div>
 				<img src="/assets/images/Account/not-logged-in-user.svg" class="rounded img" width="100">
@@ -15,6 +17,7 @@
 	</div>
 </div>
 
+<!-- User Logged-In HTML -->
 <ng-template #loggedIn>
 <div>
 	<div class="d-flex justify-content-center">

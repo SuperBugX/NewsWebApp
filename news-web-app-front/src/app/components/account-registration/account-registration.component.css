@@ -1,0 +1,29 @@
+.mat-stepper-horizontal {
+  margin-top: 8px;
+}
+
+.mat-form-field {
+  margin-top: 16px;
+}
+
+mat-label, label{
+  font-size: 25px;
+  font-weight: 400;
+}
+
+.stepper-wrapper{
+  border: 1px solid black;
+  border-radius: 10px;
+}
+
+.textual-input{
+  font-size: 17px;
+  border-bottom: 1px solid #c9c9c9;
+  max-width: 450px;
+}
+
+.topic-item{
+  margin: 15px;
+  max-width: 250px;
+  font-size: 18px;
+}

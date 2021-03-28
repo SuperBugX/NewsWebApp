@@ -14,15 +14,20 @@ import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { SignInComponent } from './components/sign-in/sign-in.component';
 import { NewsCategoryFilterComponent } from './components/news-category-filter/news-category-filter.component';
 import { LargeArticleComponent } from './components/large-article/large-article.component';
 import { SmallArticleComponent } from './components/small-article/small-article.component';
 import { HorizontalImageArticleComponent } from './components/horizontal-image-article/horizontal-image-article.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { AccountRegistrationComponent } from './components/account-registration/account-registration.component';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -38,6 +43,7 @@ import {MatButtonModule} from '@angular/material/button';
     LargeArticleComponent,
     SmallArticleComponent,
     HorizontalImageArticleComponent,
+    AccountRegistrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +54,11 @@ import {MatButtonModule} from '@angular/material/button';
     MatCheckboxModule,
     MatSelectModule,
     MatButtonModule,
+    MatStepperModule,
+    MatInputModule,
+    MatFormFieldModule,
     ReactiveFormsModule,
+    MatProgressSpinnerModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en'
     })

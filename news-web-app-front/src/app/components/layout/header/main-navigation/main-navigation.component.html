@@ -2,13 +2,18 @@
   <div class="container-fluid">
     <div class="row align-items-center border-bottom test">
       <div class="col-xl-2 heading">
+        <!-- Web App Logo -->
         <div class="heading">
-          <h1>The Hawkers Journal</h1>
+          <a routerLink="homepage">
+            <h1>The Hawkers Journal</h1>
+          </a>
         </div>
       </div>
+      <!-- Main Navigation -->
       <div class="col-xl-8">
         <div class="navbar-wrapper">
 
+          <!-- Normal Nav Bar -->
           <div class="row">
             <div class="col">
               <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -19,6 +24,7 @@
                   <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                  <!-- Links -->
                   <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item">
                       <a class="nav-link active" aria-current="page" routerLink="homepage">Home</a>
@@ -38,6 +44,7 @@
             </div>
           </div>
 
+          <!-- Quick Navbar Links to News Categories -->
           <div class="row">
             <div class="col">
               <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -51,20 +58,22 @@
 
                 <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedCategories">
 
+                  <!-- Quick News Links -->
                   <div class="d-flex flex-wrap category-wrapper">
-                    <button type="button" class="btn btn-general">General</button>
-                    <button type="button" class="btn btn-sports">Sports</button>
-                    <button type="button" class="btn btn-health">Health</button>
-                    <button type="button" class="btn btn-business">Business</button>
-                    <button type="button" class="btn btn-technology">Technology</button>
-                    <button type="button" class="btn btn-science">Science</button>
-                    <button type="button" class="btn btn-entertainment">Entertainment</button>
+                    <a><button type="button" class="btn btn-general">General</button></a>
+                    <a><button type="button" class="btn btn-sports">Sports</button></a>
+                    <a><button type="button" class="btn btn-health">Health</button></a>
+                    <a><button type="button" class="btn btn-business">Business</button></a>
+                    <a><button type="button" class="btn btn-technology">Technology</button></a>
+                    <a><button type="button" class="btn btn-science">Science</button></a>
+                    <a><button type="button" class="btn btn-entertainment">Entertainment</button></a>
                   </div>
                 </div>
               </nav>
             </div>
           </div>
 
+          <!-- Breadcrumb Code -->
           <div class="row">
             <div class="col">
               <nav aria-label="breadcrumb">

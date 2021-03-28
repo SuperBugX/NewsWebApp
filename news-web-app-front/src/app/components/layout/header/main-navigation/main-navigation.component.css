@@ -6,6 +6,10 @@
   font-size: 35px;
 }
 
+.heading a{
+  text-decoration: none;
+}
+
 .heading {
   text-align: center;
 }

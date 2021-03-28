@@ -1,5 +1,6 @@
 .login-card {
   border: 1px solid black;
+  background-color: white;
   max-width: 650px;
   min-width: 280px;
   height: auto;
@@ -19,4 +20,10 @@
 
 .logo {
   margin-bottom: 50px;
+}
+
+.textual-input{
+  font-size: 17px;
+  border-bottom: 1px solid #c9c9c9;
+  max-width: 450px;
 }
