@@ -15,7 +15,7 @@ export class ArticlesService {
   stompClient: Stomp.Client;
 
   constructor() {
-    this.topicSubscriptionServiceURL = 'ws://localhost:8060/TopicSubscriptionService/topics-websocket/websocket';
+    this.topicSubscriptionServiceURL = 'ws://localhost:8060/TopicSubscriptionService/stomp-endpoint/websocket';
 
 
     let tempArticles = [
@@ -88,18 +88,20 @@ export class ArticlesService {
   unsubscribeTopic(topic: string) {
     this.stompClient.unsubscribe(topic);
 
+    /*
     let index = this.currentTopicSubscriptions.indexOf(topic);
     if (index !== -1) {
       this.currentTopicSubscriptions.splice(index, 1);
     }
+    */
   }
 
   subscribeTopic(topic: string) {
     this.stompClient.subscribe(topic, (message) => {
-      let newJSONArticles = Object.assign(new Article(), message.body);
-      this.articles.value.push(newJSONArticles);
+      // let newJSONArticles = Object.assign(new Article(), message.body);
+      // this.articles.value.push(newJSONArticles);
     });
-    this.currentTopicSubscriptions.push(topic);
+    //this.currentTopicSubscriptions.push(topic);
   }
 
   sendMessage(destination: string, message: string) {

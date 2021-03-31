@@ -2,13 +2,19 @@ package com.example.demo.controllers;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
+import com.example.demo.consumers.CustomAckMessageListener;
+import com.example.demo.consumers.KafkaConsumerUtil;
 import com.example.demo.resources.ClientSession;
+import com.example.demo.resources.NewsTopicProcessor;
 import com.example.demo.resources.TopicSubscription;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
 import java.util.Arrays;
@@ -20,6 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
 public class WebSocketController {
+
+	@Autowired
+	SimpMessagingTemplate simpMessagingTemplate;
+	
+	@Autowired 
+	Map<String, Object> consumerConfig;
 
 	private Map<String, TopicSubscription> topics = new HashMap<String, TopicSubscription>(15);
 	private Map<String, ClientSession> sessions = new HashMap<String, ClientSession>(50);
@@ -49,6 +61,12 @@ public class WebSocketController {
 				topicEntry.incrementSubscriptions();
 			} else {
 				topics.put(topic, new TopicSubscription(topic));
+
+				CustomAckMessageListener customAckMessageListener = new CustomAckMessageListener(
+						new NewsTopicProcessor(topic, simpMessagingTemplate));
+
+				// start the consumer
+				KafkaConsumerUtil.startOrCreateConsumers(topic, customAckMessageListener, 1, consumerConfig);
 			}
 		}
 

@@ -17,14 +17,19 @@ import java.util.Map;
 public class KafkaConfig {
 
 	@Bean
-	public ConsumerFactory<String, String> consumerFactory() {
+	public Map<String, Object> getConsumerConfig() {
 		Map<String, Object> configProps = new HashMap<>();
 		configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
+		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 		configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		return configProps;
+	}
 
-		return new DefaultKafkaConsumerFactory<>(configProps);
+	@Bean
+	public ConsumerFactory<String, String> consumerFactory() {
+		return new DefaultKafkaConsumerFactory<>(getConsumerConfig());
 	}
 
 	@Bean
