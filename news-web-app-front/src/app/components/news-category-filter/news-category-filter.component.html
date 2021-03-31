@@ -49,7 +49,8 @@
                     readonly="readonly" placeholder="Selected country code will appear here" />
             </div>
             <!-- Filter Button -->
-            <button type="submit" class="btn btn-primary mb-2 mt-2">Search <i class="bi bi-search in-text-icon"></i></button>
+            <button type="button" (click)="onSubmit()" class="btn btn-primary mb-2 mt-2">Search <i class="bi bi-search in-text-icon"></i></button>
+            <button type="button" (click)="unSubmit()" class="btn btn-primary mb-2 mt-2">UNSearch <i class="bi bi-search in-text-icon"></i></button>
         </div>
     </form>
 </div>

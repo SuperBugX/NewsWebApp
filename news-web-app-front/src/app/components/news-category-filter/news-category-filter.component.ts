@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ArticlesService } from 'src/app/services/Articles/articles.service';
 // JQuery Var (Needed for JQuery)
 declare var $: any;
 
@@ -18,7 +19,7 @@ export class NewsCategoryFilterComponent implements OnInit {
   scienceCheck: boolean;
   entertainmentCheck: boolean;
 
-  constructor() { }
+  constructor(private articleService: ArticlesService) { }
 
   ngOnInit(): void {
 
@@ -36,7 +37,16 @@ export class NewsCategoryFilterComponent implements OnInit {
   }
 
   // Methods
-  
+  onSubmit(){
+    this.articleService.subscribeTopic('/app/subscribe/HELLOMAN');
+    //this.articleService.sendMessage('/app/business', 'erhry');
+  }
+
+  unSubmit(){
+    this.articleService.unsubscribeTopic('/app/unsubscribe/HELLOMAN');
+    //this.articleService.sendMessage('/app/business', 'erhry');
+  }
+
   // Button Toggle Methods used for CSS Class Applying in HTML
   generalChecked(event) {
     this.generalCheck = event.target.checked;
