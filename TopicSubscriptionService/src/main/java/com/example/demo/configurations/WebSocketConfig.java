@@ -24,5 +24,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		registry.addEndpoint("/stomp-endpoint").setAllowedOrigins("http://localhost:4200")
 				.addInterceptors(new HttpHandshakeInterceptor()).withSockJS();
 	}
-
 }

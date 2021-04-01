@@ -131,7 +131,7 @@ public class NewsFetcherController {
 
 		ErrorTemplate errorTemplate;
 
-		String[] categories = { "health", "business", "sports" };
+		String[] categories = { "health", "business", "sports", "technology " };
 		String[] countries = { "gb" };
 		String[] languages = { "en", "fr" };
 		String[] keyWords = null;

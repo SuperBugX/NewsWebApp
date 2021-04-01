@@ -1,10 +1,10 @@
 package com.example.demo.consumers;
 
-import static org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
@@ -14,86 +14,85 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode;
 @Slf4j
 public final class KafkaConsumerUtil {
 
-  private static Map<String, ConcurrentMessageListenerContainer<String, String>> consumersMap =
-      new HashMap<>();
+	private static Map<String, ConcurrentMessageListenerContainer<String, String>> consumersMap = new HashMap<>();
 
-  /**
-   * 1. This method first checks if consumers are already created for a given topic name 2. If the
-   * consumers already exists in Map, it will just start the container and return 3. Else create a
-   * new consumer and add to the Map
-   *
-   * @param topic topic name for which consumers is needed
-   * @param messageListener pass implementation of MessageListener or AcknowledgingMessageListener
-   *     based on enable.auto.commit
-   * @param concurrency number of consumers you need
-   * @param consumerProperties all the necessary consumer properties need to be passed in this
-   */
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  public static void startOrCreateConsumers(
-      final String topic,
-      final Object messageListener,
-      final int concurrency,
-      final Map<String, Object> consumerProperties) {
+	/**
+	 * 1. This method first checks if consumers are already created for a given
+	 * topic name 2. If the consumers already exists in Map, it will just start the
+	 * container and return 3. Else create a new consumer and add to the Map
+	 *
+	 * @param topic              topic name for which consumers is needed
+	 * @param messageListener    pass implementation of MessageListener or
+	 *                           AcknowledgingMessageListener based on
+	 *                           enable.auto.commit
+	 * @param concurrency        number of consumers you need
+	 * @param consumerProperties all the necessary consumer properties need to be
+	 *                           passed in this
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static void startOrCreateConsumers(final String topic, final Object messageListener, final int concurrency,
+			final Map<String, Object> consumerProperties) {
 
-    log.info("creating kafka consumer for topic {}", topic);
-    System.out.println("creating kafka consumer for topic ");
+		log.info("creating kafka consumer for topic {}", topic);
+		System.out.println("creating kafka consumer for topic ");
 
-    ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
-    if (container != null) {
-      if (!container.isRunning()) {
-        log.info("Consumer already created for topic {}, starting consumer!!", topic);
-        container.start();
-        log.info("Consumer for topic {} started!!!!", topic);
-      }
-      return;
-    }
+		ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
+		if (container != null) {
+			if (!container.isRunning()) {
+				log.info("Consumer already created for topic {}, starting consumer!!", topic);
+				container.start();
+				log.info("Consumer for topic {} started!!!!", topic);
+			}
+			return;
+		}
 
-    ContainerProperties containerProps = new ContainerProperties(topic);
+		ContainerProperties containerProps = new ContainerProperties(topic);
 
-    containerProps.setPollTimeout(100);
-    Boolean enableAutoCommit = (Boolean) consumerProperties.get(ENABLE_AUTO_COMMIT_CONFIG);
-    if (!enableAutoCommit) {
-      containerProps.setAckMode(AckMode.MANUAL_IMMEDIATE);
-    }
+		containerProps.setPollTimeout(100);
+		Boolean enableAutoCommit = (Boolean) consumerProperties.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 
-    ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerProperties);
+		if (enableAutoCommit != null && !enableAutoCommit) {
+			containerProps.setAckMode(AckMode.MANUAL_IMMEDIATE);
+		}
 
-    container = new ConcurrentMessageListenerContainer<>(factory, containerProps);
+		ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerProperties);
 
-    if (!enableAutoCommit && !(messageListener instanceof CustomAckMessageListener)) {
-      throw new IllegalArgumentException(
-          "Expected message listener of type com.bkatwal.kafka.impl.CustomAckMessageListener!");
-    }
+		container = new ConcurrentMessageListenerContainer<>(factory, containerProps);
 
-    container.setupMessageListener(messageListener);
+		if ((enableAutoCommit != null && !enableAutoCommit) && !(messageListener instanceof CustomAckMessageListener)) {
+			throw new IllegalArgumentException(
+					"Expected message listener of type com.bkatwal.kafka.impl.CustomAckMessageListener!");
+		}
 
-    if (concurrency == 0) {
-      container.setConcurrency(1);
-    } else {
-      container.setConcurrency(concurrency);
-    }
+		container.setupMessageListener(messageListener);
 
-    container.start();
+		if (concurrency == 0) {
+			container.setConcurrency(1);
+		} else {
+			container.setConcurrency(concurrency);
+		}
 
-    consumersMap.put(topic, container);
+		container.start();
 
-    log.info("created and started kafka consumer for topic {}", topic);
-  }
+		consumersMap.put(topic, container);
 
-  /**
-   * Get the ListenerContainer from Map based on topic name and call stop on it, to stop all
-   * consumers for given topic
-   *
-   * @param topic topic name to stop corresponding consumers
-   */
-  public static void stopConsumer(final String topic) {
-    log.info("stopping consumer for topic {}", topic);
-    ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
-    container.stop();
-    log.info("consumer stopped!!");
-  }
+		log.info("created and started kafka consumer for topic {}", topic);
+	}
 
-  private KafkaConsumerUtil() {
-    throw new UnsupportedOperationException("Can not instantiate KafkaConsumerUtil");
-  }
+	/**
+	 * Get the ListenerContainer from Map based on topic name and call stop on it,
+	 * to stop all consumers for given topic
+	 *
+	 * @param topic topic name to stop corresponding consumers
+	 */
+	public static void stopConsumer(final String topic) {
+		log.info("stopping consumer for topic {}", topic);
+		ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
+		container.stop();
+		log.info("consumer stopped!!");
+	}
+
+	private KafkaConsumerUtil() {
+		throw new UnsupportedOperationException("Can not instantiate KafkaConsumerUtil");
+	}
 }

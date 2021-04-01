@@ -38,13 +38,11 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   // Methods
   onSubmit(){
-    this.articleService.subscribeTopic('/app/subscribe/HELLOMAN');
-    //this.articleService.sendMessage('/app/business', 'erhry');
+    this.articleService.subscribeTopic('/topic/' + (<HTMLInputElement>document.getElementById("test")).value);
   }
 
   unSubmit(){
-    this.articleService.unsubscribeTopic('/app/unsubscribe/HELLOMAN');
-    //this.articleService.sendMessage('/app/business', 'erhry');
+    this.articleService.unsubscribeTopic('/topic/' + (<HTMLInputElement>document.getElementById("test")).value);
   }
 
   // Button Toggle Methods used for CSS Class Applying in HTML

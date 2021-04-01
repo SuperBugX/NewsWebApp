@@ -1,6 +1,6 @@
 package com.example.demo.configurations;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +16,8 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
 
-	@Bean
-	public Map<String, Object> getConsumerConfig() {
-		Map<String, Object> configProps = new HashMap<>();
+	public static Map<String, Object> getConsumerConfig() {
+		Map<String, Object> configProps = new HashMap<String, Object>();
 		configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
 		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
