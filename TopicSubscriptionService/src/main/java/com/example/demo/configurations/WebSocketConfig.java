@@ -1,13 +1,11 @@
 package com.example.demo.configurations;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-
-import com.example.demo.interceptors.TopicSubscriptionInterceptor;
+import com.example.demo.interceptors.HttpHandshakeInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -21,11 +19,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/topics-websocket").setAllowedOrigins("http://localhost:4200").withSockJS();
-	}
-
-	@Override
-	public void configureClientInboundChannel(ChannelRegistration registration) {
-		registration.interceptors(new TopicSubscriptionInterceptor());
+		registry.addEndpoint("/stomp-endpoint").setAllowedOrigins("http://localhost:4200")
+				.addInterceptors(new HttpHandshakeInterceptor());
+		registry.addEndpoint("/stomp-endpoint").setAllowedOrigins("http://localhost:4200")
+				.addInterceptors(new HttpHandshakeInterceptor()).withSockJS();
 	}
 }

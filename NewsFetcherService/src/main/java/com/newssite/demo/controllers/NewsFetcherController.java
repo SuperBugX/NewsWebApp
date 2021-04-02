@@ -2,7 +2,6 @@ package com.newssite.demo.controllers;
 
 import java.util.LinkedList;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class NewsFetcherController {
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
-	
+
 	@RequestMapping("/Demonstration2")
 	public void demo(@RequestParam("categories") String[] categories) {
 		// Demonstration Code
@@ -57,7 +56,7 @@ public class NewsFetcherController {
 
 			// Place the articles in the correct data-structures
 			for (int i = 0; i < dataNode.size(); i++) {
-				
+
 				System.out.println("Loop Here");
 
 				articleNode = dataNode.get(i);
@@ -68,7 +67,7 @@ public class NewsFetcherController {
 						.language(articleNode.get("language").asText())
 						.countryOrigin(articleNode.get("country").asText())
 						.publishedAt(articleNode.get("published_at").asText()).build();
-				
+
 				System.out.println(tempArticle.getCategory() + articleNode.get("category").asText());
 
 				switch (tempArticle.getCategory()) {
@@ -88,7 +87,7 @@ public class NewsFetcherController {
 					break;
 
 				case "health":
-					System.out.println("I sent something HERE HEALTH" );
+					System.out.println("I sent something HERE HEALTH");
 					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
 
@@ -132,7 +131,7 @@ public class NewsFetcherController {
 
 		ErrorTemplate errorTemplate;
 
-		String[] categories = { "health", "business", "sports"};
+		String[] categories = { "health", "business", "sports", "technology", "science", "entertainment"};
 		String[] countries = { "gb" };
 		String[] languages = { "en", "fr" };
 		String[] keyWords = null;
@@ -156,7 +155,7 @@ public class NewsFetcherController {
 
 			// Place the articles in the correct data-structures
 			for (int i = 0; i < dataNode.size(); i++) {
-				
+
 				System.out.println("Loop Here");
 
 				articleNode = dataNode.get(i);
@@ -167,7 +166,7 @@ public class NewsFetcherController {
 						.language(articleNode.get("language").asText())
 						.countryOrigin(articleNode.get("country").asText())
 						.publishedAt(articleNode.get("published_at").asText()).build();
-				
+
 				System.out.println(tempArticle.getCategory() + articleNode.get("category").asText());
 
 				switch (tempArticle.getCategory()) {
@@ -187,7 +186,7 @@ public class NewsFetcherController {
 					break;
 
 				case "health":
-					System.out.println("I sent something HERE HEALTH" );
+					System.out.println("I sent something HERE HEALTH");
 					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
 					break;
 

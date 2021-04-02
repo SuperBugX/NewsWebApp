@@ -1,10 +1,15 @@
 package com.example.demo.resources;
 
+import lombok.Data;
+
+@Data
 public class TopicSubscription {
 
+	//Attributes 
 	private String name;
 	private int subscriptions;
 
+	//Constructors
 	public TopicSubscription(String name, int subscriptions) {
 		super();
 		this.name = name;
@@ -17,22 +22,7 @@ public class TopicSubscription {
 		this.subscriptions = 1;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public int getSubscriptions() {
-		return subscriptions;
-	}
-
-	public void setSubscriptions(int subscriptions) {
-		this.subscriptions = subscriptions;
-	}
-	
+	//Methods
 	public void incrementSubscriptions() {
 		subscriptions++;
 	}

@@ -1,131 +1,52 @@
 import { Injectable } from '@angular/core';
 import { Article } from '../../models/Article';
-import { BehaviorSubject } from 'rxjs';
-import * as Stomp from 'stompjs';
-import axios from 'axios';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { WebsocketService } from './websocket.service';
+import { Frame } from 'stompjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ArticlesService {
-  articles: BehaviorSubject<Article[]>;
+  //Attributes
+  articles$: Subject<Article>;
   topicSubscriptionServiceURL: string;
-  currentTopicSubscriptions: string[];
-  websocket: WebSocket;
-  stompClient: Stomp.Client;
+  hasSubscriptions: BehaviorSubject<boolean>;
 
-  constructor() {
-    this.topicSubscriptionServiceURL = 'ws://localhost:8060/TopicSubscriptionService/topics-websocket/websocket';
-
-
-    let tempArticles = [
-      {
-        author: 'James',
-        title: 'Royal Family in Ruins',
-        description: 'Marriage issues',
-        url: 'Broken/URL',
-        source: 'BBC',
-        imageUrl: 'Image/URL',
-        category: 'Drama',
-        language: 'English',
-        countryOrigin: 'United Kingdom',
-        publishedAt: '20/20/20',
-      },
-
-      {
-        author: 'James',
-        title: 'Royal Family in Ruins2',
-        description: 'Marriage issues',
-        url: 'Broken/URL',
-        source: 'BBC',
-        imageUrl: 'Image/URL',
-        category: 'Drama',
-        language: 'English',
-        countryOrigin: 'United Kingdom',
-        publishedAt: '20/20/20',
-      },
-
-      {
-        author: 'James',
-        title: 'Royal Family in Ruins3',
-        description: 'Marriage issues',
-        url: 'Broken/URL',
-        source: 'BBC',
-        imageUrl: 'Image/URL',
-        category: 'Drama',
-        language: 'English',
-        countryOrigin: 'United Kingdom',
-        publishedAt: '20/20/20',
-      },
-    ];
-    this.articles = new BehaviorSubject<Article[]>(tempArticles);
-    this.connectToSubscriptionService();
+  constructor(private webSocketService: WebsocketService) {
+    this.hasSubscriptions = new BehaviorSubject<boolean>(false);
+    this.topicSubscriptionServiceURL =
+      'ws://localhost:8060/TopicSubscriptionService/stomp-endpoint/websocket';
+    this.articles$ = new Subject<Article>();
+    this.webSocketService.connect(this.topicSubscriptionServiceURL);
   }
 
-  getArticles() {
-    return this.articles.getValue;
+  ngOnDestroy() {
+    this.webSocketService.disconnect();
   }
 
-  setArticles(articles: Article[]) {
-    this.articles.next(articles);
+  getSubscriptions(): string[] {
+    return this.webSocketService.subscriptions;
   }
 
-  connectToSubscriptionService() {
-    this.websocket = new WebSocket(this.topicSubscriptionServiceURL);
-    this.stompClient = Stomp.over(this.websocket);
-
-    this.stompClient.connect({}, (frame) => {
-      this.stompClient.subscribe('/errors', (message) => {
-        console.log('Error: ' + message);
-      });
-
-    },
-      (error) => {
-        alert("STOMP error " + error);
-      });
+  unsubscribeAllTopics(): void {
+    this.webSocketService.unsubscribeAll();
+    this.hasSubscriptions.next(false);
   }
 
-  unsubscribeTopic(topic: string) {
-    this.stompClient.unsubscribe(topic);
+  unsubscribeTopic(topic: string): void {
+    this.webSocketService.unsubscribe('/topic/' + topic);
 
-    let index = this.currentTopicSubscriptions.indexOf(topic);
-    if (index !== -1) {
-      this.currentTopicSubscriptions.splice(index, 1);
+    if(this.webSocketService.subscriptions.length == 0){
+      this.hasSubscriptions.next(false);
     }
   }
 
-  subscribeTopic(topic: string) {
-    this.stompClient.subscribe(topic, (message) => {
-      let newJSONArticles = Object.assign(new Article(), message.body);
-      this.articles.value.push(newJSONArticles);
+  subscribeTopic(topic: string): void {
+    this.hasSubscriptions.next(true);
+    this.webSocketService.subscribe('/topic/' + topic, (message : Frame) => {
+      let article = Object.assign(new Article(), JSON.parse(message.body));
+      this.articles$.next(article);
     });
-    this.currentTopicSubscriptions.push(topic);
-  }
-
-  sendMessage(destination: string, message: string) {
-    if (this.stompClient) {
-      this.stompClient.send(destination, {}, message);
-    }
-    else {
-      alert("No connection");
-    }
-  }
-
-  requestNewsArticles(topics) {
-
-    let url = "http://localhost:8060/NewsFetcherService/Demonstration2?categories=";
-
-    for (let i = 0; i < topics.length; i++) {
-      url += topics[i];
-
-      if (i != topics.length - 1) {
-        url += ",";
-      }
-    }
-
-    axios.get(url)
-      .then(response => {
-        console.log(response);
-      });
   }
 }

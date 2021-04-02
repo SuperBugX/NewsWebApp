@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Article } from 'src/app/models/Article';
 
 @Component({
   selector: 'app-large-article',
   templateUrl: './large-article.component.html',
-  styleUrls: ['./large-article.component.css']
+  styleUrls: ['./large-article.component.css'],
 })
 export class LargeArticleComponent implements OnInit {
 
-  constructor() { }
+  @Input() article: Article;
 
-  ngOnInit(): void {
+  constructor() {
+
   }
 
+  ngOnInit(): void {}
 }
