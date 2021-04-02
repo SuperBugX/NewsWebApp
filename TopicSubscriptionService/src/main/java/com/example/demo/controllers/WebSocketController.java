@@ -49,32 +49,29 @@ public class WebSocketController {
 			ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
 			boolean isSubscribed = false;
 
-			if (!topic.equals("/errors")) {
-
-				if (sessionEntry != null) {
-					if (!sessionEntry.getSubscriptions().contains(topic)) {
-						sessionEntry.addSubscription(topic);
-					} else {
-						isSubscribed = true;
-					}
+			if (sessionEntry != null) {
+				if (!sessionEntry.getSubscriptions().contains(topic)) {
+					sessionEntry.addSubscription(topic);
 				} else {
-					activeSessions.put(sessionID,
-							new ClientSession(sessionID, new LinkedList<String>(Arrays.asList(topic))));
+					isSubscribed = true;
 				}
+			} else {
+				activeSessions.put(sessionID,
+						new ClientSession(sessionID, new LinkedList<String>(Arrays.asList(topic))));
+			}
 
-				if (!isSubscribed) {
-					TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(topic);
-					if (topicEntry != null) {
-						topicEntry.incrementSubscriptions();
-					} else {
+			if (!isSubscribed) {
+				TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(topic);
+				if (topicEntry != null) {
+					topicEntry.incrementSubscriptions();
+				} else {
 
-						activeTopics.put(topic, new TopicSubscription(topic));
+					activeTopics.put(topic, new TopicSubscription(topic));
 
-						// start the consumer
-						KafkaConsumerUtil.startOrCreateConsumers(topic,
-								new CustomMessageListener(new NewsTopicProcessor(topic, simpMessagingTemplate)), 1,
-								consumerConfig);
-					}
+					// start the consumer
+					KafkaConsumerUtil.startOrCreateConsumers(topic,
+							new CustomMessageListener(new NewsTopicProcessor(topic, simpMessagingTemplate)), 1,
+							consumerConfig);
 				}
 			}
 		}

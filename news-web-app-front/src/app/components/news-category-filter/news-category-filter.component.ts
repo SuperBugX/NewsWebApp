@@ -6,11 +6,11 @@ declare var $: any;
 @Component({
   selector: 'app-news-category-filter',
   templateUrl: './news-category-filter.component.html',
-  styleUrls: ['./news-category-filter.component.css']
+  styleUrls: ['./news-category-filter.component.css'],
 })
 export class NewsCategoryFilterComponent implements OnInit {
-
   // Variables
+  activeTopics: string[];
   generalCheck: boolean;
   sportsCheck: boolean;
   healthCheck: boolean;
@@ -19,71 +19,131 @@ export class NewsCategoryFilterComponent implements OnInit {
   scienceCheck: boolean;
   entertainmentCheck: boolean;
 
-  constructor(private articleService: ArticlesService) { }
+  constructor(private articleService: ArticlesService) {
+    this.activeTopics = [];
+    this.generalCheck = false;
+    this.sportsCheck = false;
+    this.healthCheck = false;
+    this.businessCheck = false;
+    this.technologyCheck = false;
+    this.scienceCheck = false;
+    this.entertainmentCheck = false;
+  }
 
   ngOnInit(): void {
-
     // JQuery Code Needed for Country Selector in HTML
-    $("#country_selector").countrySelect({
-      defaultCountry: "gb",
+    $('#country_selector').countrySelect({
+      defaultCountry: 'gb',
       onlyCountries: [
-        'ar', 'au', 'at', 'be', 'br', 'bg', 'ca', 'cn', 'co', 'cz', 'eg', 'fr', 'de',
-        'gr', 'hk', 'hu', 'in', 'id', 'ie', 'il', 'it', 'jp', 'lv', 'lt', 'my', 'mx',
-        'ma', 'nl', 'nz', 'ng', 'no', 'ph', 'pl', 'pt', 'ro', 'sa', 'rs', 'sg', 'sk',
-        'si', 'za', 'kr', 'se', 'ch', 'tw', 'th', 'tr', 'ae', 'ua', 'gb', 'us', 've'
+        'ar',
+        'au',
+        'at',
+        'be',
+        'br',
+        'bg',
+        'ca',
+        'cn',
+        'co',
+        'cz',
+        'eg',
+        'fr',
+        'de',
+        'gr',
+        'hk',
+        'hu',
+        'in',
+        'id',
+        'ie',
+        'il',
+        'it',
+        'jp',
+        'lv',
+        'lt',
+        'my',
+        'mx',
+        'ma',
+        'nl',
+        'nz',
+        'ng',
+        'no',
+        'ph',
+        'pl',
+        'pt',
+        'ro',
+        'sa',
+        'rs',
+        'sg',
+        'sk',
+        'si',
+        'za',
+        'kr',
+        'se',
+        'ch',
+        'tw',
+        'th',
+        'tr',
+        'ae',
+        'ua',
+        'gb',
+        'us',
+        've',
       ],
       responsiveDropdown: true,
     });
   }
 
   // Methods
-  onSubmit(){
-    this.articleService.subscribeTopic('/topic/' + (<HTMLInputElement>document.getElementById("test")).value);
-  }
+  getArticles() {
+    this.articleService.unsubscribeAllTopics();
 
-  unSubmit(){
-    this.articleService.unsubscribeTopic('/topic/' + (<HTMLInputElement>document.getElementById("test")).value);
+    for (var i = 0; this.activeTopics[i]; ++i) {
+      this.articleService.subscribeTopic(this.activeTopics[i]);
+    }
   }
 
   // Button Toggle Methods used for CSS Class Applying in HTML
-  generalChecked(event) {
+  generalChecked(event): void {
     this.generalCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  sportsChecked(event) {
+  sportsChecked(event): void {
     this.sportsCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  healthChecked(event) {
+  healthChecked(event): void {
     this.healthCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  businessChecked(event) {
+  businessChecked(event): void {
     this.businessCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  technologyChecked(event) {
+  technologyChecked(event): void {
     this.technologyCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  scienceChecked(event) {
+  scienceChecked(event): void {
     this.scienceCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  entertainmentChecked(event) {
+  entertainmentChecked(event): void {
     this.entertainmentCheck = event.target.checked;
+    this.updateChosenTopicsList(event.srcElement.value);
   }
 
-  //   updateTopicSubscriptions() {
+  updateChosenTopicsList(topic: string): void {
+    let index = this.activeTopics.indexOf(topic);
 
-  //   let topicsArray: string[];
-  //   let selectedTopicBoxesElements = document.getElementById("topicCheckBoxes").querySelector("input:checked");
-  //   this.articlesService.currentTopicSubscriptions.forEach((topic) => { this.articlesService.unsubscribeTopic(topic) });
-
-  //   for (var i = 0; selectedTopicBoxesElements[i]; ++i) {
-  //     this.articlesService.subscribeTopic(selectedTopicBoxesElements[i]);
-  //     topicsArray.push(selectedTopicBoxesElements[i]);
-  //   }
-  //   this.articlesService.requestNewsArticles(topicsArray);
-  // }
+    if (index == -1) {
+      this.activeTopics.push(topic);
+    } else {
+      this.activeTopics.splice(index, 1);
+    }
+  }
 }

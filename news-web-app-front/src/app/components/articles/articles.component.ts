@@ -1,34 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Article } from '../../models/Article';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
-
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
 
 @Component({
   selector: 'app-articles',
   templateUrl: './articles.component.html',
   styleUrls: ['./articles.component.css']
 })
+
 export class ArticlesComponent implements OnInit {
 
-
   articles: Article[];
+  showLoading: boolean;
 
-  tiles: Tile[] = [
-    { text: 'One', cols: 3, rows: 1, color: 'lightblue' },
-    { text: 'Two', cols: 1, rows: 2, color: 'lightgreen' },
-    { text: 'Three', cols: 1, rows: 1, color: 'lightpink' },
-    { text: 'Four', cols: 2, rows: 1, color: '#DDBDF1' },
-  ];
-
-  constructor(/*private _articleService: ArticlesService*/) { }
+  constructor(private articleService: ArticlesService) {
+    this.articles =[];
+    this.articleService.articles$.subscribe((article) => {this.updateArticlesView(article)})
+    this.articleService.hasSubscriptions.subscribe((value) => {this.showLoading = value});
+  }
 
   ngOnInit(): void {
-    //this._articleService.articles.subscribe(x => this.articles = x);
+  }
+
+  updateArticlesView(article:Article){
+    this.showLoading = false;
+    this.articles.push(article);
   }
 }

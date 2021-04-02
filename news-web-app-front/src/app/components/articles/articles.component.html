@@ -1,17 +1,15 @@
-<!-- <app-article *ngFor="let article of articles" [article]="article">
-</app-article> -->
-
-<div class=" d-flex flex-column align-items-center justify-content-center">
+<div
+  *ngIf="showLoading"
+  class="d-flex flex-column align-items-center justify-content-center"
+>
   <h4>Please Wait</h4>
   <mat-spinner></mat-spinner>
 </div>
 
-<mat-grid-list cols="4" rowHeight="100px">
-  <mat-grid-tile *ngFor="let tile of tiles" [colspan]="tile.cols" [rowspan]="tile.rows" [style.background]="tile.color">
-    {{tile.text}}
+<mat-grid-list cols="2">
+  <mat-grid-tile *ngFor="let article of articles">
+    <app-horizontal-image-article
+      [article]="article"
+    ></app-horizontal-image-article>
   </mat-grid-tile>
 </mat-grid-list>
-
-<app-horizontal-image-article></app-horizontal-image-article>
-<app-large-article></app-large-article>
-<app-small-article></app-small-article>

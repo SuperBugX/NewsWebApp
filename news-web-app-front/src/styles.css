@@ -55,6 +55,41 @@ button a{
     }
 }
 
+.sports-colour{
+  background-color: #009c05;
+  color: white;
+}
+
+.general-colour{
+  background-color: #424242;
+  color: white;
+}
+
+.health-colour{
+  background-color: #d9534f;
+  color: white;
+}
+
+.science-colour{
+  background-color: #00c3d1;
+  color: white;
+}
+
+.entertainment-colour{
+  background-color: #edba00;
+  color: white;
+}
+
+.technology-colour{
+  background-color: #4300c9;
+  color: white;
+}
+
+.business-colour{
+  background-color: #0055de;
+  color: white;
+}
+
 .btn-sports {
   background-color: #009c05;
   color: white;

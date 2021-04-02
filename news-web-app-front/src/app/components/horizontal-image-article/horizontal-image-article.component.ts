@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit  } from '@angular/core';
+import { Article } from 'src/app/models/Article';
 
 @Component({
   selector: 'app-horizontal-image-article',
@@ -7,7 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HorizontalImageArticleComponent implements OnInit {
 
-  constructor() { }
+  @Input() article: Article;
+
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
