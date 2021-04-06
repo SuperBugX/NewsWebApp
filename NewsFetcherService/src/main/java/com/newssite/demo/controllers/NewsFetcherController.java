@@ -26,12 +26,14 @@ import com.newssite.demo.resources.ErrorTemplate;
 @RequestMapping("/NewsFetcherService")
 public class NewsFetcherController {
 
+	//Attributes
 	@Autowired
 	MediaStackBuilder mediaStackBuilder;
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
 
+	//Methods
 	@RequestMapping("/Demonstration2")
 	public void demo(@RequestParam("categories") String[] categories) {
 		// Demonstration Code

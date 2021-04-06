@@ -19,7 +19,6 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { NewsCategoryFilterComponent } from './components/news-category-filter/news-category-filter.component';
 import { LargeArticleComponent } from './components/large-article/large-article.component';
 import { SmallArticleComponent } from './components/small-article/small-article.component';
-import { HorizontalImageArticleComponent } from './components/horizontal-image-article/horizontal-image-article.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,7 +43,6 @@ import { MyAccountComponent } from './components/my-account/my-account.component
     NewsCategoryFilterComponent,
     LargeArticleComponent,
     SmallArticleComponent,
-    HorizontalImageArticleComponent,
     AccountRegistrationComponent,
     NotFoundPageComponent,
     MyAccountComponent,
