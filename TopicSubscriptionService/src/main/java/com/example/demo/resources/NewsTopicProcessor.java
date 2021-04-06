@@ -17,8 +17,8 @@ public class NewsTopicProcessor implements TopicProcessor {
 	// Method
 	@Override
 	public void process(String key, String message) {
-		// TODO Auto-generated method stub
+
+		// Send the received kafka message to the designated topic
 		simpMessagerTemplate.convertAndSend("/topic/" + topic, message);
-		System.out.println("I sent  : + " + topic);
 	}
 }

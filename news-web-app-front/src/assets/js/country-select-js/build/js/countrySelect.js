@@ -1351,7 +1351,12 @@
 	}, {
 		n: "Zimbabwe",
 		i: "zw"
-	} ], function(i, c) {
+	},
+  {
+		n: "None",
+		i: "--"
+	}
+ ], function(i, c) {
 		c.name = c.n;
 		c.iso2 = c.i;
 		delete c.n;

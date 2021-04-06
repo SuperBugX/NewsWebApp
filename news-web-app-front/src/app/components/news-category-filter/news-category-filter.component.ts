@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
 // JQuery Var (Needed for JQuery)
 declare var $: any;
@@ -9,8 +9,14 @@ declare var $: any;
   styleUrls: ['./news-category-filter.component.css'],
 })
 export class NewsCategoryFilterComponent implements OnInit {
+
+  @ViewChild('countryInput') countryInput: ElementRef;
+  @ViewChild('languageInput') languageInput: ElementRef;
+
   // Variables
   activeTopics: string[];
+  chosenLanguage: string;
+  chosenCountry: string;
   generalCheck: boolean;
   sportsCheck: boolean;
   healthCheck: boolean;
@@ -21,6 +27,8 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   constructor(private articleService: ArticlesService) {
     this.activeTopics = [];
+    this.chosenLanguage = '';
+    this.chosenCountry = '';
     this.generalCheck = false;
     this.sportsCheck = false;
     this.healthCheck = false;
@@ -32,8 +40,9 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   ngOnInit(): void {
     // JQuery Code Needed for Country Selector in HTML
+
     $('#country_selector').countrySelect({
-      defaultCountry: 'gb',
+      defaultCountry: '--',
       onlyCountries: [
         'ar',
         'au',
@@ -87,6 +96,7 @@ export class NewsCategoryFilterComponent implements OnInit {
         'gb',
         'us',
         've',
+        '--',
       ],
       responsiveDropdown: true,
     });
@@ -95,9 +105,14 @@ export class NewsCategoryFilterComponent implements OnInit {
   // Methods
   getArticles() {
     this.articleService.unsubscribeAllTopics();
+    this.articleService.madeNewRequest$.next(true);
+    this.chosenCountry = this.countryInput.nativeElement.value;
+    this.chosenLanguage = this.languageInput.nativeElement.value;
+    let subscriptionRequest;
 
     for (var i = 0; this.activeTopics[i]; ++i) {
-      this.articleService.subscribeTopic(this.activeTopics[i]);
+      subscriptionRequest = this.activeTopics[i] + "?" + "country=" + this.chosenCountry + "&" + "lang=" + this.chosenLanguage;
+      this.articleService.subscribeTopic(subscriptionRequest);
     }
   }
 
