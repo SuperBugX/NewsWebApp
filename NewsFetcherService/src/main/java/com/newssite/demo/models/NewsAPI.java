@@ -1,6 +1,7 @@
 package com.newssite.demo.models;
 
 import java.net.URI;
+import java.util.Date;
 
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -11,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newssite.demo.abstarct.AbstractNewsAPI;
 import com.newssite.demo.exceptions.NewsAPIJSONException;
 import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
-import com.newssite.demo.interfaces.TopNewsAPI;
 import com.newssite.demo.resources.Article;
 
 import lombok.Builder;
@@ -19,18 +19,18 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
+public class NewsAPI extends AbstractNewsAPI {
 
-	// All possible API parameter values updated as of 26/01/21.
+	// All possible API parameter values updated as of 06/04/21.
 
 	// Attributes
 	// Registered API key
-	private final String APIKEY = "2fc31c34f76d68a481bacaf3b874a961";
+	private final String APIKEY = "ca4d921c12a049beb7a1395ba27ad62f";
 
 	// API Host URI
-	private final String HOST = "http://api.mediastack.com";
+	private final String HOST = "https://newsapi.org";
 	// Live News endPoint
-	private final String LIVENEWS = "/v1/news";
+	private final String LIVENEWS = "/v2/top-headlines";
 
 	/*
 	 * Supported Categories: general, business, entertainment, health, science,
@@ -56,22 +56,21 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 	 * Supported languages: ar - Arabic de - German en - English es - Spanish fr -
 	 * French he - Hebrew it - Italian nl - Dutch no - Norwegian pt - Portuguese ru
 	 * - Russian se - Swedish zh - Chinese
+	 *
 	 */
-
 	private String language;
 
 	// General keywords to be used
 	private String[] keyWords;
 
-	// Maximum pagination limit is 100, Default is 25
-	private int paginationLimit;
-	private int paginationOffset;
-
-	// Contains news sources (organisations)
+	// Contains news sources (organisations), Maximum 20 allowed
 	private String[] sources;
 
-	// Supported sorting values: published_desc, published_acs, popularity
-	private String sortBy;
+	// Maximum pagination limit is 100, Default is 100
+	private int paginationLimit;
+
+	// Pagination offset, Default is 1
+	private int paginationOffset;
 
 	// Methods
 	public String getLatestNews() throws NewsAPIResponseErrorException, NewsAPIJSONException {
@@ -83,16 +82,16 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 
 		// Build a request based on the available variables and get a JSON response
 		apiJsonResponse = (WebClient.builder().build()).get()
-				.uri(HOST, uriBuilder -> buildLiveArticlesRequest(uriBuilder)).retrieve().bodyToMono(String.class)
+				.uri(HOST, uriBuilder -> buildTopHeadlineRequest(uriBuilder)).retrieve().bodyToMono(String.class)
 				.block();
 
 		try {
 			// Parse the JSON response
 			responseNode = jsonMapper.readTree(apiJsonResponse);
-			dataNode = responseNode.get("error");
+			dataNode = responseNode.get("status");
 
 			// Check if a error response was provided
-			if (dataNode != null) {
+			if (dataNode.toString().equals("error")) {
 				throw new NewsAPIResponseErrorException("Received the error:" + dataNode.asText());
 			}
 		} catch (JsonMappingException e) {
@@ -107,47 +106,41 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 		return apiJsonResponse;
 	}
 
-	public URI buildLiveArticlesRequest(UriBuilder uriBuilder) {
+	public URI buildTopHeadlineRequest(UriBuilder uriBuilder) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
 
-		uriBuilder.path(LIVENEWS).queryParam("access_key", APIKEY);
-
-		if (country != null && !country.equals("")) {
+		uriBuilder.path(LIVENEWS).queryParam("apiKey", APIKEY);
+		
+		if(country != null && !country.equals("")) {
 			uriBuilder.queryParam("country", country);
 		}
-
-		if (language != null && !language.equals("")) {
+		
+		if(language != null && !language.equals("")) {
 			uriBuilder.queryParam("language", language);
 		}
-
-		if (category != null && !category.equals("")) {
+		
+		if(category != null && !category.equals("")) {
 			uriBuilder.queryParam("category", category);
 		}
-
-		if (sources != null && !sources.equals(new String[] {})) {
+		
+		if(keyWords != null && !keyWords.equals(new String[] {})) {
+			uriBuilder.queryParam("q", commaSeperateArray(keyWords));
+		}
+		
+		if(sources != null && !sources.equals(new String[] {})) {
 			uriBuilder.queryParam("sources", commaSeperateArray(sources));
 		}
-
-		if (keyWords != null && !keyWords.equals(new String[] {})) {
-			uriBuilder.queryParam("keywords", commaSeperateArray(keyWords));
-		}
-
-		if (paginationLimit != 0) {
+		
+		if(paginationLimit != 0) {
 			uriBuilder.queryParam("pageSize", paginationLimit);
 		}
-
-		if (paginationOffset != 0) {
+		
+		if(paginationOffset != 0) {
 			uriBuilder.queryParam("page", paginationOffset);
 		}
 
-		if (sortBy != null) {
-			uriBuilder.queryParam("sort", sortBy);
-		} else {
-			uriBuilder.queryParam("sort", "published_desc");
-		}
-
-		System.out.println("I GOT " + uriBuilder.build().toString());
+		System.out.println("I SENT" + uriBuilder.build().toString());
 		return uriBuilder.build();
 	}
 
@@ -168,22 +161,24 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 			// TODO Auto-generated catch block
 			throw new NewsAPIJSONException(e.getMessage());
 		}
-		dataNode = responseNode.get("data");
+		dataNode = responseNode.get("status");
+
+		dataNode = responseNode.get("articles");
 		Article[] articles = new Article[dataNode.size()];
 
-		// Place the articles in the correct data-structures
 		for (int i = 0; i < dataNode.size(); i++) {
 
 			articleNode = dataNode.get(i);
-			tempArticle = Article.builder().author(articleNode.get("author").asText())
-					.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
-					.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
-					.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
-					.language(articleNode.get("language").asText()).countryOrigin(articleNode.get("country").asText())
-					.publishedAt(articleNode.get("published_at").asText()).build();
+			tempArticle = Article.builder().author(articleNode.get("author").asText()).category(category)
+					.title(articleNode.get("title").asText()).url(articleNode.get("url").asText())
+					.description(articleNode.get("description").asText())
+					.imageUrl(articleNode.get("urlToImage").asText()).language(language).countryOrigin(country)
+					.publishedAt(articleNode.get("publishedAt").asText())
+					.source(articleNode.get("source").get("name").asText()).build();
 			articles[i] = tempArticle;
-
 		}
+
 		return articles;
+
 	}
 }

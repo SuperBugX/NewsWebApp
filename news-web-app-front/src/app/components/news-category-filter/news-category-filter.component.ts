@@ -106,9 +106,15 @@ export class NewsCategoryFilterComponent implements OnInit {
   getArticles() {
     this.articleService.unsubscribeAllTopics();
     this.articleService.madeNewRequest$.next(true);
-    this.chosenCountry = this.countryInput.nativeElement.value;
     this.chosenLanguage = this.languageInput.nativeElement.value;
     let subscriptionRequest;
+
+    if(this.countryInput.nativeElement.value == '--'){
+      this.chosenCountry = '';
+    }
+    else{
+      this.chosenCountry = this.countryInput.nativeElement.value;
+    }
 
     for (var i = 0; this.activeTopics[i]; ++i) {
       subscriptionRequest = this.activeTopics[i] + "?" + "country=" + this.chosenCountry + "&" + "lang=" + this.chosenLanguage;

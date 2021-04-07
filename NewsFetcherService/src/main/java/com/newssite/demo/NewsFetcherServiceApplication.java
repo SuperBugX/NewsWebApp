@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 
 import com.newssite.demo.models.MediaStack;
 import com.newssite.demo.models.MediaStack.MediaStackBuilder;
+import com.newssite.demo.models.NewsAPI;
+import com.newssite.demo.models.NewsAPI.NewsAPIBuilder;
 
 @SpringBootApplication
 @EnableEurekaClient
@@ -16,6 +18,11 @@ public class NewsFetcherServiceApplication {
 	@Bean
 	public MediaStackBuilder getMediaStackAPIBuilder() {
 		return MediaStack.builder();
+	}
+	
+	@Bean
+	public NewsAPIBuilder getNewsAPIBuilder() {
+		return NewsAPI.builder();
 	}
 
 	public static void main(String[] args) {

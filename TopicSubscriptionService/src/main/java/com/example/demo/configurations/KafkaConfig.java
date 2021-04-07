@@ -12,6 +12,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @EnableKafka
 @Configuration
 public class KafkaConfig {
@@ -19,8 +20,8 @@ public class KafkaConfig {
 	public static Map<String, Object> getConsumerConfig() {
 		Map<String, Object> configProps = new HashMap<String, Object>();
 		configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
 		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
+		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
 		configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		return configProps;

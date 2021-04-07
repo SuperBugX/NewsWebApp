@@ -1,24 +1,23 @@
 package com.newssite.demo.controllers;
 
 import java.util.LinkedList;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newssite.demo.configurations.Topic;
-import com.newssite.demo.exceptions.MediaStackJSONException;
-import com.newssite.demo.exceptions.MediaStackResponseErrorException;
+import com.newssite.demo.configurations.KafkaConfig;
+import com.newssite.demo.exceptions.NewsAPIJSONException;
+import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
 import com.newssite.demo.models.MediaStack;
 import com.newssite.demo.models.MediaStack.MediaStackBuilder;
+import com.newssite.demo.models.NewsAPI;
+import com.newssite.demo.models.NewsAPI.NewsAPIBuilder;
 import com.newssite.demo.resources.Article;
 import com.newssite.demo.resources.ErrorTemplate;
 
@@ -26,370 +25,91 @@ import com.newssite.demo.resources.ErrorTemplate;
 @RequestMapping("/NewsFetcherService")
 public class NewsFetcherController {
 
-	//Attributes
+	// Attributes
 	@Autowired
-	MediaStackBuilder mediaStackBuilder;
+	private MediaStackBuilder mediaStackBuilder;
+
+	@Autowired
+	private NewsAPIBuilder newsAPIBuilder;
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
+	
+	private List<String> kafkaTopics = new LinkedList<String>(); 
 
-	//Methods
-	@RequestMapping("/Demonstration2")
-	public void demo(@RequestParam("categories") String[] categories) {
-		// Demonstration Code
+	// Methods
 
-		ErrorTemplate errorTemplate;
-
-		MediaStack api = mediaStackBuilder.categories(categories).build();
-
-		try {
-
-			// Perform API request
-			String apiJsonResponse = api.getLiveArticles();
-
-			ObjectMapper jsonMapper = new ObjectMapper();
-			JsonNode responseNode;
-			JsonNode dataNode;
-			JsonNode articleNode;
-			Article tempArticle;
-
-			responseNode = jsonMapper.readTree(apiJsonResponse);
-			dataNode = responseNode.get("data");
-
-			// Place the articles in the correct data-structures
-			for (int i = 0; i < dataNode.size(); i++) {
-
-				System.out.println("Loop Here");
-
-				articleNode = dataNode.get(i);
-				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
-						.language(articleNode.get("language").asText())
-						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText()).build();
-
-				System.out.println(tempArticle.getCategory() + articleNode.get("category").asText());
-
-				switch (tempArticle.getCategory()) {
-
-				case "general":
-					System.out.println("I sent something HERE");
-					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "business":
-					System.out.println("I sent something HERE BBBBBBB");
-					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "entertainment":
-					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "health":
-					System.out.println("I sent something HERE HEALTH");
-					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "science":
-					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "sports":
-					System.out.println("I sent something HERE");
-					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "technology":
-					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				default:
-					break;
-				}
-			}
-
-		} catch (MediaStackResponseErrorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		} catch (MediaStackJSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping("/Demonstration")
-	public void demo() {
-		// Demonstration Code
-
-		ErrorTemplate errorTemplate;
-
-		String[] categories = { "health", "business", "sports", "technology", "science", "entertainment"};
-		String[] countries = { "gb" };
-		String[] languages = { "en", "fr" };
-		String[] keyWords = null;
-		String[] sources = { "bbc" };
-
-		MediaStack api = mediaStackBuilder.languages(languages).categories(categories).build();
-
-		try {
-
-			// Perform API request
-			String apiJsonResponse = api.getLiveArticles();
-
-			ObjectMapper jsonMapper = new ObjectMapper();
-			JsonNode responseNode;
-			JsonNode dataNode;
-			JsonNode articleNode;
-			Article tempArticle;
-
-			responseNode = jsonMapper.readTree(apiJsonResponse);
-			dataNode = responseNode.get("data");
-
-			// Place the articles in the correct data-structures
-			for (int i = 0; i < dataNode.size(); i++) {
-
-				System.out.println("Loop Here");
-
-				articleNode = dataNode.get(i);
-				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
-						.language(articleNode.get("language").asText())
-						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText()).build();
-
-				System.out.println(tempArticle.getCategory() + articleNode.get("category").asText());
-
-				switch (tempArticle.getCategory()) {
-
-				case "general":
-					System.out.println("I sent something HERE");
-					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "business":
-					System.out.println("I sent something HERE BBBBBBB");
-					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "entertainment":
-					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "health":
-					System.out.println("I sent something HERE HEALTH");
-					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "science":
-					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "sports":
-					System.out.println("I sent something HERE");
-					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "technology":
-					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				default:
-					break;
-				}
-			}
-
-		} catch (MediaStackResponseErrorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-		} catch (MediaStackJSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@RequestMapping("/RetrieveNews")
-	public String retrieveNews(@RequestParam("categories") String[] categories,
-			@RequestParam("countries") String[] countries, @RequestParam("languages") String[] languages,
-			@RequestParam("keywords") String[] keywords, @RequestParam("limit") int limit,
-			@RequestParam("offset") int offset, @RequestParam("sources") String[] sources,
-			@RequestParam("sort") String sort) {
+	@RequestMapping("/PublishNews")
+	public String publishNews(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
+			@RequestParam("country") String country, @RequestParam("language") String language) {
 
 		ErrorTemplate errorTemplate;
 
 		// Build the API request parameters
-		MediaStack api = mediaStackBuilder.countries(countries).categories(categories).languages(languages)
-				.sources(sources).keyWords(keywords).paginationLimit(limit).paginationOffset(offset).sortBy(sort)
-				.build();
+		MediaStack api = mediaStackBuilder.country(country).category(category).language(language).build();
 
 		try {
-			// Perform the API request and return the JSON result
-			return api.getLiveArticles();
-		} catch (MediaStackResponseErrorException e) {
+			// Perform API request
+			String apiJsonResponse = api.getLatestNews();
+			Article[] articles = api.convertLatestNewsToArticles(apiJsonResponse);
+
+			for (int i = 0; i < articles.length; i++) {
+				try {
+					kafkaTemplate.send(kafkaTopic, articles[i].toJSON());
+				} catch (JsonProcessingException e) {
+					e.getStackTrace();
+				}
+			}
+
+			return "";
+
+		} catch (NewsAPIResponseErrorException e) {
 			// TODO Auto-generated catch block
 			errorTemplate = new ErrorTemplate("api-error-responses", "All APIs produced errors in their responses");
 			return errorTemplate.toJSON();
 
-		} catch (MediaStackJSONException e) {
+		} catch (NewsAPIJSONException e) {
 			// TODO Auto-generated catch block
 			errorTemplate = new ErrorTemplate("json-error", "Error processing JSON data");
 			return errorTemplate.toJSON();
 		}
-
 	}
 
-	@RequestMapping("/PublishNews")
-	public void publishNews(@RequestParam("categories") String[] categories,
-			@RequestParam("countries") String[] countries, @RequestParam("languages") String[] languages,
-			@RequestParam("keywords") String[] keywords, @RequestParam("limit") int limit,
-			@RequestParam("offset") int offset, @RequestParam("sources") String[] sources,
-			@RequestParam("sort") String sort) {
+	@RequestMapping("/PublishNews2")
+	public String publishNews2(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
+			@RequestParam("country") String country, @RequestParam("language") String language) {
+
+		ErrorTemplate errorTemplate;
 
 		// Build the API request parameters
-		MediaStack api = mediaStackBuilder.countries(countries).categories(categories).languages(languages)
-				.sources(sources).keyWords(keywords).paginationLimit(limit).paginationOffset(offset).sortBy(sort)
-				.build();
+		NewsAPI api = newsAPIBuilder.country(country).category(category).language(language).build();
+
 		try {
-
 			// Perform API request
-			String apiJsonResponse = api.getLiveArticles();
+			String apiJsonResponse = api.getLatestNews();
+			Article[] articles = api.convertLatestNewsToArticles(apiJsonResponse);
 
-			ObjectMapper jsonMapper = new ObjectMapper();
-			JsonNode responseNode;
-			JsonNode dataNode;
-			JsonNode articleNode;
-			Article tempArticle;
-
-			// Linked Lists that are meant to contain articles of their category
-			List<Article> generalArticles = new LinkedList<Article>();
-			List<Article> businessArticles = new LinkedList<Article>();
-			List<Article> entertainmentArticles = new LinkedList<Article>();
-			List<Article> healthArticles = new LinkedList<Article>();
-			List<Article> scienceArticles = new LinkedList<Article>();
-			List<Article> sportsArticles = new LinkedList<Article>();
-			List<Article> technologyArticles = new LinkedList<Article>();
-
-			responseNode = jsonMapper.readTree(apiJsonResponse);
-			dataNode = responseNode.get("data");
-
-			// Place the articles in the correct data-structures
-			for (int i = 0; i < dataNode.size(); i++) {
-
-				articleNode = dataNode.get(i);
-				tempArticle = Article.builder().author(articleNode.get("author").asText())
-						.category(articleNode.get("category").asText()).title(articleNode.get("title").asText())
-						.url(articleNode.get("url").asText()).description(articleNode.get("description").asText())
-						.source(articleNode.get("source").asText()).imageUrl(articleNode.get("image").asText())
-						.language(articleNode.get("language").asText())
-						.countryOrigin(articleNode.get("country").asText())
-						.publishedAt(articleNode.get("published_at").asText()).build();
-
-				switch (tempArticle.getCategory()) {
-
-				case "general":
-					generalArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.GENERAL.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "business":
-					businessArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.BUSINESS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "entertainment":
-					entertainmentArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.ENTERTAINMENT.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "health":
-					healthArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.HEALTH.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "science":
-					scienceArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.SCIENCE.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "sports":
-					sportsArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.SPORTS.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				case "technology":
-					technologyArticles.add(tempArticle);
-					kafkaTemplate.send(Topic.TECHNOLOGY.toString(), jsonMapper.writeValueAsString(tempArticle));
-					break;
-
-				default:
-					break;
+			for (int i = 0; i < articles.length; i++) {
+				try {
+					
+					System.out.println("TOPIC IS" + kafkaTopic + "I SENT " + articles[i].toString());
+;					kafkaTemplate.send(kafkaTopic, articles[i].toJSON());
+				} catch (JsonProcessingException e) {
+					e.getStackTrace();
 				}
 			}
 
-			/*
-			 * //Publish the articles of each data structure to the correct kafka topic
-			 * 
-			 * if(!generalArticles.isEmpty()) { kafkaTemplate.send(Topic.GENERAL,
-			 * generalArticles. );
-			 * 
-			 * }
-			 * 
-			 * if(!businessArticles.isEmpty()) {
-			 * 
-			 * }
-			 * 
-			 * if(!entertainmentArticles.isEmpty()) {
-			 * 
-			 * }
-			 * 
-			 * if(!healthArticles.isEmpty()) {
-			 * 
-			 * }
-			 * 
-			 * if(!scienceArticles.isEmpty()) {
-			 * 
-			 * }
-			 * 
-			 * if(!sportsArticles.isEmpty()) {
-			 * 
-			 * }
-			 * 
-			 * if(!technologyArticles.isEmpty()) {
-			 * 
-			 * }
-			 */
+			return "";
 
-		} catch (MediaStackResponseErrorException e) {
+		} catch (NewsAPIResponseErrorException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorTemplate = new ErrorTemplate("api-error-responses", "All APIs produced errors in their responses");
+			return errorTemplate.toJSON();
 
-		} catch (MediaStackJSONException e) {
+		} catch (NewsAPIJSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			errorTemplate = new ErrorTemplate("json-error", "Error processing JSON data");
+			return errorTemplate.toJSON();
 		}
 	}
 }

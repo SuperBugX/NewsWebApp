@@ -36,6 +36,7 @@ export class ArticlesComponent implements OnInit {
   displayArticle(article: Article) {
     this.showLoading = false;
     if (this.newRequest) {
+      alert("here");
       this.clearView();
       this.newRequest = false;
     }
