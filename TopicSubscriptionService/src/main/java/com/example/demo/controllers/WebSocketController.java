@@ -11,6 +11,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import com.example.demo.configurations.KafkaConfig;
 import com.example.demo.consumers.CustomMessageListener;
@@ -27,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 public class WebSocketController {
@@ -35,8 +37,11 @@ public class WebSocketController {
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
+
 	private static final String NEWSFETCHERSERVICEURL = "http://localhost:8060/NewsFetcherService";
-	private static final String NEWSPUBLISHENDPOINT = "/PublishNews";
+	private static final String NEWSPUBLISHENDPOINT = "/PublishNews2";
 
 	private Map<String, Object> consumerConfig = KafkaConfig.getConsumerConfig();
 	private Map<String, TopicSubscription> activeTopics = new HashMap<String, TopicSubscription>(15);
@@ -70,7 +75,7 @@ public class WebSocketController {
 			String country) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
-		System.out.println("Country" + country + "Category" + topic + "Language" +  language + "KAFKA" + kafkaTopic);
+		System.out.println("Country" + country + "Category" + topic + "Language" + language + "KAFKA" + kafkaTopic);
 
 		uriBuilder.path(NEWSPUBLISHENDPOINT);
 
@@ -102,7 +107,7 @@ public class WebSocketController {
 
 			// Check if the destination exists
 			if (subscriptionDestination != null) {
-				
+
 				// Get the sessions attributes variable from the received frame
 				// The variable is used to retrieve the current clients session ID for
 				// identification purposes
@@ -113,7 +118,7 @@ public class WebSocketController {
 				if (sessionAttributes != null) {
 
 					// Get the clients session ID
-					String sessionID = sessionAttributes.get("sessionId");	
+					String sessionID = sessionAttributes.get("sessionId");
 					ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
 					boolean isSubscribed = false;
 
@@ -127,8 +132,8 @@ public class WebSocketController {
 						}
 					} else {
 						// Create a new session instance for the new client connection
-						activeSessions.put(sessionID,
-								new ClientSession(sessionID, new LinkedList<String>(Arrays.asList(subscriptionDestination))));
+						activeSessions.put(sessionID, new ClientSession(sessionID,
+								new LinkedList<String>(Arrays.asList(subscriptionDestination))));
 					}
 
 					// Depending on if the client is already subscribed, create a new topic
@@ -139,6 +144,7 @@ public class WebSocketController {
 						// kafka consumer already
 						if (topicEntry != null) {
 							// Increment the amount subscriptions that exist for the topic
+
 							topicEntry.incrementSubscriptions();
 						} else {
 
@@ -161,19 +167,24 @@ public class WebSocketController {
 									country = countryParam.get(0);
 								}
 							}
-							
+
 							// Remove the desired STOMP prefix
 							String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
 							String kafkaTopic = topicName + country + language;
-							activeTopics.put(subscriptionDestination, new TopicSubscription(kafkaTopic, subscriptionDestination));
+							activeTopics.put(subscriptionDestination,
+									new TopicSubscription(kafkaTopic, subscriptionDestination));
 
-							// Request for news content from the NewsFetcherService to be published into kafka
-							requestNews(kafkaTopic, topicName, language, country);
+							System.out.println("I CONSUME FROM " + kafkaTopic);
 
 							// Start a new consumer for the new topic
 							KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
-									new CustomMessageListener(new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate)), 1,
-									consumerConfig);
+									new CustomMessageListener(
+											new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate)),
+									1, consumerConfig);
+
+							// Request for news content from the NewsFetcherService to be published into
+							// kafka
+							requestNews(kafkaTopic, topicName, language, country);
 						}
 					}
 				}
@@ -251,7 +262,7 @@ public class WebSocketController {
 				if (sessionEntry != null) {
 
 					String stompSubscription = event.getMessage().getHeaders().get("simpSubscriptionId").toString();
-					 
+
 					// Check if a desired subscription/topic to unsubscribe from exists and whether
 					// it was successfully removed from the ClientSession instance
 					if (sessionEntry.removeSubscription(stompSubscription)) {

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.newssite.demo.abstarct.AbstractNewsAPI;
 import com.newssite.demo.exceptions.NewsAPIJSONException;
 import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
 import com.newssite.demo.resources.Article;
@@ -18,7 +19,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class NewsAPI {
+public class NewsAPI extends AbstractNewsAPI {
 
 	// All possible API parameter values updated as of 06/04/21.
 
@@ -29,7 +30,7 @@ public class NewsAPI {
 	// API Host URI
 	private final String HOST = "https://newsapi.org";
 	// Live News endPoint
-	private final String LIVENEWS = "/v2/everything";
+	private final String LIVENEWS = "/v2/top-headlines";
 
 	/*
 	 * Supported Categories: general, business, entertainment, health, science,
@@ -62,21 +63,8 @@ public class NewsAPI {
 	// General keywords to be used
 	private String[] keyWords;
 
-	// Keywords to be specifically matched with article titles
-	private String[] titleKeyWords;
-
 	// Contains news sources (organisations), Maximum 20 allowed
 	private String[] sources;
-
-	// Contains the website domains of news sources to narrow the article searching
-	private String[] domains;
-
-	// Contains a list of website domains of news sources to exclude when article
-	// searching
-	private String[] excludeDomains;
-
-	// Supported sorting values: relevancy, popularity, publishedAt.
-	private String sortBy;
 
 	// Maximum pagination limit is 100, Default is 100
 	private int paginationLimit;
@@ -84,15 +72,8 @@ public class NewsAPI {
 	// Pagination offset, Default is 1
 	private int paginationOffset;
 
-	// A date attribute for the oldest article allowed. This should be in ISO 8601
-	// format
-	private Date fromDate;
-	// A date attribute for the newest article allowed. This should be in ISO 8601
-	// format
-	private Date toDate;
-
 	// Methods
-	public String getLiveArticles() throws NewsAPIResponseErrorException, NewsAPIJSONException {
+	public String getLatestNews() throws NewsAPIResponseErrorException, NewsAPIJSONException {
 
 		String apiJsonResponse = null;
 		JsonNode responseNode = null;
@@ -100,8 +81,9 @@ public class NewsAPI {
 		ObjectMapper jsonMapper = new ObjectMapper();
 
 		// Build a request based on the available variables and get a JSON response
-		apiJsonResponse = (WebClient.builder().build()).get().uri(HOST, uriBuilder -> buildLiveNewsRequest(uriBuilder))
-				.retrieve().bodyToMono(String.class).block();
+		apiJsonResponse = (WebClient.builder().build()).get()
+				.uri(HOST, uriBuilder -> buildTopHeadlineRequest(uriBuilder)).retrieve().bodyToMono(String.class)
+				.block();
 
 		try {
 			// Parse the JSON response
@@ -124,45 +106,63 @@ public class NewsAPI {
 		return apiJsonResponse;
 	}
 
-	public URI buildLiveNewsRequest(UriBuilder uriBuilder) {
+	public URI buildTopHeadlineRequest(UriBuilder uriBuilder) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
 
 		uriBuilder.path(LIVENEWS).queryParam("apiKey", APIKEY);
-
-		uriBuilder.queryParam("country", country);
-
-		uriBuilder.queryParam("language", language);
-
-		uriBuilder.queryParam("category", category);
-
-		uriBuilder.queryParam("q", commaSeperateArray(keyWords));
-
-		uriBuilder.queryParam("sources", commaSeperateArray(sources));
-
-		uriBuilder.queryParam("pageSize", paginationLimit);
-
-		uriBuilder.queryParam("page", paginationOffset);
-
-		if (sortBy != null) {
-			uriBuilder.queryParam("sort", sortBy);
-		} else {
-			uriBuilder.queryParam("sort", "publishedAt");
+		
+		if(country != null && !country.equals("")) {
+			uriBuilder.queryParam("country", country);
+		}
+		
+		if(language != null && !language.equals("")) {
+			uriBuilder.queryParam("language", language);
+		}
+		
+		if(category != null && !category.equals("")) {
+			uriBuilder.queryParam("category", category);
+		}
+		
+		if(keyWords != null && !keyWords.equals(new String[] {})) {
+			uriBuilder.queryParam("q", commaSeperateArray(keyWords));
+		}
+		
+		if(sources != null && !sources.equals(new String[] {})) {
+			uriBuilder.queryParam("sources", commaSeperateArray(sources));
+		}
+		
+		if(paginationLimit != 0) {
+			uriBuilder.queryParam("pageSize", paginationLimit);
+		}
+		
+		if(paginationOffset != 0) {
+			uriBuilder.queryParam("page", paginationOffset);
 		}
 
 		System.out.println("I SENT" + uriBuilder.build().toString());
 		return uriBuilder.build();
 	}
 
-	public Article[] convertJSONToArticles(String json) throws JsonMappingException, JsonProcessingException {
+	public Article[] convertLatestNewsToArticles(String json) throws NewsAPIJSONException {
 
 		JsonNode responseNode;
 		JsonNode dataNode;
 		JsonNode articleNode;
 		Article tempArticle;
 		ObjectMapper jsonMapper = new ObjectMapper();
-		
-		responseNode = jsonMapper.readTree(json);
+
+		try {
+			responseNode = jsonMapper.readTree(json);
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			throw new NewsAPIJSONException(e.getMessage());
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			throw new NewsAPIJSONException(e.getMessage());
+		}
+		dataNode = responseNode.get("status");
+
 		dataNode = responseNode.get("articles");
 		Article[] articles = new Article[dataNode.size()];
 
@@ -171,28 +171,14 @@ public class NewsAPI {
 			articleNode = dataNode.get(i);
 			tempArticle = Article.builder().author(articleNode.get("author").asText()).category(category)
 					.title(articleNode.get("title").asText()).url(articleNode.get("url").asText())
-					.description(articleNode.get("content").asText()).source(articleNode.get("source").asText())
-					.imageUrl(articleNode.get("image").asText()).language(articleNode.get("language").asText())
-					.countryOrigin(articleNode.get("country").asText())
-					.publishedAt(articleNode.get("published_at").asText()).build();
+					.description(articleNode.get("description").asText())
+					.imageUrl(articleNode.get("urlToImage").asText()).language(language).countryOrigin(country)
+					.publishedAt(articleNode.get("publishedAt").asText())
+					.source(articleNode.get("source").get("name").asText()).build();
 			articles[i] = tempArticle;
 		}
-		
+
 		return articles;
-	}
 
-	public String commaSeperateArray(Object[] arrayObj) {
-		String newString = "";
-		if (arrayObj != null) {
-			for (int i = 0; i < arrayObj.length; i++) {
-
-				newString += arrayObj[i];
-
-				if (i != arrayObj.length - 1) {
-					newString += ",";
-				}
-			}
-		}
-		return newString;
 	}
 }
