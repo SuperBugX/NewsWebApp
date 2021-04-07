@@ -8,8 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.newssite.demo.exceptions.MediaStackJSONException;
-import com.newssite.demo.exceptions.MediaStackResponseErrorException;
+import com.newssite.demo.exceptions.NewsAPIJSONException;
+import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
 
 import lombok.Builder;
 import lombok.Data;
@@ -64,14 +64,12 @@ public class MediaStack {
 
 	//Contains news sources (organisations)
 	private String[] sources;
-
-	/*
-	 * Supported sorting values: published_desc, published_acs, popularity
-	 */
+	
+	//Supported sorting values: published_desc, published_acs, popularity
 	private String sortBy;
 
 	// Methods
-	public String getLiveArticles() throws MediaStackResponseErrorException, MediaStackJSONException {
+	public String getLiveArticles() throws NewsAPIResponseErrorException, NewsAPIJSONException {
 
 		String apiJsonResponse = null;
 		JsonNode responseNode = null;
@@ -89,14 +87,14 @@ public class MediaStack {
 
 			//Check if a error response was provided
 			if (dataNode != null) {
-				throw new MediaStackResponseErrorException("Received the error:" + dataNode.asText());
+				throw new NewsAPIResponseErrorException("Received the error:" + dataNode.asText());
 			}
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
-			throw new MediaStackJSONException(e.getMessage());
+			throw new NewsAPIJSONException(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
-			throw new MediaStackJSONException(e.getMessage());
+			throw new NewsAPIJSONException(e.getMessage());
 		}
 
 		//Return the JSON list of articles
@@ -129,6 +127,7 @@ public class MediaStack {
 			uriBuilder.queryParam("sort", "published_desc");
 		}
 
+		System.out.println("I GOT " + uriBuilder.build().toString());
 		return uriBuilder.build();
 	}
 

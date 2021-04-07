@@ -73,7 +73,7 @@ export class WebsocketService {
     }
   }
 
-  subscribe(destination, callBack:(message) => void ): void{
+  subscribe(destination, callBack:(message) => void): void{
     if(this.isConnected){
       if(this.subscriptions.indexOf(destination) == -1){
         this.stompClient.subscribe(destination, callBack);

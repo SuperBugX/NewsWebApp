@@ -9,25 +9,25 @@ public class ClientSession {
 
 	// Attributes
 	private String sessionID;
-	private List<String> subscriptions;
+	private List<String> stompSubscriptions;
 
 	// Constructors
 	public ClientSession(String sessionID) {
 		this.sessionID = sessionID;
-		subscriptions = new LinkedList<String>();
+		stompSubscriptions = new LinkedList<String>();
 	}
 
-	public ClientSession(String sessionID, LinkedList<String> subscriptions) {
+	public ClientSession(String sessionID, LinkedList<String> stompSubscriptions) {
 		this.sessionID = sessionID;
-		this.subscriptions = subscriptions;
+		this.stompSubscriptions = stompSubscriptions;
 	}
 
 	// Methods
-	public boolean addSubscription(String subscription) {
-		return subscriptions.add(subscription);
+	public boolean addSubscription(String stompSubscriptions) {
+		return this.stompSubscriptions.add(stompSubscriptions);
 	}
 
-	public boolean removeSubscription(String subscription) {
-		return subscriptions.remove(subscription);
+	public boolean removeSubscription(String stompSubscriptions) {
+		return this.stompSubscriptions.remove(stompSubscriptions);
 	}
 }
