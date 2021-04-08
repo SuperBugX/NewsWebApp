@@ -12,7 +12,6 @@ export class ArticlesService {
   articles$: Subject<Article>;
   madeNewRequest$: Subject<boolean>;
   hasSubscriptions$: BehaviorSubject<boolean>;
-  hasPreviouslyRequested: boolean
   topicSubscriptionServiceURL: string;
 
   constructor(private webSocketService: WebsocketService) {

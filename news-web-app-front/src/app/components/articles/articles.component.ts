@@ -35,15 +35,16 @@ export class ArticlesComponent implements OnInit {
 
   displayArticle(article: Article) {
     this.showLoading = false;
+
     if (this.newRequest) {
       this.clearView();
       this.newRequest = false;
     }
+
     this.articles.push(article);
   }
 
   clearView() {
-      //this.firstArticleColumn.nativeElement.innerHTML = '';
-      //this.secondArticleColumn.nativeElement.innerHTML = '';
+    this.articles = [];
   }
 }
