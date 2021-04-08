@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './components/layout/footer/footer/footer.component';
 import { AccountCardComponent } from './components/account-card/account-card.component';
 import { HomapageComponent } from './components/homapage/homapage.component';
-import { DatePipe } from '@angular/common';
+import { DatePipe, KeyValuePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';

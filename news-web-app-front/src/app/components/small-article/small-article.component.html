@@ -11,6 +11,6 @@
         <span class="ml-2" *ngIf="article.author != 'null'">Author: {{article.author}}</span>
     </div>
     <div class="card-body pt-0">
-        <p class="card-text" [innerHTML]="article.description"></p>
+        <p class="card-text" *ngIf="article.description != 'null'" [innerHTML]="article.description"></p>
     </div>
 </div>

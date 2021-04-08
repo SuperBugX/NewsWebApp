@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
 // JQuery Var (Needed for JQuery)
 declare var $: any;
@@ -104,22 +105,43 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   // Methods
   getArticles() {
-    this.articleService.unsubscribeAllTopics();
-    this.articleService.madeNewRequest$.next(true);
+    let subscriptions = this.articleService.getSubscriptions();
+    let tempCountryValue : string;
+    let dataReseted: boolean;
+
+    if(this.countryInput.nativeElement.value == "--"){
+      tempCountryValue = "";
+    }
+    else{
+      tempCountryValue = this.countryInput.nativeElement.value;
+    }
+
+    if(this.chosenCountry.localeCompare(tempCountryValue) != 0 || this.chosenLanguage.localeCompare(this.languageInput.nativeElement.value) != 0 || this.activeTopics.length == 0){
+      alert("I DLETE");
+      this.articleService.needDataReset$.next(true);
+      this.articleService.unsubscribeAllTopics();
+      dataReseted = true;
+    }
+    else{
+      subscriptions.forEach((subscription) =>{
+        if(!this.activeTopics.includes(subscription)){
+          this.articleService.unsubscribeTopic(subscription + "?" + "country=" + this.chosenCountry + "&" + "lang=" + this.chosenLanguage);
+        }
+      })
+    }
+
+    this.chosenCountry = tempCountryValue;
     this.chosenLanguage = this.languageInput.nativeElement.value;
     let subscriptionRequest;
 
-    if(this.countryInput.nativeElement.value == '--'){
-      this.chosenCountry = '';
-    }
-    else{
-      this.chosenCountry = this.countryInput.nativeElement.value;
+    for (var i = 0; this.activeTopics[i]; ++i) {
+      if(!subscriptions.includes(this.activeTopics[i]) || dataReseted){
+        subscriptionRequest = this.activeTopics[i] + "?" + "country=" + this.chosenCountry + "&" + "lang=" + this.chosenLanguage;
+        this.articleService.subscribeTopic(subscriptionRequest);
+      }
     }
 
-    for (var i = 0; this.activeTopics[i]; ++i) {
-      subscriptionRequest = this.activeTopics[i] + "?" + "country=" + this.chosenCountry + "&" + "lang=" + this.chosenLanguage;
-      this.articleService.subscribeTopic(subscriptionRequest);
-    }
+    this.articleService.madeNewRequest$.next(true);
   }
 
   // Button Toggle Methods used for CSS Class Applying in HTML

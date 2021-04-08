@@ -80,7 +80,7 @@ export class WebsocketService {
         this.subscriptions.push(destination);
       }
       else{
-        console.log('Already Subscribed');
+        console.log('Already Subscribed' + destination);
       }
     }
     else{
@@ -106,7 +106,7 @@ export class WebsocketService {
 
   unsubscribeAll() : void{
     if(this.isConnected){
-      this.subscriptions.forEach((Subscription) => {this.stompClient.unsubscribe(Subscription)});
+      this.subscriptions.forEach((subscription) => {this.unsubscribe(subscription)});
     }
     else{
       console.log('No Active Connection');
