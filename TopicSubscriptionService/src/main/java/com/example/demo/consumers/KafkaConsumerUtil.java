@@ -2,6 +2,8 @@ package com.example.demo.consumers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -33,8 +35,7 @@ public final class KafkaConsumerUtil {
 	public static void startOrCreateConsumers(final String topic, final Object messageListener, final int concurrency,
 			final Map<String, Object> consumerProperties) {
 
-		log.info("creating kafka consumer for topic {}", topic);
-		System.out.println("creating kafka consumer for topic ");
+		System.out.println("creating kafka consumer for topic " + topic);
 
 		ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
 		if (container != null) {
@@ -48,22 +49,20 @@ public final class KafkaConsumerUtil {
 
 		ContainerProperties containerProps = new ContainerProperties(topic);
 
-		containerProps.setPollTimeout(100);
 		Boolean enableAutoCommit = (Boolean) consumerProperties.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
 
 		if (enableAutoCommit != null && !enableAutoCommit) {
 			containerProps.setAckMode(AckMode.MANUAL_IMMEDIATE);
 		}
 
+		if ((enableAutoCommit != null && !enableAutoCommit) && !(messageListener instanceof TopicAckMessageListener)) {
+			throw new IllegalArgumentException("Expected message listener of type TopicAckMessageListener");
+		}
+
+		containerProps.setPollTimeout(100);
 		ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerProperties);
 
 		container = new ConcurrentMessageListenerContainer<>(factory, containerProps);
-
-		if ((enableAutoCommit != null && !enableAutoCommit) && !(messageListener instanceof CustomAckMessageListener)) {
-			throw new IllegalArgumentException(
-					"Expected message listener of type com.bkatwal.kafka.impl.CustomAckMessageListener!");
-		}
-
 		container.setupMessageListener(messageListener);
 
 		if (concurrency == 0) {
@@ -90,6 +89,39 @@ public final class KafkaConsumerUtil {
 		ConcurrentMessageListenerContainer<String, String> container = consumersMap.get(topic);
 		container.stop();
 		log.info("consumer stopped!!");
+	}
+
+	public static void createTemporaryConsumer(final String topic, final Object messageListener,
+			final Map<String, Object> consumerProperties, final int delay) {
+
+		ContainerProperties containerProps = new ContainerProperties(topic);
+
+		Boolean enableAutoCommit = (Boolean) consumerProperties.get(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
+
+		if (enableAutoCommit != null && !enableAutoCommit) {
+			containerProps.setAckMode(AckMode.MANUAL_IMMEDIATE);
+		}
+
+		if ((enableAutoCommit != null && !enableAutoCommit) && !(messageListener instanceof TopicAckMessageListener)) {
+			throw new IllegalArgumentException("Expected message listener of type TopicAckMessageListener");
+		}
+
+		containerProps.setPollTimeout(100);
+		containerProps.setGroupId(UUID.randomUUID().toString());
+		ConsumerFactory<String, String> factory = new DefaultKafkaConsumerFactory<>(consumerProperties);
+		ConcurrentMessageListenerContainer<String, String> container = new ConcurrentMessageListenerContainer<>(factory,
+				containerProps);
+
+		container.setupMessageListener(messageListener);
+		container.setConcurrency(1);
+		container.start();
+
+		new java.util.Timer().schedule(new java.util.TimerTask() {
+			@Override
+			public void run() {
+				container.stop();
+			}
+		}, delay);
 	}
 
 	private KafkaConsumerUtil() {

@@ -13,7 +13,8 @@ import lombok.NonNull;
 public class ErrorTemplate {
 	
 	//Attributes
-	@NonNull private String code;
+	@NonNull
+	private String code;
 	private String message;
 	
 	public String toJSON() {

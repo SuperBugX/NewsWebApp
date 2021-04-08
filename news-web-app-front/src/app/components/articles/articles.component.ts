@@ -36,20 +36,14 @@ export class ArticlesComponent implements OnInit {
   displayArticle(article: Article) {
     this.showLoading = false;
     if (this.newRequest) {
-      alert("here");
       this.clearView();
       this.newRequest = false;
     }
     this.articles.push(article);
   }
-  s;
-  clearView() {
-    if (this.firstArticleColumn) {
-      this.firstArticleColumn.nativeElement.innerHTML = '';
-    }
 
-    if (this.secondArticleColumn) {
-      this.secondArticleColumn.nativeElement.innerHTML = '';
-    }
+  clearView() {
+      //this.firstArticleColumn.nativeElement.innerHTML = '';
+      //this.secondArticleColumn.nativeElement.innerHTML = '';
   }
 }

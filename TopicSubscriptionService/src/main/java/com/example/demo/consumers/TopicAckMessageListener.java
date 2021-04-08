@@ -1,16 +1,23 @@
 package com.example.demo.consumers;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.Data;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
 
 import com.example.demo.interfaces.TopicProcessor;
-import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class CustomAckMessageListener implements AcknowledgingMessageListener<String, String> {
+@Data
+public class TopicAckMessageListener implements AcknowledgingMessageListener<String, String> {
 
+	@NonNull
 	private TopicProcessor topicProcessor;
+	@NonNull
+	private boolean autoAcknowledge;
 
 	@Override
 	public void onMessage(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
@@ -19,6 +26,8 @@ public class CustomAckMessageListener implements AcknowledgingMessageListener<St
 		topicProcessor.process(consumerRecord.key(), consumerRecord.value());
 
 		// commit offset
-		acknowledgment.acknowledge();
+		if (autoAcknowledge) {
+			acknowledgment.acknowledge();
+		}
 	}
 }
