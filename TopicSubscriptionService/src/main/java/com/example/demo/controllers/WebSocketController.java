@@ -178,8 +178,7 @@ public class WebSocketController {
 										new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate), true),
 								1, consumerConfig);
 
-						// Request for news content from the NewsFetcherService to be published into
-						// kafka
+						// Request for news content from the NewsFetcherService to be published into kafka
 						requestNewsProducer(kafkaTopic, topicName, language, country);
 					}
 				}
