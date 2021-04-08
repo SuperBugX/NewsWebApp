@@ -27,7 +27,7 @@ public class NewsAPI extends AbstractNewsAPI {
 	// Registered API key
 	//7783e4d68a23493a95b49f8594dbb506
 	//ca4d921c12a049beb7a1395ba27ad62f
-	private final String APIKEY = "7783e4d68a23493a95b49f8594dbb506";
+	private final String APIKEY = "ca4d921c12a049beb7a1395ba27ad62f";
 
 	// API Host URI
 	private final String HOST = "https://newsapi.org";
