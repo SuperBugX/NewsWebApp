@@ -20,8 +20,10 @@ public class KafkaConfig {
 	public static Map<String, Object> getConsumerConfig() {
 		Map<String, Object> configProps = new HashMap<String, Object>();
 		configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
-		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
+		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "news_consumer");
+		configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+		configProps.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, true);
+		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
 		configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		return configProps;

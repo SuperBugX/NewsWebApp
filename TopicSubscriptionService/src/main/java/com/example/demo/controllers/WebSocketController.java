@@ -11,13 +11,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
-import org.springframework.kafka.core.KafkaTemplate;
 
 import com.example.demo.configurations.KafkaConfig;
-import com.example.demo.consumers.CustomMessageListener;
 import com.example.demo.consumers.KafkaConsumerUtil;
+import com.example.demo.consumers.TopicAckMessageListener;
 import com.example.demo.resources.ClientSession;
 import com.example.demo.resources.NewsTopicProcessor;
+import com.example.demo.resources.NewsRefresherTopicProcessor;
 import com.example.demo.resources.TopicSubscription;
 
 import java.net.URI;
@@ -27,8 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class WebSocketController {
@@ -36,9 +34,6 @@ public class WebSocketController {
 	// Attributes
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
-
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
 
 	private static final String NEWSFETCHERSERVICEURL = "http://localhost:8060/NewsFetcherService";
 	private static final String NEWSPUBLISHENDPOINT = "/PublishNews2";
@@ -60,7 +55,7 @@ public class WebSocketController {
 	}
 
 	// Method to request the NewsFetcherService to publish news content into kafka
-	public void requestNews(String kafkaTopic, String topic, String language, String country) {
+	public void requestNewsProducer(String kafkaTopic, String topic, String language, String country) {
 
 		// Build a request based on the available variables
 		(WebClient.builder().build()).get()
@@ -108,84 +103,84 @@ public class WebSocketController {
 			// Check if the destination exists
 			if (subscriptionDestination != null) {
 
-				// Get the sessions attributes variable from the received frame
-				// The variable is used to retrieve the current clients session ID for
-				// identification purposes
-				Map<String, String> sessionAttributes = (ConcurrentHashMap<String, String>) event.getMessage()
-						.getHeaders().get("simpSessionAttributes");
+				// Get the clients session ID
+				String sessionID = event.getUser().getName();
+				ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
+				boolean isSubscribed = false;
 
-				// Check if the sessions attributes variable could be found from the header
-				if (sessionAttributes != null) {
-
-					// Get the clients session ID
-					String sessionID = sessionAttributes.get("sessionId");
-					ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
-					boolean isSubscribed = false;
-
-					// Check if the client already has a session as indicated in the data structure
-					if (sessionEntry != null) {
-						// Check if the existing client is already subscribed to a topic
-						if (!sessionEntry.getStompSubscriptions().contains(subscriptionDestination)) {
-							sessionEntry.addSubscription(subscriptionDestination);
-						} else {
-							isSubscribed = true;
-						}
+				// Check if the client already has a session as indicated in the data structure
+				if (sessionEntry != null) {
+					// Check if the existing client is already subscribed to a topic
+					if (!sessionEntry.getStompSubscriptions().contains(subscriptionDestination)) {
+						sessionEntry.addSubscription(subscriptionDestination);
 					} else {
-						// Create a new session instance for the new client connection
-						activeSessions.put(sessionID, new ClientSession(sessionID,
-								new LinkedList<String>(Arrays.asList(subscriptionDestination))));
+						isSubscribed = true;
+					}
+				} else {
+					// Create a new session instance for the new client connection
+					activeSessions.put(sessionID, new ClientSession(sessionID,
+							new LinkedList<String>(Arrays.asList(subscriptionDestination))));
+				}
+
+				// Parse the string URI as a Map with String Parameter keys and List<String>
+				// values as parameter values
+				Map<String, List<String>> parameters = getURIParam(subscriptionDestination);
+				String country = "";
+				String language = "";
+
+				if (parameters != null) {
+					List<String> languageParam = parameters.get("lang");
+					List<String> countryParam = parameters.get("country");
+
+					// Check if any parameters were provided
+					if (languageParam != null && languageParam.get(0) != null) {
+						language = languageParam.get(0);
 					}
 
-					// Depending on if the client is already subscribed, create a new topic
-					// subscription and kafka consumer
-					if (!isSubscribed) {
-						TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(subscriptionDestination);
-						// Check if the topic already exists base don a data structure and thus has a
-						// kafka consumer already
-						if (topicEntry != null) {
-							// Increment the amount subscriptions that exist for the topic
+					if (countryParam != null && countryParam.get(0) != null) {
+						country = countryParam.get(0);
+					}
+				}
 
-							topicEntry.incrementSubscriptions();
-						} else {
+				// Remove the desired STOMP prefix
+				String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
+				String kafkaTopic = topicName + country + language;
 
-							// Parse the string URI as a Map with String Parameter keys and List<String>
-							// values as parameter values
-							Map<String, List<String>> parameters = getURIParam(subscriptionDestination);
-							String country = "";
-							String language = "";
+				// Depending on if the client is already subscribed, create a new topic
+				// subscription and kafka consumer
+				if (!isSubscribed) {
+					TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(subscriptionDestination);
+					// Check if the topic already exists base don a data structure and thus has a
+					// kafka consumer already
+					if (topicEntry != null) {
+						// Increment the amount subscriptions that exist for the topic
+						topicEntry.incrementSubscriptions();
 
-							if (parameters != null) {
-								List<String> languageParam = parameters.get("lang");
-								List<String> countryParam = parameters.get("country");
+						// Start a new consumer for the new topic
+						KafkaConsumerUtil
+								.createTemporaryConsumer(kafkaTopic,
+										new TopicAckMessageListener(new NewsRefresherTopicProcessor(
+												subscriptionDestination, sessionID, simpMessagingTemplate), false),
+										consumerConfig, 10000);
 
-								// Check if any parameters were provided
-								if (languageParam != null && languageParam.get(0) != null) {
-									language = languageParam.get(0);
-								}
+						System.out.println("I GOT AFTER METHOD");
 
-								if (countryParam != null && countryParam.get(0) != null) {
-									country = countryParam.get(0);
-								}
-							}
+					} else {
 
-							// Remove the desired STOMP prefix
-							String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
-							String kafkaTopic = topicName + country + language;
-							activeTopics.put(subscriptionDestination,
-									new TopicSubscription(kafkaTopic, subscriptionDestination));
+						activeTopics.put(subscriptionDestination,
+								new TopicSubscription(kafkaTopic, subscriptionDestination));
 
-							System.out.println("I CONSUME FROM " + kafkaTopic);
+						System.out.println("I CONSUME FROM " + kafkaTopic);
 
-							// Start a new consumer for the new topic
-							KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
-									new CustomMessageListener(
-											new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate)),
-									1, consumerConfig);
+						// Start a new consumer for the new topic
+						KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
+								new TopicAckMessageListener(
+										new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate), true),
+								1, consumerConfig);
 
-							// Request for news content from the NewsFetcherService to be published into
-							// kafka
-							requestNews(kafkaTopic, topicName, language, country);
-						}
+						// Request for news content from the NewsFetcherService to be published into
+						// kafka
+						requestNewsProducer(kafkaTopic, topicName, language, country);
 					}
 				}
 			}
@@ -198,15 +193,9 @@ public class WebSocketController {
 		// Get the sessions attributes variable from the received frame
 		// The variable is used to retrieve the current clients session ID for
 		// identification purposes
-		Map<String, String> attributes = (ConcurrentHashMap<String, String>) event.getMessage().getHeaders()
-				.get("simpSessionAttributes");
-		String sessionID = null;
 
-		// Check if the attributes variable exists
-		if (attributes != null) {
-			// Get the clients session ID if it exists
-			sessionID = attributes.get("sessionId");
-		}
+		// Get the clients session ID
+		String sessionID = event.getUser().getName();
 
 		// Check if a session ID exists and was found
 		if (sessionID != null) {
@@ -241,51 +230,41 @@ public class WebSocketController {
 	@EventListener
 	public void onApplicationEvent(SessionUnsubscribeEvent event) {
 
-		// Get the sessions attributes variable from the received frame
-		// The variable is used to retrieve the current clients session ID for
-		// identification purposes
-		Map<String, String> attributes = (ConcurrentHashMap<String, String>) event.getMessage().getHeaders()
-				.get("simpSessionAttributes");
-		String sessionID = null;
+		// Get the clients session ID
+		String sessionID = event.getUser().getName();
 
-		// Check if the attributes variable exists
-		if (attributes != null) {
-			// Get the clients session ID if it exists
-			sessionID = attributes.get("sessionId");
+		// Check if a session ID was found
+		if (sessionID != null) {
 
-			// Check if a session ID was found
-			if (sessionID != null) {
+			ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
 
-				ClientSession sessionEntry = (ClientSession) activeSessions.get(sessionID);
+			// Check if a session instance exists
+			if (sessionEntry != null) {
 
-				// Check if a session instance exists
-				if (sessionEntry != null) {
+				String stompSubscription = event.getMessage().getHeaders().get("simpSubscriptionId").toString();
 
-					String stompSubscription = event.getMessage().getHeaders().get("simpSubscriptionId").toString();
+				// Check if a desired subscription/topic to unsubscribe from exists and whether
+				// it was successfully removed from the ClientSession instance
+				if (sessionEntry.removeSubscription(stompSubscription)) {
 
-					// Check if a desired subscription/topic to unsubscribe from exists and whether
-					// it was successfully removed from the ClientSession instance
-					if (sessionEntry.removeSubscription(stompSubscription)) {
+					// Get the topic/subscription instance
+					TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(stompSubscription);
 
-						// Get the topic/subscription instance
-						TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(stompSubscription);
+					// Check if the desired topic exists
+					if (topicEntry != null) {
+						topicEntry.decrementSubscriptions();
 
-						// Check if the desired topic exists
-						if (topicEntry != null) {
-							topicEntry.decrementSubscriptions();
-
-							// Check if the number of subscribers is below zero
-							if (topicEntry.getSubscriptions() <= 0) {
-								// Delete the topic from the data structure and terminate the corresponding
-								// consumer
-								KafkaConsumerUtil.stopConsumer(topicEntry.getKafkaTopic());
-								activeTopics.remove(stompSubscription);
-							}
+						// Check if the number of subscribers is below zero
+						if (topicEntry.getSubscriptions() <= 0) {
+							// Delete the topic from the data structure and terminate the corresponding
+							// consumer
+							KafkaConsumerUtil.stopConsumer(topicEntry.getKafkaTopic());
+							activeTopics.remove(stompSubscription);
 						}
 					}
 				}
-
 			}
+
 		}
 
 	}

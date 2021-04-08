@@ -39,6 +39,7 @@ export class ArticlesService {
 
   unsubscribeTopic(topic: string): void {
     this.webSocketService.unsubscribe('/topic/' + topic);
+    this.webSocketService.unsubscribe('/user/topic/' + topic);
 
     if (this.webSocketService.subscriptions.length == 0) {
       this.hasSubscriptions$.next(false);
@@ -48,6 +49,11 @@ export class ArticlesService {
   subscribeTopic(topic: string): void {
     this.hasSubscriptions$.next(true);
     this.webSocketService.subscribe('/topic/' + topic, (message: Frame) => {
+      let article = Object.assign(new Article(), JSON.parse(message.body));
+      this.articles$.next(article);
+    });
+
+    this.webSocketService.subscribe('/user/topic/' + topic, (message: Frame) => {
       let article = Object.assign(new Article(), JSON.parse(message.body));
       this.articles$.next(article);
     });

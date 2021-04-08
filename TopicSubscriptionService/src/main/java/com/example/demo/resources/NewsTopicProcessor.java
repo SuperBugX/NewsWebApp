@@ -5,13 +5,16 @@ import com.example.demo.interfaces.TopicProcessor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
 public class NewsTopicProcessor implements TopicProcessor {
 
 	// Attributes
+	@NonNull
 	private String stompTopic;
+	@NonNull
 	private SimpMessagingTemplate simpMessagerTemplate;
 
 	// Method

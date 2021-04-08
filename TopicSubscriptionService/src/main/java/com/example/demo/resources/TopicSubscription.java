@@ -1,12 +1,15 @@
 package com.example.demo.resources;
 
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class TopicSubscription {
 
 	// Attributes
+	@NonNull
 	private String kafkaTopic;
+	@NonNull
 	private String stompTopic;
 	private int subscriptions;
 
