@@ -4,14 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.newssite.demo.configurations.KafkaConfig;
 import com.newssite.demo.exceptions.NewsAPIJSONException;
 import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
 import com.newssite.demo.models.MediaStack;
@@ -39,7 +38,7 @@ public class NewsFetcherController {
 
 	// Methods
 
-	@RequestMapping("/PublishNews")
+	@GetMapping("/PublishNews")
 	public String publishNews(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
 			@RequestParam("country") String country, @RequestParam("language") String language) {
 
@@ -75,7 +74,7 @@ public class NewsFetcherController {
 		}
 	}
 
-	@RequestMapping("/PublishNews2")
+	@GetMapping("/PublishNews2")
 	public String publishNews2(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
 			@RequestParam("country") String country, @RequestParam("language") String language) {
 

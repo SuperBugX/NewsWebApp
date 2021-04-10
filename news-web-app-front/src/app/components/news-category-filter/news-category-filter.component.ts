@@ -117,7 +117,6 @@ export class NewsCategoryFilterComponent implements OnInit {
     }
 
     if(this.chosenCountry.localeCompare(tempCountryValue) != 0 || this.chosenLanguage.localeCompare(this.languageInput.nativeElement.value) != 0 || this.activeTopics.length == 0){
-      alert("I DLETE");
       this.articleService.needDataReset$.next(true);
       this.articleService.unsubscribeAllTopics();
       dataReseted = true;

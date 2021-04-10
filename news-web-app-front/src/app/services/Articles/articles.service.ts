@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Article } from '../../models/Article';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { WebsocketService } from './websocket.service';
+import { WebsocketService } from '../Websocket/websocket.service';
 import { Frame } from 'stompjs';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class ArticlesService {
   //Attributes
   articles$: Subject<Article>;
@@ -45,11 +46,12 @@ export class ArticlesService {
     this.webSocketService.unsubscribe('/topic/' + topic);
     this.webSocketService.unsubscribe('/user/topic/' + topic);
 
-    let index = this.newsTopicSubscriptions.indexOf(topic.substr(0, topic.indexOf('?')));
-    if(index != -1){
-      this.newsTopicSubscriptions.splice(index,1);
+    let index = this.newsTopicSubscriptions.indexOf(
+      topic.substr(0, topic.indexOf('?'))
+    );
+    if (index != -1) {
+      this.newsTopicSubscriptions.splice(index, 1);
     }
-
 
     if (this.webSocketService.subscriptions.length == 0) {
       this.hasSubscriptions$.next(false);

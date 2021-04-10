@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent } from './components/layout/footer/footer/footer.component';
 import { AccountCardComponent } from './components/account-card/account-card.component';
 import { HomapageComponent } from './components/homapage/homapage.component';
-import { DatePipe, KeyValuePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -29,6 +29,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 import { MyAccountComponent } from './components/my-account/my-account.component';
+import { WebsocketService } from './services/Websocket/websocket.service';
+import { AuthenticationService } from './services/Authentication/authentication.service';
 
 @NgModule({
   declarations: [
@@ -61,11 +63,8 @@ import { MyAccountComponent } from './components/my-account/my-account.component
     MatFormFieldModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'en'
-    })
   ],
-  providers: [ArticlesService, DatePipe],
+  providers: [ArticlesService, WebsocketService, AuthenticationService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

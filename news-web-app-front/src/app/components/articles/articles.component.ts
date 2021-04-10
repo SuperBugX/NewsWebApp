@@ -60,12 +60,8 @@ export class ArticlesComponent implements OnInit {
       let subscriptions = this.articleService.getSubscriptions();
       let currentArticleTopics = Array.from(this.articles.keys());
 
-      alert('Current : ' + currentArticleTopics);
-      alert('Sub : ' + subscriptions);
-
       currentArticleTopics.forEach((topic) => {
         if (!subscriptions.includes(topic)) {
-          alert('rgtrh   : ' + topic);
           this.articles.delete(topic);
         }
       });
