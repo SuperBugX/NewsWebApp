@@ -33,19 +33,17 @@ public class NewsFetcherController {
 
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
-	
-	private List<String> kafkaTopics = new LinkedList<String>(); 
 
 	// Methods
 
 	@GetMapping("/PublishNews")
 	public String publishNews(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
-			@RequestParam("country") String country, @RequestParam("language") String language) {
+			@RequestParam("country") String country) {
 
 		ErrorTemplate errorTemplate;
 
 		// Build the API request parameters
-		MediaStack api = mediaStackBuilder.country(country).category(category).language(language).build();
+		MediaStack api = mediaStackBuilder.country(country).category(category).build();
 
 		try {
 			// Perform API request
@@ -76,12 +74,12 @@ public class NewsFetcherController {
 
 	@GetMapping("/PublishNews2")
 	public String publishNews2(@RequestParam("kafkaTopic") String kafkaTopic, @RequestParam("category") String category,
-			@RequestParam("country") String country, @RequestParam("language") String language) {
+			@RequestParam("country") String country) {
 
 		ErrorTemplate errorTemplate;
 
 		// Build the API request parameters
-		NewsAPI api = newsAPIBuilder.country(country).category(category).language(language).build();
+		NewsAPI api = newsAPIBuilder.country(country).category(category).build();
 
 		try {
 			// Perform API request
@@ -90,9 +88,7 @@ public class NewsFetcherController {
 
 			for (int i = 0; i < articles.length; i++) {
 				try {
-					
-					System.out.println("TOPIC IS" + kafkaTopic + "I SENT " + articles[i].toString());
-;					kafkaTemplate.send(kafkaTopic, articles[i].toJSON());
+					kafkaTemplate.send(kafkaTopic, articles[i].toJSON());
 				} catch (JsonProcessingException e) {
 					e.getStackTrace();
 				}

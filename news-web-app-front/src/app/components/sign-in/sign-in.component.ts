@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/Authentication/authentication.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -13,7 +12,7 @@ export class SignInComponent implements OnInit {
   // Variables
   loginForm: FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private AuthenticationService: AuthenticationService) {
+  constructor(private router: Router, private formBuilder: FormBuilder) {
     if (false) {
       // Code used for redirecting
       router.navigate(['/']);
@@ -59,8 +58,5 @@ export class SignInComponent implements OnInit {
 
   onSubmit() {
     console.warn(this.loginForm.value);
-    this.AuthenticationService.login(this.username, this.password).subscribe(() =>{
-      console.log("User is logged in");
-    });
   }
 }

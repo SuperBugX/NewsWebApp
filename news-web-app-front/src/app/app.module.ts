@@ -64,7 +64,7 @@ import { AuthenticationService } from './services/Authentication/authentication.
     ReactiveFormsModule,
     MatProgressSpinnerModule,
   ],
-  providers: [ArticlesService, WebsocketService, AuthenticationService, DatePipe],
+  providers: [ArticlesService, WebsocketService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,7 +9,6 @@ export class AuthenticationService {
   constructor(private http: HttpClient) { }
 
   login(email, password){
-    return this.http.post<User>('/api/login', {email, password}).shareReplay();
 
   }
 }

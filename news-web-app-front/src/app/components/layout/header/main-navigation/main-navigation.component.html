@@ -64,13 +64,13 @@
 
                   <!-- Quick News Links -->
                   <div class="d-flex flex-wrap category-wrapper">
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-general">General</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-sports">Sports</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-health">Health</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-business">Business</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-technology">Technology</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-science">Science</button></a>
-                    <a routerLink="news-feed-page"><button type="button" class="btn btn-entertainment">Entertainment</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'general'}"><button type="button" class="btn btn-general">General</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'sports'}"><button type="button" class="btn btn-sports">Sports</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'health'}"><button type="button" class="btn btn-health">Health</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'business'}"><button type="button" class="btn btn-business">Business</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'technology'}"><button type="button" class="btn btn-technology">Technology</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'science'}"><button type="button" class="btn btn-science">Science</button></a>
+                    <a [routerLink]="['/news-feed-page']" [queryParams] = "{category:'entertainment'}"><button type="button" class="btn btn-entertainment">Entertainment</button></a>
                   </div>
                 </div>
               </nav>

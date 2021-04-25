@@ -13,6 +13,8 @@ import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.ContainerProperties.AckMode;
 
+import com.newssite.demo.configurations.KafkaConfig;
+
 @Slf4j
 public final class KafkaConsumerUtil {
 

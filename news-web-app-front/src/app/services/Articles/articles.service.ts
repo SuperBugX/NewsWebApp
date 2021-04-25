@@ -25,11 +25,14 @@ export class ArticlesService {
     this.newsTopicSubscriptions = [];
     this.topicSubscriptionServiceURL =
       'ws://localhost:8060/TopicSubscriptionService/stomp-endpoint/websocket';
-    this.webSocketService.connect(this.topicSubscriptionServiceURL);
   }
 
   ngOnDestroy() {
     this.webSocketService.disconnect();
+  }
+
+  connect(){
+    this.webSocketService.connect(this.topicSubscriptionServiceURL);
   }
 
   getSubscriptions(): string[] {
@@ -50,7 +53,7 @@ export class ArticlesService {
       topic.substr(0, topic.indexOf('?'))
     );
     if (index != -1) {
-      this.newsTopicSubscriptions.splice(index, 1);
+      this.newsTopicSubscriptions[index] = null
     }
 
     if (this.webSocketService.subscriptions.length == 0) {

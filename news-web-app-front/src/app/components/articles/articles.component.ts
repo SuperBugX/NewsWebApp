@@ -37,7 +37,9 @@ export class ArticlesComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.articleService.connect();
+  }
 
   displayArticle(article: Article) {
     this.showLoading = false;

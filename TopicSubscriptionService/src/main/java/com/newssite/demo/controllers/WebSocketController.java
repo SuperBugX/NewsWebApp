@@ -55,30 +55,26 @@ public class WebSocketController {
 	}
 
 	// Method to request the NewsFetcherService to publish news content into kafka
-	public void requestNewsProducer(String kafkaTopic, String topic, String language, String country) {
+	public void requestNewsProducer(String kafkaTopic, String topic, String country) {
 
 		// Build a request based on the available variables
 		(WebClient.builder().build()).get()
-				.uri(NEWSFETCHERSERVICEURL,
-						uriBuilder -> buildNewsRequest(uriBuilder, kafkaTopic, topic, language, country))
+				.uri(NEWSFETCHERSERVICEURL, uriBuilder -> buildNewsRequest(uriBuilder, kafkaTopic, topic, country))
 				.retrieve().bodyToMono(String.class).block();
 
 	}
 
 	// URI Builder for the provided variables
-	public URI buildNewsRequest(UriBuilder uriBuilder, String kafkaTopic, String topic, String language,
-			String country) {
+	public URI buildNewsRequest(UriBuilder uriBuilder, String kafkaTopic, String topic, String country) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
-		System.out.println("Country" + country + "Category" + topic + "Language" + language + "KAFKA" + kafkaTopic);
+		System.out.println("Country" + country + "Category" + topic + "KAFKA" + kafkaTopic);
 
 		uriBuilder.path(NEWSPUBLISHENDPOINT);
 
 		uriBuilder.queryParam("kafkaTopic", kafkaTopic);
 
 		uriBuilder.queryParam("category", topic);
-
-		uriBuilder.queryParam("language", language);
 
 		uriBuilder.queryParam("country", country);
 
@@ -99,9 +95,9 @@ public class WebSocketController {
 		if (nativeHeaders != null) {
 			// Get the intended destination/topic of the frame
 			String subscriptionDestination = ((ArrayList<String>) nativeHeaders.get("destination")).get(0);
-
+			
 			// Check if the destination exists
-			if (subscriptionDestination != null) {
+			if (subscriptionDestination != null && !subscriptionDestination.contains("/user")) {
 
 				// Get the clients session ID
 				String sessionID = event.getUser().getName();
@@ -126,17 +122,12 @@ public class WebSocketController {
 				// values as parameter values
 				Map<String, List<String>> parameters = getURIParam(subscriptionDestination);
 				String country = "";
-				String language = "";
 
 				if (parameters != null) {
 					List<String> languageParam = parameters.get("lang");
 					List<String> countryParam = parameters.get("country");
 
 					// Check if any parameters were provided
-					if (languageParam != null && languageParam.get(0) != null) {
-						language = languageParam.get(0);
-					}
-
 					if (countryParam != null && countryParam.get(0) != null) {
 						country = countryParam.get(0);
 					}
@@ -144,7 +135,7 @@ public class WebSocketController {
 
 				// Remove the desired STOMP prefix
 				String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
-				String kafkaTopic = topicName + country + language;
+				String kafkaTopic = topicName + country;
 
 				// Depending on if the client is already subscribed, create a new topic
 				// subscription and kafka consumer
@@ -162,24 +153,35 @@ public class WebSocketController {
 										new TopicAckMessageListener(new NewsRefresherTopicProcessor(
 												subscriptionDestination, sessionID, simpMessagingTemplate), false),
 										consumerConfig, 10000);
-
-						System.out.println("I GOT AFTER METHOD");
-
 					} else {
 
-						activeTopics.put(subscriptionDestination,
-								new TopicSubscription(kafkaTopic, subscriptionDestination));
+						if (KafkaConfig.topicExists(kafkaTopic)) {
 
-						System.out.println("I CONSUME FROM " + kafkaTopic);
+							activeTopics.put(subscriptionDestination,
+									new TopicSubscription(kafkaTopic, subscriptionDestination));
 
-						// Start a new consumer for the new topic
-						KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
-								new TopicAckMessageListener(
-										new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate), true),
-								1, consumerConfig);
+							// Start a new consumer for the new topic
+							KafkaConsumerUtil
+									.createTemporaryConsumer(kafkaTopic,
+											new TopicAckMessageListener(new NewsRefresherTopicProcessor(
+													subscriptionDestination, sessionID, simpMessagingTemplate), false),
+											consumerConfig, 10000);
 
-						// Request for news content from the NewsFetcherService to be published into kafka
-						requestNewsProducer(kafkaTopic, topicName, language, country);
+						} else {
+							activeTopics.put(subscriptionDestination,
+									new TopicSubscription(kafkaTopic, subscriptionDestination));
+
+							// Start a new consumer for the new topic
+							KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
+									new TopicAckMessageListener(
+											new NewsTopicProcessor(subscriptionDestination, simpMessagingTemplate),
+											true),
+									1, consumerConfig);
+
+							// Request for news content from the NewsFetcherService to be published into
+							// kafka
+							requestNewsProducer(kafkaTopic, topicName, country);
+						}
 					}
 				}
 			}
