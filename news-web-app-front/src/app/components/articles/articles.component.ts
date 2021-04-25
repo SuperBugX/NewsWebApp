@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Article } from '../../models/Article';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
 
@@ -8,42 +8,68 @@ import { ArticlesService } from 'src/app/services/Articles/articles.service';
   styleUrls: ['./articles.component.css'],
 })
 export class ArticlesComponent implements OnInit {
-  @ViewChild('firstArticleColumn') firstArticleColumn: ElementRef;
-  @ViewChild('secondArticleColumn') secondArticleColumn: ElementRef;
-
-  articles: Article[];
+  articles: Map<string, Article[]>;
   showLoading: boolean;
-  showingArticles: boolean;
   newRequest: boolean;
-  hasPreviouslyRequested: boolean;
+  resetData: boolean;
 
   constructor(private articleService: ArticlesService) {
-    this.articles = [];
+    this.articles = new Map();
+
     this.articleService.articles$.subscribe((article) => {
       this.displayArticle(article);
     });
+
+    this.showLoading = false;
     this.articleService.hasSubscriptions$.subscribe((value) => {
       this.showLoading = value;
     });
+
     this.newRequest = false;
     this.articleService.madeNewRequest$.subscribe((value) => {
       this.newRequest = value;
+      this.removeUnsubscribedContent();
+    });
+
+    this.resetData = false;
+    this.articleService.needDataReset$.subscribe((value) => {
+      this.resetData = value;
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.articleService.connect();
+  }
 
   displayArticle(article: Article) {
     this.showLoading = false;
-    if (this.newRequest) {
-      this.clearView();
-      this.newRequest = false;
+
+    if (this.articles.has(article.category)) {
+      this.articles.get(article.category).push(article);
+    } else {
+      let newArray: Article[] = [];
+      newArray.push(article);
+      this.articles.set(article.category, newArray);
     }
-    this.articles.push(article);
   }
 
-  clearView() {
-      //this.firstArticleColumn.nativeElement.innerHTML = '';
-      //this.secondArticleColumn.nativeElement.innerHTML = '';
+  getMapKeys(map) {
+    return Array.from(map.keys());
+  }
+
+  removeUnsubscribedContent() {
+    if (!this.resetData) {
+      let subscriptions = this.articleService.getSubscriptions();
+      let currentArticleTopics = Array.from(this.articles.keys());
+
+      currentArticleTopics.forEach((topic) => {
+        if (!subscriptions.includes(topic)) {
+          this.articles.delete(topic);
+        }
+      });
+    } else {
+      this.articles = new Map();
+      this.resetData = false;
+    }
   }
 }

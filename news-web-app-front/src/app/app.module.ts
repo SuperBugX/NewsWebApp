@@ -29,6 +29,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 import { MyAccountComponent } from './components/my-account/my-account.component';
+import { WebsocketService } from './services/Websocket/websocket.service';
+import { AuthenticationService } from './services/Authentication/authentication.service';
 
 @NgModule({
   declarations: [
@@ -61,11 +63,8 @@ import { MyAccountComponent } from './components/my-account/my-account.component
     MatFormFieldModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    TranslateModule.forRoot({
-      defaultLanguage: 'en'
-    })
   ],
-  providers: [ArticlesService, DatePipe],
+  providers: [ArticlesService, WebsocketService, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

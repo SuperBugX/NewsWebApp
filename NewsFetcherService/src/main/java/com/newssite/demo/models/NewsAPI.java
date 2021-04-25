@@ -142,7 +142,6 @@ public class NewsAPI extends AbstractNewsAPI {
 			uriBuilder.queryParam("page", paginationOffset);
 		}
 
-		System.out.println("I SENT" + uriBuilder.build().toString());
 		return uriBuilder.build();
 	}
 

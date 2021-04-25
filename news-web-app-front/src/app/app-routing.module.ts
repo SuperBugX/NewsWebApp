@@ -10,7 +10,8 @@ import { MyAccountComponent } from './components/my-account/my-account.component
 const routes: Routes = [
   { path: '', component: HomapageComponent },
   { path: 'homepage', component: HomapageComponent },
-  { path: 'news-feed-page', component: NewsFeedPageComponent },
+  { path: 'news-feed-page', component: NewsFeedPageComponent},
+  { path: 'news-feed-page/:category', component: NewsFeedPageComponent},
   { path: 'sign-in', component: SignInComponent },
   { path: 'account-registration', component: AccountRegistrationComponent },
   { path: 'my-account', component: MyAccountComponent},

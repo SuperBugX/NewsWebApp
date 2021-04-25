@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // JQuery Var (Needed for JQuery)
 declare var $: any;
@@ -6,10 +6,9 @@ declare var $: any;
 @Component({
   selector: 'app-account-registration',
   templateUrl: './account-registration.component.html',
-  styleUrls: ['./account-registration.component.css']
+  styleUrls: ['./account-registration.component.css'],
 })
-export class AccountRegistrationComponent implements OnInit {
-
+export class AccountRegistrationComponent implements OnInit, AfterViewInit {
   // Variables
   accountForm: FormGroup;
   topicForm: FormGroup;
@@ -21,55 +20,100 @@ export class AccountRegistrationComponent implements OnInit {
   scienceCheck: boolean;
   entertainmentCheck: boolean;
 
-
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
-
     // Account Form
-    this.accountForm = this.formBuilder.group({
-      username: ['', [
-        Validators.required,
-        Validators.pattern('^[A-Za-z0-9]+$'),
-        Validators.minLength(5),
-        Validators.maxLength(25),
-
-      ]],
-      email: ['', [
-        Validators.required,
-        Validators.email,
-
-      ]],
-      password: ['', [
-        Validators.required,
-        Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]+$'),
-        Validators.minLength(10),
-        Validators.maxLength(100),
-
-      ]],
-      passwordConfirm: ['', [
-        Validators.required,
-      ]],
-      preferedCountry: ['', [
-
-      ]]
-    }, {
-      validator: this.mustMatch('password', 'passwordConfirm')
-    });
+    this.accountForm = this.formBuilder.group(
+      {
+        username: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^[A-Za-z0-9]+$'),
+            Validators.minLength(5),
+            Validators.maxLength(25),
+          ],
+        ],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]+$'),
+            Validators.minLength(10),
+            Validators.maxLength(100),
+          ],
+        ],
+        passwordConfirm: ['', [Validators.required]],
+        preferedCountry: ['', []],
+      },
+      {
+        validator: this.mustMatch('password', 'passwordConfirm'),
+      }
+    );
 
     // News Topic Form
-    this.topicForm = this.formBuilder.group({
+    this.topicForm = this.formBuilder.group({});
+  }
 
-    });
-
+  ngAfterViewInit() {
     // JQuery Code Needed for Country Selector in HTML
-    $("#country_selector").countrySelect({
-      defaultCountry: "gb",
+    $('#country_selector').countrySelect({
+      defaultCountry: 'gb',
       onlyCountries: [
-        'ar', 'au', 'at', 'be', 'br', 'bg', 'ca', 'cn', 'co', 'cz', 'eg', 'fr', 'de',
-        'gr', 'hk', 'hu', 'in', 'id', 'ie', 'il', 'it', 'jp', 'lv', 'lt', 'my', 'mx',
-        'ma', 'nl', 'nz', 'ng', 'no', 'ph', 'pl', 'pt', 'ro', 'sa', 'rs', 'sg', 'sk',
-        'si', 'za', 'kr', 'se', 'ch', 'tw', 'th', 'tr', 'ae', 'ua', 'gb', 'us', 've'
+        'ar',
+        'au',
+        'at',
+        'be',
+        'br',
+        'bg',
+        'ca',
+        'cn',
+        'co',
+        'cz',
+        'eg',
+        'fr',
+        'de',
+        'gr',
+        'hk',
+        'hu',
+        'in',
+        'id',
+        'ie',
+        'il',
+        'it',
+        'jp',
+        'lv',
+        'lt',
+        'my',
+        'mx',
+        'ma',
+        'nl',
+        'nz',
+        'ng',
+        'no',
+        'ph',
+        'pl',
+        'pt',
+        'ro',
+        'sa',
+        'rs',
+        'sg',
+        'sk',
+        'si',
+        'za',
+        'kr',
+        'se',
+        'ch',
+        'tw',
+        'th',
+        'tr',
+        'ae',
+        'ua',
+        'gb',
+        'us',
+        've',
       ],
       responsiveDropdown: true,
     });
@@ -94,7 +138,7 @@ export class AccountRegistrationComponent implements OnInit {
       } else {
         matchingControl.setErrors(null);
       }
-    }
+    };
   }
   // Getters And Setters for Registration Form
   get username() {

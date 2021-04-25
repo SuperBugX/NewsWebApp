@@ -59,5 +59,4 @@ export class SignInComponent implements OnInit {
   onSubmit() {
     console.warn(this.loginForm.value);
   }
-
 }

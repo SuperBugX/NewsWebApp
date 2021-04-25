@@ -147,7 +147,6 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 			uriBuilder.queryParam("sort", "published_desc");
 		}
 
-		System.out.println("I GOT " + uriBuilder.build().toString());
 		return uriBuilder.build();
 	}
 

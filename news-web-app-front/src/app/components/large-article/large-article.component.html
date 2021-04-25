@@ -1,9 +1,9 @@
 <div class="card mb-3 rounded">
-    <div class="article-category-header" [ngClass]="{'general-colour': article.category === 'general ', 'sports-colour': article.category === 'sports',
+    <div class="article-category-header" [ngClass]="{'general-colour': article.category === 'general', 'sports-colour': article.category === 'sports',
     'health-colour': article.category === 'health', 'business-colour': article.category === 'business', 'entertainment-colour': article.category === 'entertainment'
     ,'technology-colour': article.category === 'technology', 'science-colour': article.category === 'science' }">{{article.category | uppercase }}</div>
     <a [href]="article.url" target="_blank">
-      <div class="card-header article-title">{{article.title  | titlecase}}</div>
+      <div class="card-header article-title">{{article.title}}</div>
     </a>
     <img class="article-image" [src]="article.imageUrl" layout-fill>
     <div class="card-body">
@@ -12,6 +12,6 @@
         <span class="ml-2" *ngIf="article.author != 'null'">Author: {{article.author}}</span>
     </div>
     <div class="card-body pt-0">
-        <p class="card-text" [innerHTML]="article.description"></p>
+        <p class="card-text" *ngIf="article.description != 'null'" [innerHTML]="article.description"></p>
     </div>
 </div>

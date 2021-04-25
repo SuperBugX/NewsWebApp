@@ -10,8 +10,6 @@ export class AppComponent {
 
   title = "The Hawkers Journal";
 
-  constructor(translate: TranslateService) {
-    translate.setDefaultLang('en');
-    translate.use('en');
+  constructor() {
   }
 }
