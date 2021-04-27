@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from 'src/app/services/Authentication/authentication.service';
 
 @Component({
   selector: 'app-account-card',
@@ -7,9 +8,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountCardComponent implements OnInit {
 
-  constructor() { }
+  isLoggedIn: boolean;
+  username: string;
+
+  constructor(private authenticationService:AuthenticationService) {
+    this.username = this.authenticationService.getUsername();
+
+    this.authenticationService.loggedIn.subscribe(value => {
+      this.isLoggedIn = value;
+    })
+  }
 
   ngOnInit(): void {
   }
 
+  logOut(){
+    this.authenticationService.logOut();
+  }
 }

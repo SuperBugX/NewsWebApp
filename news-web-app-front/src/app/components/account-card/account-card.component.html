@@ -1,11 +1,11 @@
 <!-- Condition Statement for if the user is logged in, The appropriate html is provided -->
 <!-- Users Not Logged-In HTML -->
-<div *ngIf="true;else loggedIn">
-	<div class="d-flex justify-content-center">
-		<div class="card border-0">
+<div *ngIf="!isLoggedIn;else loggedIn">
+	<div class=" d-flex justify-content-center">
+		<div class="border-0">
 			<div class="d-flex align-items-center">
 				<div class="mr-4 mt-2">
-					<div class="d-flex flex-column align-items-center">
+					<div class="">
 
 						<a class="text-white" routerLink="account-registration"><button
 								class="btn btn-sm btn-primary card-button">Sign-Up<i
@@ -26,19 +26,18 @@
 <!-- User Logged-In HTML -->
 <ng-template #loggedIn>
 	<div class="d-flex justify-content-center">
-		<div class="card border-0">
-			<div class="d-flex align-items-center text-center mr-5">
-				<div class="mr-3 mt-2">
-					<h5 class="border-bottom username-holder">UsernameXXXXXXX</h5>
+		<div class="border-0">
+			<div class="d-flex align-items-center text-center">
+				<div class="mt-2">
+					<h5 class="border-bottom username-holder">SuperBugX</h5>
 					<div class="d-flex flex-row mt-2">
 						<a routerLink="my-account"><button class="btn btn-outline-primary card-button">Account Settings</button></a>
 						<!-- Log out Button -->
-						<button class="btn btn-primary card-button">
+						<button class="btn btn-primary card-button w-25" (click)="logOut()">
 							<i class="bi bigger-icon bi-box-arrow-left"></i>
 						</button>
 					</div>
 				</div>
-				<img src="/assets/images/Account/logged-in-user.svg" class="rounded img mt-4" width="75">
 			</div>
 		</div>
 	</div>
