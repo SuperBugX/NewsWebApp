@@ -11,7 +11,6 @@ import { FooterComponent } from './components/layout/footer/footer/footer.compon
 import { AccountCardComponent } from './components/account-card/account-card.component';
 import { HomapageComponent } from './components/homapage/homapage.component';
 import { DatePipe } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 import { NewsFeedPageComponent } from './components/news-feed-page/news-feed-page.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -31,6 +30,10 @@ import { NotFoundPageComponent } from './components/not-found-page/not-found-pag
 import { MyAccountComponent } from './components/my-account/my-account.component';
 import { WebsocketService } from './services/Websocket/websocket.service';
 import { AuthenticationService } from './services/Authentication/authentication.service';
+import { HttpClientModule } from '@angular/common/http';
+import { JWTTokenService } from './services/JWTToken/jwttoken.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ErrorDialogComponent } from './components/dialogs/error-dialog/error-dialog.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import { AuthenticationService } from './services/Authentication/authentication.
     AccountRegistrationComponent,
     NotFoundPageComponent,
     MyAccountComponent,
+    ErrorDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -63,8 +67,10 @@ import { AuthenticationService } from './services/Authentication/authentication.
     MatFormFieldModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    HttpClientModule,
+    MatDialogModule,
   ],
-  providers: [ArticlesService, WebsocketService, DatePipe],
+  providers: [ArticlesService, WebsocketService, DatePipe, AuthenticationService, JWTTokenService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
