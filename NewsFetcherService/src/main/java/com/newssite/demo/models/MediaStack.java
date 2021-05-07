@@ -2,24 +2,22 @@ package com.newssite.demo.models;
 
 import java.net.URI;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.newssite.demo.abstarct.AbstractNewsAPI;
 import com.newssite.demo.exceptions.NewsAPIJSONException;
 import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
-import com.newssite.demo.interfaces.TopNewsAPI;
+import com.newssite.demo.interfaces.LatestNewsAPI;
 import com.newssite.demo.resources.Article;
 
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
-public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
+public class MediaStack extends AbstractNewsAPI implements LatestNewsAPI {
 
 	// All possible API parameter values updated as of 26/01/21.
 
@@ -29,12 +27,12 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 
 	// API Host URI
 	private final String HOST = "http://api.mediastack.com";
-	// Live News endPoint
+	// Live News End Point
 	private final String LIVENEWS = "/v1/news";
 
 	/*
 	 * Supported Categories: general, business, entertainment, health, science,
-	 * sports technology,
+	 * sports, technology,
 	 */
 	private String category;
 
@@ -60,31 +58,36 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 
 	private String language;
 
-	// General keywords to be used
+	// General keywords to be used to narrow article searching
 	private String[] keyWords;
 
 	// Maximum pagination limit is 100, Default is 25
 	private int paginationLimit;
+	// Pagination Offset, works only if the number of found articles is greater than
+	// the set pagination limit
 	private int paginationOffset;
 
-	// Contains news sources (organisations)
+	// Contains news sources, used to filter sources to be removed in found results
+	// or as the only desired sources
 	private String[] sources;
 
 	// Supported sorting values: published_desc, published_acs, popularity
 	private String sortBy;
+	
+	@Autowired
+	WebClient.Builder webClientBuilder;
 
 	// Methods
 	public String getLatestNews() throws NewsAPIResponseErrorException, NewsAPIJSONException {
 
-		String apiJsonResponse = null;
-		JsonNode responseNode = null;
-		JsonNode dataNode = null;
+		String apiJsonResponse;
+		JsonNode responseNode;
+		JsonNode dataNode;
 		ObjectMapper jsonMapper = new ObjectMapper();
 
 		// Build a request based on the available variables and get a JSON response
-		apiJsonResponse = (WebClient.builder().build()).get()
-				.uri(HOST, uriBuilder -> buildLiveArticlesRequest(uriBuilder)).retrieve().bodyToMono(String.class)
-				.block();
+		apiJsonResponse = (WebClient.builder().build()).get().uri(HOST, uriBuilder -> buildLiveArticlesRequest(uriBuilder))
+				.retrieve().bodyToMono(String.class).block();
 
 		try {
 			// Parse the JSON response
@@ -95,9 +98,6 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 			if (dataNode != null) {
 				throw new NewsAPIResponseErrorException("Received the error:" + dataNode.asText());
 			}
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			throw new NewsAPIJSONException(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			throw new NewsAPIJSONException(e.getMessage());
@@ -107,7 +107,7 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 		return apiJsonResponse;
 	}
 
-	public URI buildLiveArticlesRequest(UriBuilder uriBuilder) {
+	private URI buildLiveArticlesRequest(UriBuilder uriBuilder) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
 
@@ -160,13 +160,11 @@ public class MediaStack extends AbstractNewsAPI implements TopNewsAPI {
 
 		try {
 			responseNode = jsonMapper.readTree(json);
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			throw new NewsAPIJSONException(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			throw new NewsAPIJSONException(e.getMessage());
 		}
+
 		dataNode = responseNode.get("data");
 		Article[] articles = new Article[dataNode.size()];
 

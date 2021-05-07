@@ -23,7 +23,6 @@ public class NewsTopicProcessor implements TopicProcessor {
 	public void process(String key, String message) {
 
 		// Send the received kafka message to the designated topic
-		System.out.println("All Users Subscribed to The Topic: " + stompTopic + ", Received News");
 		simpMessagerTemplate.convertAndSend(stompTopic, message);
 	}
 }

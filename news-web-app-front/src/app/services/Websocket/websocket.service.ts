@@ -27,7 +27,7 @@ export class WebsocketService {
     this.disconnect();
   }
 
-  connect(url: string): void {
+   connect(url: string): void {
     if(!this.isConnected){
       this.websocket = new WebSocket(url);
       if(this.websocket){
@@ -45,9 +45,6 @@ export class WebsocketService {
         else{
           console.log('Stomp Error');
         }
-      }
-      else{
-        console.log('Could Not Create Socket');
       }
     }
     else{

@@ -1,20 +1,15 @@
 package com.newssite.demo.configurations;
 
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 
 @EnableKafka
@@ -37,30 +32,6 @@ public class KafkaConfig {
 	public ConsumerFactory<String, String> consumerFactory() {
 		return new DefaultKafkaConsumerFactory<>(getConsumerConfig());
 	}
-
-	@Bean
-	public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory() {
-		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
-		factory.setConsumerFactory(consumerFactory());
-
-		return factory;
-	}
 	
-	public static boolean topicExists(String topic) {
-		AdminClient admin = AdminClient.create(getConsumerConfig());
-	    ListTopicsResult listTopics = admin.listTopics();
-	    
-	    try {
-			Set<String> names = listTopics.names().get();
-			return names.contains(topic);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	    return false;
-	}
+	
 }

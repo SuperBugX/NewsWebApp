@@ -2,27 +2,33 @@ package com.newssite.demo.controllers;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.event.EventListener;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.StringUtils;
 
+import com.netflix.discovery.EurekaClient;
 import com.newssite.demo.configurations.KafkaConfig;
-import com.newssite.demo.consumers.KafkaConsumerUtil;
 import com.newssite.demo.consumers.TopicAckMessageListener;
 import com.newssite.demo.resources.ClientSession;
 import com.newssite.demo.resources.NewsRefresherTopicProcessor;
+import com.newssite.demo.resources.NewsRetriever;
 import com.newssite.demo.resources.NewsTopicProcessor;
 import com.newssite.demo.resources.TopicSubscription;
+import com.newssite.demo.util.KafkaConsumerUtil;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,52 +41,59 @@ public class WebSocketController {
 	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 
-	private static final String NEWSFETCHERSERVICEURL = "http://localhost:8060/NewsFetcherService";
-	private static final String NEWSPUBLISHENDPOINT = "/PublishNews2";
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
+
+	@Autowired
+	private DiscoveryClient discoveryClient;
+
+	@Autowired
+	private EurekaClient eurekaClient;
 
 	private Map<String, Object> consumerConfig = KafkaConfig.getConsumerConfig();
 	private Map<String, TopicSubscription> activeTopics = new HashMap<String, TopicSubscription>(15);
 	private Map<String, ClientSession> activeSessions = new HashMap<String, ClientSession>(50);
 
 	// Methods
-
 	/*
 	 * Method returns a Map with String keys And List<String> Values. Each key
 	 * represents a parameter retrieved from the provided String uri and the value
 	 * is a string list with the found values for the corresponding parameter key
 	 * NOTE: The received method parameter uri is not decoded in the process
 	 */
-	public Map<String, List<String>> getURIParam(String uri) {
+	public static Map<String, List<String>> getURIParam(String uri) {
 		return UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
 	}
 
-	// Method to request the NewsFetcherService to publish news content into kafka
-	public void requestNewsProducer(String kafkaTopic, String topic, String country) {
+	@KafkaListener(topics = "NewsRequests", properties = "auto.offset.reset=latest", groupId = "#{T(java.util.UUID).randomUUID().toString()}")
+	public void listenSpecialEvent(String stompDestination) {
 
-		// Build a request based on the available variables
-		(WebClient.builder().build()).get()
-				.uri(NEWSFETCHERSERVICEURL, uriBuilder -> buildNewsRequest(uriBuilder, kafkaTopic, topic, country))
-				.retrieve().bodyToMono(String.class).block();
+		TopicSubscription topicSubscription = activeTopics.get(stompDestination);
 
-	}
+		if (topicSubscription != null && topicSubscription.getSubscriptions() > 0) {
 
-	// URI Builder for the provided variables
-	public URI buildNewsRequest(UriBuilder uriBuilder, String kafkaTopic, String topic, String country) {
+			int delayOffset = 0;
+			String currentServiceInstanceID = eurekaClient.getApplicationInfoManager().getInfo().getId();
+			List<ServiceInstance> topicSubscriptionServices = discoveryClient
+					.getInstances("Topic-Subscription-Service");
 
-		// Build a uri request with all of the attributes as query parameters inputs
-		System.out.println("Country" + country + "Category" + topic + "KAFKA" + kafkaTopic);
+			Collections.sort(topicSubscriptionServices, new Comparator<ServiceInstance>() {
 
-		uriBuilder.path(NEWSPUBLISHENDPOINT);
+				@Override
+				public int compare(ServiceInstance o1, ServiceInstance o2) {
+					return o1.getInstanceId().compareTo(o2.getInstanceId());
+				}
+			});
 
-		uriBuilder.queryParam("kafkaTopic", kafkaTopic);
+			for (int i = 0; i < topicSubscriptionServices.size(); i++) {
+				if (topicSubscriptionServices.get(i).getInstanceId().equals(currentServiceInstanceID)) {
+					delayOffset = i;
+					break;
+				}
+			}
 
-		uriBuilder.queryParam("category", topic);
-
-		uriBuilder.queryParam("country", country);
-
-		System.out.println("I GOT" + uriBuilder.build().toString());
-
-		return uriBuilder.build();
+			topicSubscription.resetTimer(delayOffset * 60000);
+		}
 	}
 
 	// Event Listeners
@@ -95,7 +108,7 @@ public class WebSocketController {
 		if (nativeHeaders != null) {
 			// Get the intended destination/topic of the frame
 			String subscriptionDestination = ((ArrayList<String>) nativeHeaders.get("destination")).get(0);
-			
+
 			// Check if the destination exists
 			if (subscriptionDestination != null && !subscriptionDestination.contains("/user")) {
 
@@ -124,7 +137,6 @@ public class WebSocketController {
 				String country = "";
 
 				if (parameters != null) {
-					List<String> languageParam = parameters.get("lang");
 					List<String> countryParam = parameters.get("country");
 
 					// Check if any parameters were provided
@@ -135,13 +147,13 @@ public class WebSocketController {
 
 				// Remove the desired STOMP prefix
 				String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
-				String kafkaTopic = topicName + country;
+				String kafkaTopic = DigestUtils.sha1Hex(topicName + country);
 
 				// Depending on if the client is already subscribed, create a new topic
 				// subscription and kafka consumer
 				if (!isSubscribed) {
 					TopicSubscription topicEntry = (TopicSubscription) activeTopics.get(subscriptionDestination);
-					// Check if the topic already exists base don a data structure and thus has a
+					// Check if the topic already exists based on a data structure and thus has a
 					// kafka consumer already
 					if (topicEntry != null) {
 						// Increment the amount subscriptions that exist for the topic
@@ -155,10 +167,10 @@ public class WebSocketController {
 										consumerConfig, 10000);
 					} else {
 
-						if (KafkaConfig.topicExists(kafkaTopic)) {
+						if (KafkaConsumerUtil.topicExists(kafkaTopic)) {
 
 							activeTopics.put(subscriptionDestination,
-									new TopicSubscription(kafkaTopic, subscriptionDestination));
+									new TopicSubscription(kafkaTopic, subscriptionDestination, kafkaTemplate));
 
 							// Start a new consumer for the new topic
 							KafkaConsumerUtil
@@ -169,7 +181,7 @@ public class WebSocketController {
 
 						} else {
 							activeTopics.put(subscriptionDestination,
-									new TopicSubscription(kafkaTopic, subscriptionDestination));
+									new TopicSubscription(kafkaTopic, subscriptionDestination, kafkaTemplate));
 
 							// Start a new consumer for the new topic
 							KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
@@ -180,7 +192,7 @@ public class WebSocketController {
 
 							// Request for news content from the NewsFetcherService to be published into
 							// kafka
-							requestNewsProducer(kafkaTopic, topicName, country);
+							NewsRetriever.requestNewsProducer(kafkaTopic, topicName, country);
 						}
 					}
 				}
@@ -216,7 +228,7 @@ public class WebSocketController {
 					if (topic != null) {
 						topic.decrementSubscriptions();
 						if (topic.getSubscriptions() <= 0) {
-							KafkaConsumerUtil.stopConsumer(topic.getKafkaTopic());
+							KafkaConsumerUtil.pauseConsumer(topic.getKafkaTopic());
 							activeTopics.remove(subscription);
 						}
 					}
@@ -259,14 +271,12 @@ public class WebSocketController {
 						if (topicEntry.getSubscriptions() <= 0) {
 							// Delete the topic from the data structure and terminate the corresponding
 							// consumer
-							KafkaConsumerUtil.stopConsumer(topicEntry.getKafkaTopic());
+							KafkaConsumerUtil.pauseConsumer(topicEntry.getKafkaTopic());
 							activeTopics.remove(stompSubscription);
 						}
 					}
 				}
 			}
-
 		}
-
 	}
 }

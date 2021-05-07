@@ -2,14 +2,15 @@ package com.newssite.demo.abstarct;
 
 public abstract class AbstractNewsAPI {
 
-	public static String commaSeperateArray(Object[] arrayObj) {
+	//Method converts an array of String into a single string of comma separated values
+	public static String commaSeperateArray(String[] stringArray) {
 		String newString = "";
-		if (arrayObj != null) {
-			for (int i = 0; i < arrayObj.length; i++) {
+		if (stringArray != null) {
+			for (int i = 0; i < stringArray.length; i++) {
 
-				newString += arrayObj[i];
+				newString += stringArray[i];
 
-				if (i != arrayObj.length - 1) {
+				if (i != stringArray.length - 1) {
 					newString += ",";
 				}
 			}

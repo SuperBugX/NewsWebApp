@@ -9,4 +9,6 @@ spring:
             allowedMethods:
             - GET
             - POST
+            - PUT
+            - DELETE
           

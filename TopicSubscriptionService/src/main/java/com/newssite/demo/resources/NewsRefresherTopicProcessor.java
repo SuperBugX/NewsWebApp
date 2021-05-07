@@ -32,7 +32,6 @@ public class NewsRefresherTopicProcessor implements TopicProcessor {
 	public void process(String key, String message) {
 
 		// Send the received kafka message to the designated topic
-		System.out.println("Specific User: " + userName + " Received The News Article: " + message);
 		simpMessagerTemplate.convertAndSendToUser(userName, stompTopic, message);
 	}
 

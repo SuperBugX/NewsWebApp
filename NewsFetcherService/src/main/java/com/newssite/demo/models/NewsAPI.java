@@ -1,32 +1,31 @@
 package com.newssite.demo.models;
 
 import java.net.URI;
-import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.newssite.demo.abstarct.AbstractNewsAPI;
 import com.newssite.demo.exceptions.NewsAPIJSONException;
 import com.newssite.demo.exceptions.NewsAPIResponseErrorException;
+import com.newssite.demo.interfaces.LatestNewsAPI;
 import com.newssite.demo.resources.Article;
 
 import lombok.Builder;
-import lombok.Data;
 
-@Data
 @Builder
-public class NewsAPI extends AbstractNewsAPI {
+public class NewsAPI extends AbstractNewsAPI implements LatestNewsAPI {
 
 	// All possible API parameter values updated as of 06/04/21.
 
 	// Attributes
 	// Registered API key
-	//7783e4d68a23493a95b49f8594dbb506
-	//ca4d921c12a049beb7a1395ba27ad62f
+	// 7783e4d68a23493a95b49f8594dbb506
+	// ca4d921c12a049beb7a1395ba27ad62f
 	private final String APIKEY = "7783e4d68a23493a95b49f8594dbb506";
 
 	// API Host URI
@@ -74,6 +73,9 @@ public class NewsAPI extends AbstractNewsAPI {
 	// Pagination offset, Default is 1
 	private int paginationOffset;
 
+	@Autowired
+	WebClient.Builder webClientBuilder;
+
 	// Methods
 	public String getLatestNews() throws NewsAPIResponseErrorException, NewsAPIJSONException {
 
@@ -96,9 +98,6 @@ public class NewsAPI extends AbstractNewsAPI {
 			if (dataNode.toString().equals("error")) {
 				throw new NewsAPIResponseErrorException("Received the error:" + dataNode.asText());
 			}
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			throw new NewsAPIJSONException(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			throw new NewsAPIJSONException(e.getMessage());
@@ -108,37 +107,37 @@ public class NewsAPI extends AbstractNewsAPI {
 		return apiJsonResponse;
 	}
 
-	public URI buildTopHeadlineRequest(UriBuilder uriBuilder) {
+	private URI buildTopHeadlineRequest(UriBuilder uriBuilder) {
 
 		// Build a uri request with all of the attributes as query parameters inputs
 
 		uriBuilder.path(LIVENEWS).queryParam("apiKey", APIKEY);
-		
-		if(country != null && !country.equals("")) {
+
+		if (country != null && !country.equals("")) {
 			uriBuilder.queryParam("country", country);
 		}
-		
-		if(language != null && !language.equals("")) {
+
+		if (language != null && !language.equals("")) {
 			uriBuilder.queryParam("language", language);
 		}
-		
-		if(category != null && !category.equals("")) {
+
+		if (category != null && !category.equals("")) {
 			uriBuilder.queryParam("category", category);
 		}
-		
-		if(keyWords != null && !keyWords.equals(new String[] {})) {
+
+		if (keyWords != null && !keyWords.equals(new String[] {})) {
 			uriBuilder.queryParam("q", commaSeperateArray(keyWords));
 		}
-		
-		if(sources != null && !sources.equals(new String[] {})) {
+
+		if (sources != null && !sources.equals(new String[] {})) {
 			uriBuilder.queryParam("sources", commaSeperateArray(sources));
 		}
-		
-		if(paginationLimit != 0) {
+
+		if (paginationLimit != 0) {
 			uriBuilder.queryParam("pageSize", paginationLimit);
 		}
-		
-		if(paginationOffset != 0) {
+
+		if (paginationOffset != 0) {
 			uriBuilder.queryParam("page", paginationOffset);
 		}
 
@@ -155,14 +154,10 @@ public class NewsAPI extends AbstractNewsAPI {
 
 		try {
 			responseNode = jsonMapper.readTree(json);
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			throw new NewsAPIJSONException(e.getMessage());
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			throw new NewsAPIJSONException(e.getMessage());
 		}
-		dataNode = responseNode.get("status");
 
 		dataNode = responseNode.get("articles");
 		Article[] articles = new Article[dataNode.size()];
@@ -180,6 +175,5 @@ public class NewsAPI extends AbstractNewsAPI {
 		}
 
 		return articles;
-
 	}
 }
