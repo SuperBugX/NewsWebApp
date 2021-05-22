@@ -14,6 +14,7 @@ import com.newssite.demo.models.NewsAPI.NewsAPIBuilder;
 @EnableEurekaClient
 public class NewsFetcherServiceApplication {
 
+	// Class builders (using lombok) that are used to create and configure API calls
 	@Bean
 	public MediaStackBuilder getMediaStackAPIBuilder() {
 		return MediaStack.builder();

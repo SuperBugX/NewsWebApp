@@ -1,6 +1,5 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
 // JQuery Var (Needed for JQuery)
 declare var $: any;
@@ -86,7 +85,6 @@ export class NewsCategoryFilterComponent implements OnInit {
 
   ngOnInit(): void {
     // JQuery Code Needed for Country Selector in HTML
-
     $('#country_selector').countrySelect({
       defaultCountry: '--',
       onlyCountries: [
@@ -168,7 +166,6 @@ export class NewsCategoryFilterComponent implements OnInit {
       this.articleService.unsubscribeAllTopics();
       dataReseted = true;
     } else {
-
       subscriptions.forEach((subscription) => {
         if (!this.activeTopics.includes(subscription)) {
           this.articleService.unsubscribeTopic(

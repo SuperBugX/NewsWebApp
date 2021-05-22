@@ -23,38 +23,58 @@ import com.newssite.demo.resources.Article;
 @Configuration
 public class KafkaConfig {
 
-	@Bean
-	public ProducerFactory<String, Article> producerFactory() {
-		Map<String, Object> configProps = new HashMap<>();
+	// Attributes
+	private static Map<String, Object> producerProps;
+	private static Map<String, Object> consumerProps;
 
-		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		configProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "zstd");
-		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+	static {
+		// Configure the consumers properties for the microservice with Apache Kafka
+		consumerProps = new HashMap<String, Object>();
+		consumerProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		consumerProps.put(ConsumerConfig.GROUP_ID_CONFIG, "news_consumer");
+		consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+		consumerProps.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, true);
+		consumerProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+		consumerProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		consumerProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+		consumerProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
 
-		return new DefaultKafkaProducerFactory<>(configProps);
+		// Configure the producer properties for the microservice with Apache Kafka
+		producerProps = new HashMap<String, Object>();
+		producerProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		producerProps.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "zstd");
+		producerProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+		producerProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 	}
 
-	public static Map<String, Object> getConsumerConfig() {
-		Map<String, Object> configProps = new HashMap<String, Object>();
-		configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-		configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "news_consumer");
-		configProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-		configProps.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, true);
-		configProps.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-		configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
-		return configProps;
+	// Getters
+	public static Map<String, Object> getProducerProps() {
+		return producerProps;
+	}
+
+	public static Map<String, Object> getConsumerProps() {
+		return consumerProps;
+	}
+
+	// Methods
+	@Bean
+	public ProducerFactory<String, Article> producerFactory() {
+		// Create a ProducerFactory instance to be dependency injected that will
+		// be used to create Apache Kafka producers
+		return new DefaultKafkaProducerFactory<>(producerProps);
 	}
 
 	@Bean
 	public ConsumerFactory<String, Article> consumerFactory() {
-		return new DefaultKafkaConsumerFactory<>(getConsumerConfig());
+		// Create a ConsumerFactory instance to be dependency injected that will
+		// be used to create Apache Kafka listeners/consumers
+		return new DefaultKafkaConsumerFactory<>(consumerProps);
 	}
 
 	@Bean
 	public KafkaTemplate<String, Article> kafkaTemplate() {
+		// Create a template to be dependency injected for pushing new
+		// events into an Apache Kafka topic using the producer properties specified
 		return new KafkaTemplate<>(producerFactory());
 	}
 }

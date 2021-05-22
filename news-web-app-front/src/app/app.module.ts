@@ -34,6 +34,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { JWTTokenService } from './services/JWTToken/jwttoken.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ErrorDialogComponent } from './components/dialogs/error-dialog/error-dialog.component';
+import { ArticleSearcherPageComponent } from './components/article-searcher-page/article-searcher-page.component';
+import { ArticleSearcherFiltersComponent } from './components/article-searcher-filters/article-searcher-filters.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { ErrorDialogComponent } from './components/dialogs/error-dialog/error-di
     NotFoundPageComponent,
     MyAccountComponent,
     ErrorDialogComponent,
+    ArticleSearcherPageComponent,
+    ArticleSearcherFiltersComponent,
   ],
   imports: [
     BrowserModule,

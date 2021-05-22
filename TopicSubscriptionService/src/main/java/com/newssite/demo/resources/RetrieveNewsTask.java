@@ -11,22 +11,20 @@ public class RetrieveNewsTask extends TimerTask {
 	// Attributes
 	private static final String kafkaNewRequestTopic = "NewsRequests";
 	private KafkaTemplate<String, String> kafkaTemplate;
-
-	// Attributes used for requesting news based on filters
 	private String kafkaTopic;
 	private String stompTopic;
 	private String newsTopic;
-	private String country;
+	private NewsTopicFilters filters;
 
 	// Constructors
-	public RetrieveNewsTask(String kafkaTopic, String stompTopic,
-			String newsTopic, String country, KafkaTemplate<String, String> kafkaTemplate) {
+	public RetrieveNewsTask(String kafkaTopic, String stompTopic, String newsTopic, NewsTopicFilters filters,
+			KafkaTemplate<String, String> kafkaTemplate) {
 		super();
 		this.kafkaTemplate = kafkaTemplate;
 		this.kafkaTopic = kafkaTopic;
 		this.stompTopic = stompTopic;
 		this.newsTopic = newsTopic;
-		this.country = country;
+		this.filters = filters;
 	}
 
 	// Getters and Setters
@@ -51,12 +49,12 @@ public class RetrieveNewsTask extends TimerTask {
 		return kafkaNewRequestTopic;
 	}
 
-	public String getCountry() {
-		return country;
+	public NewsTopicFilters getFilters() {
+		return filters;
 	}
 
-	public void setCountry(String country) {
-		this.country = country;
+	public void setFilters(NewsTopicFilters filters) {
+		this.filters = filters;
 	}
 
 	public String getStompTopic() {
@@ -83,14 +81,14 @@ public class RetrieveNewsTask extends TimerTask {
 	@Override
 	public void run() {
 		kafkaTemplate.send(kafkaNewRequestTopic, stompTopic);
-		NewsRetriever.requestNewsProducer(kafkaTopic, kafkaTopic, country);
+		NewsRetriever.requestNewsProducer(kafkaTopic, kafkaTopic, filters);
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((filters == null) ? 0 : filters.hashCode());
 		result = prime * result + ((kafkaTemplate == null) ? 0 : kafkaTemplate.hashCode());
 		result = prime * result + ((kafkaTopic == null) ? 0 : kafkaTopic.hashCode());
 		result = prime * result + ((newsTopic == null) ? 0 : newsTopic.hashCode());
@@ -107,10 +105,10 @@ public class RetrieveNewsTask extends TimerTask {
 		if (getClass() != obj.getClass())
 			return false;
 		RetrieveNewsTask other = (RetrieveNewsTask) obj;
-		if (country == null) {
-			if (other.country != null)
+		if (filters == null) {
+			if (other.filters != null)
 				return false;
-		} else if (!country.equals(other.country))
+		} else if (!filters.equals(other.filters))
 			return false;
 		if (kafkaTemplate == null) {
 			if (other.kafkaTemplate != null)
@@ -138,6 +136,6 @@ public class RetrieveNewsTask extends TimerTask {
 	@Override
 	public String toString() {
 		return "RetrieveNewsTask [kafkaTemplate=" + kafkaTemplate + ", kafkaTopic=" + kafkaTopic + ", stompTopic="
-				+ stompTopic + ", newsTopic=" + newsTopic + ", country=" + country + "]";
+				+ stompTopic + ", newsTopic=" + newsTopic + ", filters=" + filters + "]";
 	}
 }

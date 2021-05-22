@@ -6,6 +6,7 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { AccountRegistrationComponent } from './components/account-registration/account-registration.component'
 import { NotFoundPageComponent } from './components/not-found-page/not-found-page.component';
 import { MyAccountComponent } from './components/my-account/my-account.component';
+import { ArticleSearcherPageComponent } from './components/article-searcher-page/article-searcher-page.component';
 
 const routes: Routes = [
   { path: '', component: HomapageComponent },
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'sign-in', component: SignInComponent },
   { path: 'account-registration', component: AccountRegistrationComponent },
   { path: 'my-account', component: MyAccountComponent},
+  { path: 'search-articles', component: ArticleSearcherPageComponent},
   { path: '**', component: NotFoundPageComponent }
 ];
 

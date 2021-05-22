@@ -1,4 +1,4 @@
-package com.newssite.demo.controllers;
+Fpackage com.newssite.demo.controllers;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,8 @@ import com.newssite.demo.consumers.TopicAckMessageListener;
 import com.newssite.demo.resources.ClientSession;
 import com.newssite.demo.resources.NewsRefresherTopicProcessor;
 import com.newssite.demo.resources.NewsRetriever;
+import com.newssite.demo.resources.NewsTopicFilters;
+import com.newssite.demo.resources.NewsTopicFilters.NewsTopicFiltersBuilder;
 import com.newssite.demo.resources.NewsTopicProcessor;
 import com.newssite.demo.resources.TopicSubscription;
 import com.newssite.demo.util.KafkaConsumerUtil;
@@ -39,6 +41,9 @@ public class WebSocketController {
 
 	// Attributes
 	@Autowired
+	private NewsTopicFiltersBuilder newsTopicFiltersBuilder;
+
+	@Autowired
 	private SimpMessagingTemplate simpMessagingTemplate;
 
 	@Autowired
@@ -50,33 +55,44 @@ public class WebSocketController {
 	@Autowired
 	private EurekaClient eurekaClient;
 
-	private Map<String, Object> consumerConfig = KafkaConfig.getConsumerConfig();
+	private Map<String, Object> consumerConfig = KafkaConfig.getConsumerProps();
 	private Map<String, TopicSubscription> activeTopics = new HashMap<String, TopicSubscription>(15);
 	private Map<String, ClientSession> activeSessions = new HashMap<String, ClientSession>(50);
 
 	// Methods
-	/*
-	 * Method returns a Map with String keys And List<String> Values. Each key
-	 * represents a parameter retrieved from the provided String uri and the value
-	 * is a string list with the found values for the corresponding parameter key
-	 * NOTE: The received method parameter uri is not decoded in the process
-	 */
-	public static Map<String, List<String>> getURIParam(String uri) {
-		return UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
+	public NewsTopicFilters getTopicFiltersFromURI(String uri) {
+		Map<String, List<String>> parameters = UriComponentsBuilder.fromUriString(uri).build().getQueryParams();
+		String country = "";
+
+		if (parameters != null) {
+			List<String> countryParam = parameters.get("country");
+
+			// Check if any parameters were provided
+			if (countryParam != null && countryParam.get(0) != null) {
+				country = countryParam.get(0);
+			}
+		}
+
+		return newsTopicFiltersBuilder.includedCountries(new String[] { country }).build();
 	}
 
+	//Listen for other TopicSubscriptionServices events
 	@KafkaListener(topics = "NewsRequests", properties = "auto.offset.reset=latest", groupId = "#{T(java.util.UUID).randomUUID().toString()}")
-	public void listenSpecialEvent(String stompDestination) {
+	public void newsWasRequested(String stompDestination) {
 
 		TopicSubscription topicSubscription = activeTopics.get(stompDestination);
 
+		//Check if the current microservice has the same STOMP subscription that was recently updated and is in use
 		if (topicSubscription != null && topicSubscription.getSubscriptions() > 0) {
 
 			int delayOffset = 0;
+			//Get the current microservice information from the registered eureka server
 			String currentServiceInstanceID = eurekaClient.getApplicationInfoManager().getInfo().getId();
+			//Get a list of all registered microservices with the eureka server (including this instance)
 			List<ServiceInstance> topicSubscriptionServices = discoveryClient
 					.getInstances("Topic-Subscription-Service");
 
+			//Sort the list of microservices instances information
 			Collections.sort(topicSubscriptionServices, new Comparator<ServiceInstance>() {
 
 				@Override
@@ -85,6 +101,7 @@ public class WebSocketController {
 				}
 			});
 
+			//Find the current microservices position in the list
 			for (int i = 0; i < topicSubscriptionServices.size(); i++) {
 				if (topicSubscriptionServices.get(i).getInstanceId().equals(currentServiceInstanceID)) {
 					delayOffset = i;
@@ -92,6 +109,8 @@ public class WebSocketController {
 				}
 			}
 
+			//Reset the appropriate scheduled task (in a timer) with a delay
+			//based on the found position of the microservice prior
 			topicSubscription.resetTimer(delayOffset * 60000);
 		}
 	}
@@ -133,21 +152,12 @@ public class WebSocketController {
 
 				// Parse the string URI as a Map with String Parameter keys and List<String>
 				// values as parameter values
-				Map<String, List<String>> parameters = getURIParam(subscriptionDestination);
-				String country = "";
 
-				if (parameters != null) {
-					List<String> countryParam = parameters.get("country");
-
-					// Check if any parameters were provided
-					if (countryParam != null && countryParam.get(0) != null) {
-						country = countryParam.get(0);
-					}
-				}
+				NewsTopicFilters filters = getTopicFiltersFromURI(subscriptionDestination);
 
 				// Remove the desired STOMP prefix
 				String topicName = StringUtils.substringBetween(subscriptionDestination, "/topic/", "?");
-				String kafkaTopic = DigestUtils.sha1Hex(topicName + country);
+				String kafkaTopic = DigestUtils.sha1Hex(topicName + filters.getIncludedCountries().toString());
 
 				// Depending on if the client is already subscribed, create a new topic
 				// subscription and kafka consumer
@@ -169,8 +179,8 @@ public class WebSocketController {
 
 						if (KafkaConsumerUtil.topicExists(kafkaTopic)) {
 
-							activeTopics.put(subscriptionDestination,
-									new TopicSubscription(kafkaTopic, subscriptionDestination, kafkaTemplate));
+							activeTopics.put(subscriptionDestination, new TopicSubscription(topicName, kafkaTopic,
+									subscriptionDestination, kafkaTemplate, filters));
 
 							// Start a new consumer for the new topic
 							KafkaConsumerUtil
@@ -180,8 +190,8 @@ public class WebSocketController {
 											consumerConfig, 10000);
 
 						} else {
-							activeTopics.put(subscriptionDestination,
-									new TopicSubscription(kafkaTopic, subscriptionDestination, kafkaTemplate));
+							activeTopics.put(subscriptionDestination, new TopicSubscription(topicName, kafkaTopic,
+									subscriptionDestination, kafkaTemplate, filters));
 
 							// Start a new consumer for the new topic
 							KafkaConsumerUtil.startOrCreateConsumers(kafkaTopic,
@@ -192,7 +202,7 @@ public class WebSocketController {
 
 							// Request for news content from the NewsFetcherService to be published into
 							// kafka
-							NewsRetriever.requestNewsProducer(kafkaTopic, topicName, country);
+							NewsRetriever.requestNewsProducer(kafkaTopic, topicName, filters);
 						}
 					}
 				}
