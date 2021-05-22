@@ -1,7 +1,10 @@
 <div
   *ngIf="showLoading"
-  class="d-flex flex-column align-items-center justify-content-center loading-bar"
->
+  class="d-flex
+  flex-column
+  align-items-center
+  justify-content-center
+  loading-bar">
   <h4>Please Wait</h4>
   <mat-spinner></mat-spinner>
 </div>
@@ -10,15 +13,12 @@
   <div class="col-md-6">
     <div class="d-flex flex-column">
       <div *ngFor="let itemEntry of getMapKeys(articles)">
-        <div *ngFor="let article of articles.get(itemEntry); let i = index">
+        <div *ngFor="let article of articles.get(itemEntry); let i= index">
           <div *ngIf="i % 2 == 0">
             <div
-              *ngIf="
-                article.imageUrl != 'null';
-                then largeArticle;
-                else smallArticle
-              "
-            ></div>
+              *ngIf="article.imageUrl != 'null';
+              then largeArticle;
+              else smallArticle"></div>
           </div>
           <ng-template #largeArticle>
             <app-large-article [article]="article"></app-large-article>
@@ -35,15 +35,12 @@
   <div class="col-md-6">
     <div class="d-flex flex-column">
       <div *ngFor="let itemEntry of getMapKeys(articles)">
-        <div *ngFor="let article of articles.get(itemEntry); let i = index">
+        <div *ngFor="let article of articles.get(itemEntry); let i= index">
           <div *ngIf="i % 2 != 0">
             <div
-              *ngIf="
-                article.imageUrl != 'null';
-                then largeArticle;
-                else smallArticle
-              "
-            ></div>
+              *ngIf="article.imageUrl != 'null';
+              then largeArticle;
+              else smallArticle"></div>
           </div>
           <ng-template #largeArticle>
             <app-large-article [article]="article"></app-large-article>

@@ -57,7 +57,7 @@ export class AccountRegistrationComponent implements OnInit, AfterViewInit {
     this.topicForm = this.formBuilder.group({});
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     // JQuery Code Needed for Country Selector in HTML
     $('#country_selector').countrySelect({
       defaultCountry: 'gb',
@@ -158,31 +158,31 @@ export class AccountRegistrationComponent implements OnInit, AfterViewInit {
   }
 
   // Button Toggle Methods used for CSS Class Applying in HTML
-  generalChecked(event) {
+  generalChecked(event): void {
     this.generalCheck = event.target.checked;
   }
 
-  sportsChecked(event) {
+  sportsChecked(event): void {
     this.sportsCheck = event.target.checked;
   }
 
-  healthChecked(event) {
+  healthChecked(event): void {
     this.healthCheck = event.target.checked;
   }
 
-  businessChecked(event) {
+  businessChecked(event): void {
     this.businessCheck = event.target.checked;
   }
 
-  technologyChecked(event) {
+  technologyChecked(event): void {
     this.technologyCheck = event.target.checked;
   }
 
-  scienceChecked(event) {
+  scienceChecked(event): void {
     this.scienceCheck = event.target.checked;
   }
 
-  entertainmentChecked(event) {
+  entertainmentChecked(event): void {
     this.entertainmentCheck = event.target.checked;
   }
 }
