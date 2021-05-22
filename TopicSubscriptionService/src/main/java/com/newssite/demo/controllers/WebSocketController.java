@@ -1,4 +1,4 @@
-Fpackage com.newssite.demo.controllers;
+package com.newssite.demo.controllers;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
