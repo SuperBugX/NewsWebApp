@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Article } from '../../models/Article';
 import { ArticlesService } from 'src/app/services/Articles/articles.service';
+import { Router } from '@angular/router';
+import { ErrorDialogComponent } from '../dialogs/error-dialog/error-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-articles',
@@ -8,16 +11,27 @@ import { ArticlesService } from 'src/app/services/Articles/articles.service';
   styleUrls: ['./articles.component.css'],
 })
 export class ArticlesComponent implements OnInit {
+  //Variables
   articles: Map<string, Article[]>;
   showLoading: boolean;
   newRequest: boolean;
   resetData: boolean;
 
-  constructor(private articleService: ArticlesService) {
+  constructor(
+    private articleService: ArticlesService,
+    private router: Router,
+    public dialog: MatDialog
+  ) {
     this.articles = new Map();
 
     this.articleService.articles$.subscribe((article) => {
       this.displayArticle(article);
+    });
+
+    this.articleService.searchedArticles$.subscribe((articles) => {
+      articles.forEach((article) => {
+        this.displayArticle(article);
+      });
     });
 
     this.showLoading = false;
@@ -38,9 +52,24 @@ export class ArticlesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.articleService.connect();
+    if (this.router.url != '/search-articles') {
+      this.articleService
+        .connect()
+        .then((value) => {})
+        .catch((value) => {
+          let data = {
+            data: {
+              title: 'Connection Error',
+              body: 'Unable to connect to server, please refresh the page',
+            },
+          };
+
+          this.dialog.open(ErrorDialogComponent, data);
+        });
+    }
   }
 
+  //Methods
   displayArticle(article: Article) {
     this.showLoading = false;
 
@@ -57,7 +86,7 @@ export class ArticlesComponent implements OnInit {
     return Array.from(map.keys());
   }
 
-  removeUnsubscribedContent() {
+  removeUnsubscribedContent(): void {
     if (!this.resetData) {
       let subscriptions = this.articleService.getSubscriptions();
       let currentArticleTopics = Array.from(this.articles.keys());

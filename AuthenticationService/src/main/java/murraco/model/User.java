@@ -9,66 +9,93 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
 @Entity
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-  @Size(min = 4, max = 255, message = "Minimum username length: 4 characters")
-  @Column(unique = true, nullable = false)
-  private String username;
+	@Size(min = 5, max = 255, message = "Minimum username length: 4 characters")
+	@Column(unique = true, nullable = false)
+	private String username;
 
-  @Column(unique = true, nullable = false)
-  private String email;
+	@Column(unique = true, nullable = false)
+	private String email;
 
-  @Size(min = 8, message = "Minimum password length: 8 characters")
-  private String password;
+	@Column(name = "prefered_country")
+	private String preferedCountry;
 
-  @ElementCollection(fetch = FetchType.EAGER)
-  List<Role> roles;
+	@Column(name = "prefered_country_code")
+	private String preferedCountryCode;
 
-  public Integer getId() {
-    return id;
-  }
+	@Size(min = 8, message = "Minimum password length: 8 characters")
+	@Column(unique = false, nullable = false)
+	private String password;
+	
+	@OneToMany(mappedBy="userFK")
+	private List<Subscription> subscriptions;
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+	@ElementCollection(fetch = FetchType.EAGER)
+	List<Role> roles;
 
-  public String getUsername() {
-    return username;
-  }
+	public Integer getId() {
+		return id;
+	}
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-  public String getEmail() {
-    return email;
-  }
+	public String getUsername() {
+		return username;
+	}
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
-  public String getPassword() {
-    return password;
-  }
+	public String getEmail() {
+		return email;
+	}
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-  public List<Role> getRoles() {
-    return roles;
-  }
+	public String getPreferedCountry() {
+		return preferedCountry;
+	}
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
+	public void setPreferedCountry(String preferedCountry) {
+		this.preferedCountry = preferedCountry;
+	}
+
+	public String getPreferedCountryCode() {
+		return preferedCountryCode;
+	}
+
+	public void setPreferedCountryCode(String preferedCountryCode) {
+		this.preferedCountryCode = preferedCountryCode;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 
 }

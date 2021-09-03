@@ -8,13 +8,7 @@
 html,
 body {
   margin: 0;
-
-}
-
-app-root {
-  display: flex;
-  min-height: 100vh;
-  flex-direction: column;
+  height: 100vh !important;
 }
 
 a {
@@ -23,7 +17,7 @@ a {
 
 p,
 label {
-  font-size: 20px;
+  font-size: 15px;
   color: black;
   text-align: justify;
 }

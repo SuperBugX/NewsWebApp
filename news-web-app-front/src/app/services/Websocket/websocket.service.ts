@@ -5,7 +5,6 @@ import * as Stomp from 'stompjs';
   providedIn: 'root',
 })
 export class WebsocketService {
-
   //Attributes
   websocket: WebSocket;
   isConnected: boolean;
@@ -23,40 +22,41 @@ export class WebsocketService {
     this.subscriptions = [];
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.disconnect();
   }
 
-  connect(url: string): void {
-    if(!this.isConnected){
-      this.websocket = new WebSocket(url);
-      if(this.websocket){
-        this.stompClient = Stomp.over(this.websocket);
-        if(this.stompClient){
-          this.stompClient.connect(
-            {},
-            (frame) => {},
-            (error) => {
-              console.log('Could Not Connect');
-            }
-          );
-          this.isConnected = true;
+  async connect(url: string) {
+    return new Promise((resolve, reject) => {
+      if (!this.isConnected) {
+        this.websocket = new WebSocket(url);
+        if (this.websocket) {
+          this.stompClient = Stomp.over(this.websocket);
+          if (this.stompClient) {
+            this.stompClient.connect(
+              {},
+              (frame) => {
+                this.isConnected = true;
+                resolve(true);
+              },
+              (error) => {
+                this.isConnected = false;
+                reject(false);
+              }
+            );
+          } else {
+            this.isConnected = false;
+            reject(false);
+          }
         }
-        else{
-          console.log('Stomp Error');
-        }
+      } else {
+        resolve(true);
       }
-      else{
-        console.log('Could Not Create Socket');
-      }
-    }
-    else{
-      console.log('Connection Already Exists');
-    }
+    });
   }
 
-  disconnect(): void{
-    if(this.isConnected){
+  disconnect(): void {
+    if (this.isConnected) {
       this.websocket.close();
       this.websocket = null;
       this.stompClient = null;
@@ -65,50 +65,46 @@ export class WebsocketService {
   }
 
   sendMessage(destination: string, message: string): void {
-    if(this.isConnected){
+    if (this.isConnected) {
       this.stompClient.send(destination, {}, message);
-    }
-    else{
+    } else {
       console.log('No Active Connection');
     }
   }
 
-  subscribe(destination, callBack:(message) => void): void{
-    if(this.isConnected){
-      if(this.subscriptions.indexOf(destination) == -1){
+  subscribe(destination, callBack: (message) => void): void {
+    if (this.isConnected) {
+      if (this.subscriptions.indexOf(destination) == -1) {
         this.stompClient.subscribe(destination, callBack);
         this.subscriptions.push(destination);
-      }
-      else{
+      } else {
         console.log('Already Subscribed' + destination);
       }
-    }
-    else{
+    } else {
       console.log('No Active Connection');
     }
   }
 
-  unsubscribe(destination): void{
+  unsubscribe(destination): void {
     let index = this.subscriptions.indexOf(destination);
-    if(this.isConnected){
-      if( index != -1){
+    if (this.isConnected) {
+      if (index != -1) {
         this.stompClient.unsubscribe(destination);
         this.subscriptions.splice(index, 1);
-      }
-      else{
+      } else {
         console.log('Not Subscribed');
       }
-    }
-    else{
+    } else {
       console.log('No Active Connection');
     }
   }
 
-  unsubscribeAll() : void{
-    if(this.isConnected){
-      this.subscriptions.forEach((subscription) => {this.unsubscribe(subscription)});
-    }
-    else{
+  unsubscribeAll(): void {
+    if (this.isConnected) {
+      this.subscriptions.forEach((subscription) => {
+        this.unsubscribe(subscription);
+      });
+    } else {
       console.log('No Active Connection');
     }
   }

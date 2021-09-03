@@ -1,16 +1,34 @@
-<div class="card mb-3 rounded" >
-    <div class="article-category-header" [ngClass]="{'general-colour': article.category === 'general', 'sports-colour': article.category === 'sports',
-    'health-colour': article.category === 'health', 'business-colour': article.category === 'business', 'entertainment-colour': article.category === 'entertainment'
-    ,'technology-colour': article.category === 'technology', 'science-colour': article.category === 'science' }">{{article.category | uppercase }}</div>
-    <a [href]="article.url" target="_blank">
-        <div class="card-header article-title">{{article.title}}</div>
-    </a>
-    <div class="card-body">
-        <a [href]="article.url" class="card-link" target="_blank">Source: {{article.source}}</a>
-        <span class="ml-2">Date: {{article.publishedAt | date: 'dd/MM/yyyy'}}</span>
-        <span class="ml-2" *ngIf="article.author != 'null'">Author: {{article.author}}</span>
-    </div>
-    <div class="card-body pt-0">
-        <p class="card-text" *ngIf="article.description != 'null'" [innerHTML]="article.description"></p>
-    </div>
+<div class="card mb-3 rounded">
+  <div
+    class="article-category-header"
+    [ngClass]="{
+    'general-colour': article.category === 'general',
+    'sports-colour': article.category === 'sports',
+    'health-colour': article.category === 'health',
+    'business-colour': article.category === 'business',
+    'entertainment-colour': article.category === 'entertainment',
+    'technology-colour': article.category === 'technology',
+    'science-colour': article.category === 'science'
+    }">
+    {{ article.category | uppercase }}
+  </div>
+
+  <a [href]="article.url" target="_blank">
+    <div class="card-header article-title">{{ article.title }}</div>
+  </a>
+
+  <div class="card-body">
+    <a [href]="article.url" class="card-link" target="_blank">Source: {{
+      article.source }}</a>
+    <span class="ml-2">Date: {{ article.publishedAt | date: "dd/MM/yyyy" }}</span>
+    <span class="ml-2" *ngIf="article.author != 'null'">Author: {{
+      article.author }}</span>
+  </div>
+
+  <div class="card-body pt-0">
+    <p
+      class="card-text"
+      *ngIf="article.description != 'null'"
+      [innerHTML]="article.description"></p>
+  </div>
 </div>

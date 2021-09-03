@@ -1,21 +1,27 @@
 <app-main-navigation></app-main-navigation>
 
-<div class="container-fluid">
-  <div class="row align-self-start">
-    <div class="col-lg-2 d-flex justify-content-center ml-4">
-      <img width="200" height="800" src="../assets/images/placeholder/placeholder-x.png">
+<content class="container-fluid">
+  <div class="row w-100 align-self-start">
+    <div
+      *ngIf="!isLoggedIn"
+      class="col-lg-2 d-flex justify-content-center ml-4">
+      <img width="200" src="../assets/images/placeholder/placeholder-x.png" />
     </div>
-    <div class="col-lg d-flex justify-content-center">
-      <div class="content">
+
+    <div class="col-lg justify-content-center">
+      <div [ngStyle]="isLoggedIn && { width: '80%' }" class="content">
         <div class="container-fluid">
           <router-outlet></router-outlet>
         </div>
       </div>
     </div>
-    <div class="col-lg-2 d-flex justify-content-center mr-4">
-      <img width="200" height="800" src="../assets/images/placeholder/placeholder-x.png">
+
+    <div
+      *ngIf="!isLoggedIn"
+      class="col-lg-2 d-flex justify-content-center mr-4">
+      <img width="200" src="../assets/images/placeholder/placeholder-x.png" />
     </div>
   </div>
-</div>
+</content>
 
 <app-footer></app-footer>

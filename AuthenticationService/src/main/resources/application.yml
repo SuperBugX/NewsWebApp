@@ -18,9 +18,6 @@ spring:
         id:
           new_generator_mappings: false
 
-server:
-   port: 8080 # This is the default port anyway, but you can change it here
-
 security:
   jwt:
     token:

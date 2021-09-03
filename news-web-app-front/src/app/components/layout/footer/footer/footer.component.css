@@ -1,10 +1,8 @@
 footer {
   background-color: #1a1a1a;
-  width: 100%;
   color: white;
-  padding-top: 20px;
-  margin-top: 20px;
-  font-size: 15px;
+  padding-top: 10px;
+  font-size: 10px;
 }
 
 footer a {
@@ -25,12 +23,12 @@ footer a:hover {
 
 .list-group {
   min-width: 200px;
-  max-width: 300px;
+  max-width: 200px;
   margin-right: 40px;
-  margin-top: 10px;
 }
 
 .list-group-head{
+  font-size: 12px;
   padding: 5px;
   background-color: black;
   font-weight: 700;

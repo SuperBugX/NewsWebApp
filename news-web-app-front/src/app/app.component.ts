@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Component} from '@angular/core';
+import { AuthenticationService } from './services/Authentication/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +8,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent {
 
-  title = "The Hawkers Journal";
+  title : string;
+  isLoggedIn : boolean;
 
-  constructor() {
+  constructor(private authenticationService: AuthenticationService) {
+    this.title = "The Hawkers Journal";
+
+    this.authenticationService.loggedIn.subscribe((value) => {
+      this.isLoggedIn = value;
+    })
   }
 }

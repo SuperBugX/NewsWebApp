@@ -11,5 +11,4 @@ public class GatewayApiServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayApiServiceApplication.class, args);
 	}
-
 }

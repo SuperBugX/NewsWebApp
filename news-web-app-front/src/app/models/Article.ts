@@ -1,4 +1,3 @@
-
 export class Article {
 	// Attributes
 	author: string;
