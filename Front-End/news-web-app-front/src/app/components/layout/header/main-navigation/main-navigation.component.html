@@ -1,0 +1,112 @@
+<header>
+  <div class="container-fluid">
+    <div class="row border-bottom">
+      <div class="col-xl-2 heading">
+        <!-- Web App Logo -->
+        <div class="heading">
+          <a routerLink="homepage">
+            <h1>The Hawkers Journal</h1>
+          </a>
+        </div>
+      </div>
+      <!-- Main Navigation -->
+      <div class="col-xl-8">
+        <div class="navbar-wrapper">
+
+          <!-- Normal Nav Bar -->
+          <div class="row">
+            <div class="col">
+              <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false"
+                  aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center"
+                  id="navbarSupportedContent">
+                  <!-- Links -->
+                  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                      <a class="nav-link"
+                        [ngClass]="{'active' : this.currentUrl == '/' ||
+                        this.currentUrl=='/homapage'}"
+                        aria-current="page" routerLink="homepage">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl
+                        == '/news-feed-page'}"
+                        routerLink="/news-feed-page">Browse News</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl
+                        == '/news-feed-page'}">My News</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" [ngClass]="{'active' : this.currentUrl
+                        == '/search-articles'}" routerLink="/search-articles">Search
+                        Articles</a>
+                    </li>
+                  </ul>
+                </div>
+
+              </nav>
+            </div>
+          </div>
+
+          <!-- Quick Navbar Links to News Categories -->
+          <div class="row">
+            <div class="col">
+              <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">News</a>
+                <br>
+                <button class="navbar-toggler" type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#navbarSupportedCategories"
+                  aria-controls="navbarSupportedContent"
+                  aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse justify-content-around"
+                  id="navbarSupportedCategories">
+
+                  <!-- Quick News Links -->
+                  <div class="d-flex flex-wrap category-wrapper">
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'general'}"><button
+                        type="button" class="btn btn-general">General</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'sports'}"><button
+                        type="button" class="btn btn-sports">Sports</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'health'}"><button
+                        type="button" class="btn btn-health">Health</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'business'}"><button
+                        type="button" class="btn btn-business">Business</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'technology'}"><button
+                        type="button" class="btn btn-technology">Technology</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'science'}"><button
+                        type="button" class="btn btn-science">Science</button></a>
+                    <a [routerLink]="['/news-feed-page']"
+                      [queryParams]="{category:'entertainment'}"><button
+                        type="button" class="btn btn-entertainment">Entertainment</button></a>
+                  </div>
+
+                </div>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-2">
+        <app-account-card></app-account-card>
+      </div>
+    </div>
+  </div>
+</header>

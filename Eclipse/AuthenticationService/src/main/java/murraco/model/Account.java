@@ -1,0 +1,119 @@
+package murraco.model;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Size;
+
+@Entity
+public class Account {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+
+	@Size(min = 5, max = 255, message = "Minimum username length: 4 characters")
+	@Column(unique = true, nullable = false)
+	private String username;
+
+	@Column(unique = true, nullable = false)
+	private String email;
+
+	@Column(name = "prefered_country")
+	private String preferedCountry;
+
+	@Column(name = "prefered_country_code")
+	private String preferedCountryCode;
+
+	@Size(min = 8, message = "Minimum password length: 8 characters")
+	@Column(unique = false, nullable = false)
+	private String password;
+	
+	@Column(name="password_salt")
+	private String passwordSalt;
+	
+	@OneToMany(mappedBy="accountFK")
+	private List<Subscription> subscriptions;
+
+	@ElementCollection(fetch = FetchType.EAGER)
+	List<Role> roles;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPreferedCountry() {
+		return preferedCountry;
+	}
+
+	public void setPreferedCountry(String preferedCountry) {
+		this.preferedCountry = preferedCountry;
+	}
+
+	public String getPreferedCountryCode() {
+		return preferedCountryCode;
+	}
+
+	public void setPreferedCountryCode(String preferedCountryCode) {
+		this.preferedCountryCode = preferedCountryCode;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+	public String getPasswordSalt() {
+		return passwordSalt;
+	}
+
+	public void setPasswordSalt(String passwordSalt) {
+		this.passwordSalt = passwordSalt;
+	}
+
+	public List<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(List<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+}
