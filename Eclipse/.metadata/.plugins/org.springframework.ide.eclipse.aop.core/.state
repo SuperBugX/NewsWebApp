@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="GatewayAPIService"/>
+<aop-project name="NewsFetcherService"/>
+<aop-project name="EurekaService"/>
+<aop-project name="TopicSubscriptionService"/>
+<aop-project name="AuthenticationService"/>
+</aop-reference-model>

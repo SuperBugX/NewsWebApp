@@ -1,0 +1,332 @@
+<mat-vertical-stepper linear #stepper>
+  <mat-step [stepControl]="accountForm" [editable]="true">
+    <form [formGroup]="accountForm">
+      <!-- First Step for Account Details Acquisition -->
+      <ng-template matStepLabel>Account Details</ng-template>
+      <h2>Step 1: Account Details</h2>
+      <div class="row p-1">
+        <div class="col">
+          <!-- Inputs -->
+          <!-- Country Selector Input Code -->
+          <div class="form-group mt-4">
+            <div class="form-item mt-2">
+              <mat-label class="mr-2" for="country_selector">Preferred Country
+                for News</mat-label>
+              <br />
+              <input id="country_selector" type="text" />
+            </div>
+            <div class="form-item" style="display: none">
+              <input
+                type="text"
+                matInput
+                formControlName="preferedCountry"
+                id="country_selector_code"
+                name="country_selector_code"
+                data-countrycodeinput="1"
+                readonly="readonly"
+                placeholder="Selected country code will appear here"
+                />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <mat-label for="usernameInput">Username</mat-label>
+            <input
+              id="usernameInput"
+              class="form-control textual-input"
+              type="text"
+              matInput
+              formControlName="username"
+              placeholder="Enter your username"
+              required
+              />
+            <mat-error *ngIf="username.dirty && username.invalid">
+              <mat-error *ngIf="username.hasError('minlength')">
+                Username is too small, must be atleast 5 characters
+              </mat-error>
+              <mat-error *ngIf="username.hasError('maxlength')">
+                <br />
+                Username is too long, must be equal or smaller than 25
+                characters
+              </mat-error>
+              <mat-error *ngIf="username.hasError('pattern')">
+                <br />
+                Username can not contain special characters
+              </mat-error>
+            </mat-error>
+            <mat-error *ngIf="username.untouched && username.invalid">
+              Username is required
+            </mat-error>
+          </div>
+
+          <div class="form-group">
+            <mat-label for="emailInput">Email</mat-label>
+            <input
+              id="emailInput"
+              class="form-control textual-input"
+              type="email"
+              matInput
+              formControlName="email"
+              placeholder="Enter your email"
+              required
+              />
+            <mat-error *ngIf="email.dirty && email.invalid">
+              <mat-error *ngIf="email.hasError('email')">
+                Invalid Email
+              </mat-error>
+            </mat-error>
+            <mat-error *ngIf="email.untouched && email.invalid">
+              Email is required
+            </mat-error>
+          </div>
+
+          <div class="form-group">
+            <mat-label for="passwordInput">Password</mat-label>
+            <input
+              id="passwordInput"
+              class="form-control textual-input"
+              type="password"
+              matInput
+              formControlName="password"
+              placeholder="Enter your password"
+              required
+              />
+            <mat-error *ngIf="password.dirty && password.invalid">
+              <mat-error *ngIf="password.hasError('minlength')">
+                Password is too small, must be atleast 10 characters
+              </mat-error>
+              <mat-error *ngIf="password.hasError('maxlength')">
+                <br />
+                Password is too long, must be equal or smaller than 100
+                characters
+              </mat-error>
+              <mat-error *ngIf="password.hasError('pattern')">
+                <br />
+                Password must not contain any special characters
+                <br />
+                Password must contain atleast:
+                <ul>
+                  <li>1 Capital Letter</li>
+                  <li>1 Number</li>
+                </ul>
+              </mat-error>
+            </mat-error>
+            <mat-error *ngIf="password.untouched && password.invalid">
+              Password is required
+            </mat-error>
+          </div>
+
+          <div class="form-group">
+            <mat-label for="passwordConfirmInput">Confirm Password</mat-label>
+            <input
+              id="passwordConfirmInput"
+              class="form-control textual-input"
+              type="password"
+              matInput
+              formControlName="passwordConfirm"
+              placeholder="Enter your password again as confirmation"
+              required
+              />
+            <mat-error *ngIf="passwordConfirm.dirty && passwordConfirm.invalid">
+              <mat-error *ngIf="passwordConfirm.hasError('mustMatch')">
+                Both passwords must match
+              </mat-error>
+            </mat-error>
+            <mat-error
+              *ngIf="passwordConfirm.untouched && passwordConfirm.invalid">
+              Confirmation Password is required
+            </mat-error>
+          </div>
+        </div>
+        <div class="col border-left">
+          <!-- Privacy Legal Statement -->
+          <h4>How do we use your information</h4>
+          <div class="jumbotron">
+            <p>
+              All of your information collected is not provided or sold to any
+              other external third party except for the information provided on
+              your preferences on news categories which is used for legitimate
+              news discovery and retrieval purposes.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col">
+          <div class="d-flex flex-row-reverse">
+            <button
+              mat-raised-button
+              color="primary"
+              class="next-btn"
+              matStepperNext>
+              Next
+            </button>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step [stepControl]="topicForm" [editable]="true">
+    <form [formGroup]="topicForm">
+      <!-- Second Step for News Topic Preferences Choosing -->
+      <ng-template matStepLabel>Favourite Topics</ng-template>
+      <h2>Step 2: Favourite Topics</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <!-- User Message -->
+          <div class="jumbotron">
+            <h4>Why Should you Choose</h4>
+            <p>
+              When choosing one or more of these available news topics you can
+              help us better understand your preferences and decide easier what
+              content to display too you each time you visit this site.
+            </p>
+            <p>
+              <strong>By choosing, you will be able to read on daily news
+                articles
+                that matter to you.</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="col-md-8 border-left">
+          <div class="jumbotron">
+            <form>
+              <div class="form-item">
+                <div
+                  id="topicsContainer"
+                  class="btn-group btn-group-toggle d-flex
+                  flex-wrap mb-3" data-toggle="buttons">
+
+                  <label
+                    class="btn btn-outline-general ml-0 topic-item"
+                    for="general-checkbox"
+                    [ngClass]="{ 'btn-outline-general-filled': generalCheck }">
+                    <input
+                      id="general-checkbox"
+                      type="checkbox"
+                      value="general"
+                      (change)="generalChecked($event)"
+                      />
+                    General
+                  </label>
+
+                  <label
+                    class="btn btn-outline-sports topic-item"
+                    for="sports-checkbox"
+                    [ngClass]="{ 'btn-outline-sports-filled': sportsCheck }">
+                    <input
+                      id="sports-checkbox"
+                      type="checkbox"
+                      value="sports"
+                      (change)="sportsChecked($event)"
+                      />
+                    Sports
+                  </label>
+
+                  <label
+                    class="btn btn-outline-health topic-item"
+                    for="health-checkbox"
+                    [ngClass]="{ 'btn-outline-health-filled': healthCheck }">
+                    <input
+                      id="health-checkbox"
+                      type="checkbox"
+                      value="health"
+                      (change)="healthChecked($event)"
+                      />
+                    Health
+                  </label>
+
+                  <label
+                    class="btn btn-outline-business topic-item"
+                    for="business-checkbox"
+                    [ngClass]="{ 'btn-outline-business-filled': businessCheck }">
+                    <input
+                      id="business-checkbox"
+                      type="checkbox"
+                      value="business"
+                      (change)="businessChecked($event)"
+                      />
+                    Business
+                  </label>
+
+                  <label
+                    class="btn btn-outline-technology topic-item"
+                    for="technology-checkbox"
+                    [ngClass]="{ 'btn-outline-technology-filled': technologyCheck }">
+                    <input
+                      id="technology-checkbox"
+                      type="checkbox"
+                      value="technology"
+                      (change)="technologyChecked($event)"
+                      />
+                    Technology
+                  </label>
+
+                  <label
+                    class="btn btn-outline-science topic-item"
+                    for="science-checkbox"
+                    [ngClass]="{ 'btn-outline-science-filled': scienceCheck }">
+                    <input
+                      id="science-checkbox"
+                      type="checkbox"
+                      value="science"
+                      (change)="scienceChecked($event)"
+                      />
+                    Science
+                  </label>
+
+                  <label
+                    class="btn btn-outline-entertainment topic-item"
+                    for="entertainment-checkbox"
+                    [ngClass]="{
+                    'btn-outline-entertainment-filled': entertainmentCheck
+                    }">
+                    <input
+                      id="entertainment-checkbox"
+                      type="checkbox"
+                      value="entertainment"
+                      (change)="entertainmentChecked($event)"
+                      />
+                    Entertainment
+                  </label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div class="col">
+          <div class="d-flex flex-row-reverse">
+            <button
+              mat-raised-button
+              color="primary"
+              class="next-btn"
+              matStepperNext>
+              Next
+            </button>
+          </div>
+          <hr>
+        </div>
+      </div>
+    </form>
+  </mat-step>
+
+  <mat-step>
+    <!-- Last Step for Account Creation Completion -->
+    <ng-template matStepLabel>Completion</ng-template>
+    <div class="row">
+      <div class="col">
+        <div
+          class="d-flex flex-column align-items-center justify-content-center">
+          <h4>Please Wait</h4>
+          <mat-spinner></mat-spinner>
+        </div>
+      </div>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

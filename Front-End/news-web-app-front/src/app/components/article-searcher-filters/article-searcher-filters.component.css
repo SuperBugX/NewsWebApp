@@ -1,0 +1,12 @@
+.filter-wrapper{
+  background-color: white;
+  border-radius: 10px;
+}
+
+.article-title{
+font-size: 23px;
+}
+
+.search-bar-form{
+  min-width: 225px;
+}
